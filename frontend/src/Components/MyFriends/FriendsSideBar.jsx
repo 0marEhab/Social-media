@@ -72,10 +72,10 @@ export default function FriendsSideBar() {
     },
   ];
   return (
-    <div className=" bg-secondary col-span-3 rounded-l-3xl px-10 py-16">
+    <div className="col-span-10 lg:col-span-4 xl:col-span-3 bg-secondary rounded-t-3xl lg:rounded-l-3xl lg:rounded-tr-none px-10 py-16">
       <h2 className=" text-xl font-bold text-white">Who to Follow</h2>
       {friends.map((friend) => (
-        <div className="flex items-center justify-between gap-3 my-10">
+        <div className="flex items-center justify-between gap-3 my-10" key={friend.id}>
           <div className="flex space-x-2">
             <img
               src={friend.img}

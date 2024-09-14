@@ -74,17 +74,17 @@ export default function MyFriends() {
   ];
   return (
     <div className="grid grid-cols-10 gap-10">
-      <div className="col-span-7 p-10">
+      <div className=" col-span-10 lg:col-span-6 xl:col-span-7 p-5 md:p-10">
         <SearchBar />
         <h1 className="text-4xl font-semibold text-center my-5">My Friends</h1>
-        <div className="grid grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
           {friends.map((friend) => (
             <FriendCard friend={friend} key={friend.id} />
           ))}
         </div>
       </div>
 
-      <FriendsSideBar />
+        <FriendsSideBar />
     </div>
   );
 }
