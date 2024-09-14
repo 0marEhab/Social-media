@@ -1,0 +1,18 @@
+{
+    "users": [
+      {
+        "email": "Admin@gmail.com",
+        "Password":"#Admin29",
+        "ConfirmPassword":"#Admin29",
+        "Name":"Steven",
+        "Bdate":"25/11/2001"
+      },
+      {
+        "email": "Steven@gmail.com",
+        "password":"#Silver29z",
+        "ConfirmPassword":"#Silver29z",
+        "Name":"Steven",
+        "Bdate":"25/11/2001"
+      }
+    ]
+  }

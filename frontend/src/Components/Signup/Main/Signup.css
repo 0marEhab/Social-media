@@ -1,0 +1,356 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: url("../../../Assets//Images/still-life-books-versus-technology a.jpg") no-repeat center center;
+  background-size: cover; 
+  
+  color: #fff;
+  font-family: Helvetica, sans-serif;
+  display: flex;
+  justify-content:left;
+  align-items: center;
+  height: 100vh; 
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: normal;
+}
+
+.based {
+  margin: 1rem;
+}
+
+.based a {
+  color: #fff;
+  font-weight: bold;
+}
+
+.form {
+  max-width: 900px;
+  margin: 0; 
+  width: 900px;
+  display: flex;
+  flex-direction: row;
+  padding: 4rem;
+  height: 350px;
+  border-radius: 0.2rem;
+  position: relative;
+  
+
+
+}
+
+.form_content {
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  color: #333;
+  opacity: 0;
+}
+
+.form-group_title {
+  color: #8588F0;
+  text-transform: uppercase;
+}
+
+.form-group_input {
+  width: 100%;
+  border-width: 0 0 2px 0;
+  border-bottom: 2px solid #ccc; 
+  padding: 0.5rem;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.3s ease-in-out; 
+}
+
+.form-group_input:focus {
+  border-bottom: 2px solid #8588F0; 
+  outline: none; 
+}
+
+.form_background {
+  border-radius: 1rem;
+  background-color: #fff;
+  padding: 3rem 2rem;
+  box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.4);
+  width: 50%;
+  height: 178%;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%); /* Center vertically */
+  transition: all 0.3s cubic-bezier(0.04, 0.57, 0.15, 1.46);
+
+  
+}
+
+.fieldset {
+  flex: 1;
+  margin: 0;
+  border: 0;
+  padding: 0 15rem 0 0;  
+  font-size: 20px;
+  
+}
+
+.fieldset:first-child {
+  padding-left: 0;
+}
+
+.fieldset:last-child {
+  padding-left: 5rem;
+  padding-right: 0;
+}
+
+.radio--invisible {
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+
+.button {
+  text-transform: uppercase;
+  padding: 0.6rem 3rem;
+  border: 1px solid #fff;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  transition: background 0.2s ease-in;
+  display: inline-block;
+  margin-top: 1rem;
+}
+
+.button:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.button--form {
+  background: #8588F0;
+  color: #fff;
+  float: right;
+  margin-top: 0;
+}
+
+.button--form:hover {
+  background: white;
+  color: #8588F0;
+  border: 2px solid #8588F0;
+}
+
+#noaccount:checked ~ .form_background {
+  transform: translate(3rem, -50%);
+}
+
+#noaccount:checked ~ .form_background .form-group--account {
+  display: none;
+}
+
+#noaccount:checked ~ .form_background .form-group--noaccount {
+  display: block;
+  opacity: 0;
+  -webkit-animation-delay: 0.2s;
+          animation-delay: 0.2s;
+  -webkit-animation-duration: 0.3s;
+          animation-duration: 0.3s;
+  -webkit-animation-name: slidein;
+          animation-name: slidein;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+}
+
+#account:checked ~ .form_background {
+  transform: translate(calc(100% - 3rem), -50%);
+}
+
+#account:checked ~ .form_background .form-group--noaccount {
+  display: none;
+}
+
+#account:checked ~ .form_background .form-group--account {
+  display: block;
+  -webkit-animation-delay: 0.2s;
+          animation-delay: 0.2s;
+  -webkit-animation-duration: 0.3s;
+          animation-duration: 0.3s;
+  -webkit-animation-name: slidein;
+          animation-name: slidein;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+}
+
+@-webkit-keyframes slidein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slidein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Alert styles */
+.alert {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  width: 80%;
+  max-width: 600px;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  transition: 0.5s ease;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+}
+
+.startIcon {
+  margin-right: 10px;
+  font-size: 25px;
+  vertical-align: middle;
+  animation: moveIcon 2.5s infinite;
+}
+
+@keyframes moveIcon {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 30px;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+.close:hover {
+  color: #000;
+}
+
+.faTimes {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 1.5rem;
+  color: inherit;
+  animation: blink-1 2.5s infinite both;
+}
+
+.alertSuccess {
+  border: 1px solid rgba(36, 241, 6, 0.46);
+  background-color: rgba(7, 149, 66, 0.12);
+  box-shadow: 0px 0px 2px #259c08;
+  color: #0ad406;
+}
+
+.alertSuccess:hover {
+  background-color: rgba(7, 149, 66, 0.35);
+}
+
+.alertInfo {
+  border: 1px solid rgba(6, 44, 241, 0.46);
+  background-color: rgba(7, 73, 149, 0.12);
+  box-shadow: 0px 0px 2px #0396ff;
+  color: #0396ff;
+  cursor: pointer;
+}
+
+.alertInfo:hover {
+  background-color: rgba(7, 73, 149, 0.35);
+}
+
+.alertDanger {
+  border: 1px solid rgba(241, 6, 6, 0.81);
+  background-color: rgba(220, 17, 1, 0.16);
+  box-shadow: 0px 0px 2px #ff0303;
+  color: #ff0303;
+}
+
+.alertDanger:hover {
+  background-color: rgba(220, 17, 1, 0.33);
+}
+
+.alertPrimary {
+  border: 1px solid rgba(6, 241, 226, 0.81);
+  background-color: rgba(1, 204, 220, 0.16);
+  box-shadow: 0px 0px 2px #03fff5;
+  color: #03d0ff;
+}
+
+.alertPrimary:hover {
+  background-color: rgba(1, 204, 220, 0.33);
+}
+
+.alertPrimaryIcon {
+  font-size: 18px;
+  color: #03d0ff;
+  text-shadow: none;
+}
+
+.squareBox {
+  position: absolute;
+  transform: rotate(45deg);
+  border-top-left-radius: 45px;
+  opacity: 0.3;
+}
+
+.boxThree {
+  background-image: linear-gradient(-90deg, #290a59 0%, #3d57f4 100%);
+  opacity: 0.06;
+  left: -80px;
+  top: -60px;
+  width: 500px;
+  height: 500px;
+  border-radius: 45px;
+}
+
+.boxFour {
+  background-image: linear-gradient(-90deg, #290a59 0%, #3d57f4 100%);
+  opacity: 0.06;
+  left: 150px;
+  top: -25px;
+  width: 550px;
+  height: 550px;
+  border-radius: 45px;
+}
+
+.message-font {
+  font-family: sans-serif;
+  font-weight: 900;
+  font-style: oblique;
+}
+
+@keyframes blink-1 {
+  0%, 50%, 100% {
+    opacity: 1;
+  }
+  25%, 75% {
+    opacity: 0;
+  }
+}
