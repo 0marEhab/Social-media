@@ -73,23 +73,23 @@ export default function FriendsSideBar() {
   ];
   return (
     <div className=" bg-secondary col-span-3 rounded-l-3xl px-10 py-16">
-      <h2 class=" text-xl font-bold text-white">Who to Follow</h2>
+      <h2 className=" text-xl font-bold text-white">Who to Follow</h2>
       {friends.map((friend) => (
-        <div class="flex items-center justify-between gap-3 my-10">
+        <div className="flex items-center justify-between gap-3 my-10">
           <div className="flex space-x-2">
             <img
               src={friend.img}
-              class="rounded-xl w-10 object-cover"
+              className="rounded-xl w-10 object-cover"
               alt={friend.name}
             />
-            <div class="flex flex-col items-start justify-center gap-0.5">
-              <p class=" text-[14px] font-bold text-white">{friend.name}</p>
-              <p class=" text-[12px] font-normal text-white">
+            <div className="flex flex-col items-start justify-center gap-0.5">
+              <p className=" text-[14px] font-bold text-white">{friend.name}</p>
+              <p className=" text-[12px] font-normal text-white">
                 {friend.username}
               </p>
             </div>
           </div>
-          <button class="rounded-lg p-3 flex items-center justify-center text-xs bg-primary text-white">
+          <button className="rounded-lg p-3 flex items-center justify-center text-xs bg-primary text-white">
             <FontAwesomeIcon icon={faUserPlus} />
           </button>
         </div>
