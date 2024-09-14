@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MyFriends from "./Pages/MyFriends/MyFriends";
+import Settings from "./Pages/Settings/Settings";
 import SinglePost from "./Pages/Posts/SinglePost";
 import Layout from "./Components/Layout/Layout";
 
@@ -16,6 +17,10 @@ export default function App() {
         {
           path: "/posts/:id",
           element: <SinglePost />,
+        },
+        {
+          path: "/settings",
+          element: <Settings />,
         },
       ],
     },
