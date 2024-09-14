@@ -83,7 +83,7 @@ export default function MyFriends() {
           ))}
         </div>
       </div>
-
+            
         <FriendsSideBar />
     </div>
   );
