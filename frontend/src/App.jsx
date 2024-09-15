@@ -19,6 +19,11 @@ export default function App() {
           path: "/posts/:id",
           element: <SinglePost />,
         },
+       
+        {
+          path: "/settings",
+          element: <Settings />,
+        },
       ],
     }, {
       path:"/Signing",

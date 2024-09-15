@@ -1,24 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./Signup.css";
 import data from "./data.json";
 import Alert from "../Alert/Alert";
+import { countries } from "../Main/arr";
+import {
+  validateEmail,
+  validatePassword,
+  validateConfirmPassword,
+  validateBirthdate,
+  validateCountry
+} from "../Main/Functions/validation";
 
 function Sign() {
-  const [Data, setData] = useState({
+  const [data, setData] = useState({
     Email: "",
     Name: "",
     Password: "",
     ConfirmPassword: "",
     Bdate: "",
+    Country: "Egypt",
   });
 
-  const [DataError, setDataError] = useState({
+  const [dataError, setDataError] = useState({
     EmailError: "",
-    UserNameError: "",
+    NameError: "",
     PasswordError: "",
     ConfirmPasswordError: "",
     BdateError: "",
+    CountryError: "",
   });
+
+  const [loginData, setLoginData] = useState({
+    Email: "",
+    Password: "",
+  });
+
+  const [loginError, setLoginError] = useState({
+    EmailError: "",
+    PasswordError: "",
+  });
+
   const [users, setUsers] = useState(data.users || []);
   const [alert, setAlert] = useState({
     show: false,
@@ -26,119 +47,88 @@ function Sign() {
     message: "",
     strongMessage: "",
   });
-  
+
+  const loginEmailRef = useRef(null);
+  const loginPasswordRef = useRef(null);
+
+  useEffect(() => {
+    // Check login form validity on changes
+    handleLoginChange();
+  }, [loginData]);
 
   const handleAlertClose = () => {
     setAlert({ ...alert, show: false });
   };
 
-  function containsUppercase(str) {
-    return /[A-Z]/.test(str);
-  }
-
-  function containsSpecialChars(str) {
-    const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
-    return specialChars.test(str);
-  }
-  function calculateAge(birthdate) {
-    const currentDate = new Date();
-    const birthDate = new Date(birthdate);
-  
-    let age = currentDate.getFullYear() - birthDate.getFullYear();
-    const monthDifference = currentDate.getMonth() - birthDate.getMonth();
-    
-    if (monthDifference < 0 || (monthDifference === 0 && currentDate.getDate() < birthDate.getDate())) {
-      age--;
-    }
-  
-    return age;
-  }
-
   const handleSignupChange = (event) => {
     const { name, value } = event.target;
 
+    let error = "";
     switch (name) {
       case "Email":
-        setData({ ...Data, Email: value });
-        
-        let emailError = "";
-      
-        if (value === "") {
-          emailError = "Email Required";
-        } 
-        else if (!/@/.test(value)) {
-          emailError = "Please enter a valid email that contains '@'!";
-        } 
-        else if (!/\.[a-zA-Z]{2,}$/.test(value.split('@')[1])) {
-          emailError = "Please enter a valid email domain.";
-        } 
-        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-          emailError = "Please enter a valid email address.";
-        }
-        
-        setDataError({
-          ...DataError,
-          EmailError: emailError,
-        });
+        error = validateEmail(value);
         break;
       case "Password":
-        setData({ ...Data, Password: value });
-        setDataError({
-          ...DataError,
-          PasswordError: value === ""
-            ? "Password Required"
-            : value.length < 8
-            ? "Password must be at least 8 characters"
-            : !containsUppercase(value)
-            ? "Include at least one uppercase letter"
-            : containsSpecialChars(value)
-            ? ""
-            : "Include a special character in the password",
-        });
+        error = validatePassword(value);
         break;
       case "ConfirmPassword":
-        setData({ ...Data, ConfirmPassword: value });
-        setDataError({
-          ...DataError,
-          ConfirmPasswordError: value === ""
-            ? "Password Required"
-            : value === Data.Password
-            ? ""
-            : "Passwords don't match",
-        });
+        error = validateConfirmPassword(data.Password, value);
         break;
-      case "FullName":
-        setData({ ...Data, Name: value });
-        setDataError({
-          ...DataError,
-          UserNameError: value === "" ? "Required" : "",
-        });
+      case "Name":
+        error = value === "" ? "Required" : "";
         break;
       case "Bdate":
-        setData({ ...Data, Bdate: value });
-        setDataError({
-          ...DataError,
-          BdateError: value === "" ? "Required" : calculateAge(value)<13?"Your Age Must be +13":"" ,
-        });
+        error = validateBirthdate(value);
+        break;
+      case "Country":
+        error = validateCountry(value);
         break;
       default:
         break;
     }
+
+    setData((prevData) => ({ ...prevData, [name]: value }));
+    setDataError((prevErrors) => ({ ...prevErrors, [`${name}Error`]: error }));
+  };
+
+  const handleLoginChange = () => {
+    const email = loginData.Email;
+    const password = loginData.Password;
+
+    const emailError = validateEmail(email);
+    const passwordError = password ? "" : "Password Required";
+
+    setLoginError({
+      EmailError: emailError,
+      PasswordError: passwordError,
+    });
   };
 
   const isFormValid = () => {
-    const { EmailError, UserNameError, PasswordError, ConfirmPasswordError, BdateError } = DataError;
+    const { EmailError, NameError, PasswordError, ConfirmPasswordError, BdateError, CountryError } = dataError;
     return (
-      Data.Email &&
-      Data.Name &&
-      Data.Password &&
-      Data.ConfirmPassword &&
-      Data.Bdate &&
+      data.Email &&
+      data.Name &&
+      data.Password &&
+      data.ConfirmPassword &&
+      data.Bdate &&
+      data.Country &&
       !EmailError &&
-      !UserNameError &&
+      !NameError &&
       !PasswordError &&
       !ConfirmPasswordError &&
-      !BdateError
+      !BdateError &&
+      !CountryError
+    );
+  };
+
+  const isLoginFormValid = () => {
+    const { EmailError, PasswordError } = loginError;
+    return (
+      loginData.Email &&
+      loginData.Password &&
+      !EmailError &&
+      !PasswordError
     );
   };
 
@@ -154,39 +144,53 @@ function Sign() {
     }
 
     const newUser = {
-      email: Data.Email,
-      password: Data.Password,
-      ConfirmPassword: Data.ConfirmPassword,
-      Name: Data.Name,
-      Bdate: Data.Bdate,
+      email: data.Email,
+      password: data.Password,
+      name: data.Name,
+      bdate: data.Bdate,
+      country: data.Country,
     };
 
+    setUsers((prevUsers) => {
+      const updatedUsers = [...prevUsers, newUser];
+      localStorage.setItem("users", JSON.stringify(updatedUsers));
+      return updatedUsers;
+    });
 
-    setUsers([...users, newUser]);
     setData({
       Email: "",
       Name: "",
       Password: "",
       ConfirmPassword: "",
       Bdate: "",
+      Country: "Egypt",
     });
-    localStorage.setItem("users", JSON.stringify([...users, newUser]));
 
     setAlert({
       show: true,
       type: "success",
       strongMessage: "Well done! ",
-      message: " Your Account is Successfully Registered!",
+      message: "Your Account is Successfully Registered!",
     });
   };
 
   const login = () => {
-    const em = document.getElementById("LoginEmail").value;
-    const pass = document.getElementById("LoginPassword").value;
+    if (!isLoginFormValid()) {
+      setAlert({
+        show: true,
+        type: "danger",
+        strongMessage: "Oh snap!",
+        message: "Please fill out all fields correctly.",
+      });
+      return;
+    }
+
+    const email = loginData.Email;
+    const password = loginData.Password;
 
     const storedUsers = JSON.parse(localStorage.getItem("users")) || users;
 
-    const user = storedUsers.find((u) => u.email === em && u.password === pass);
+    const user = storedUsers.find((u) => u.email === email && u.password === password);
 
     if (user) {
       localStorage.setItem("loggedInUser", JSON.stringify(user));
@@ -194,14 +198,14 @@ function Sign() {
         show: true,
         type: "primary",
         strongMessage: `Welcome Back ${user.Name}! `,
-        message: " Login Successfully!",
+        message: "Login Successfully!",
       });
     } else {
       setAlert({
         show: true,
         type: "danger",
         strongMessage: "Oh snap!",
-        message: " Change a few things up and try submitting again.",
+        message: "Change a few things up and try submitting again.",
       });
     }
   };
@@ -213,13 +217,19 @@ function Sign() {
           type={alert.type}
           message={alert.message}
           strongMessage={alert.strongMessage}
-          icon={alert.type === "success" ? "far fa-check-circle" : "" || alert.type === "primary"?"fa fa-thumbs-up" : "" || alert.type ==="danger"?"far fa-times-circle" : ""}
+          icon={
+            alert.type === "success"
+              ? "far fa-check-circle"
+              : alert.type === "primary"
+              ? "fa fa-thumbs-up"
+              : "far fa-times-circle"
+          }
           onClose={handleAlertClose}
         />
       )}
 
-      <form action="" className="form spaceform">
-        <input id="noaccount" name="radioaccount" type="radio" className="radio radio--invisible" checked />
+      <form className="form spaceform">
+        <input id="noaccount" name="radioaccount" type="radio" className="radio radio--invisible" defaultChecked />
         <input id="account" name="radioaccount" type="radio" className="radio radio--invisible" />
         <div className="form_background">
           <div className="form-group form-group--account">
@@ -229,16 +239,25 @@ function Sign() {
               type="email"
               placeholder="Email"
               name="loginEmail"
-              id="LoginEmail"
+              value={loginData.Email}
+              onChange={(e) => setLoginData({ ...loginData, Email: e.target.value })}
             />
+            <p style={{ color: "red" }}>{loginError.EmailError}</p>
             <input
               className="form-group_input"
               type="password"
               placeholder="Password"
               name="loginPassword"
-              id="LoginPassword"
+              value={loginData.Password}
+              onChange={(e) => setLoginData({ ...loginData, Password: e.target.value })}
             />
-            <button className="button button--form" type="button" onClick={login}>
+            <p style={{ color: "red" }}>{loginError.PasswordError}</p>
+            <button
+              className="button button--form"
+              type="button"
+              onClick={login}
+              disabled={!isLoginFormValid()}
+            >
               Log in
             </button>
           </div>
@@ -248,41 +267,54 @@ function Sign() {
               className="form-group_input"
               type="text"
               placeholder="Full Name"
-              name="FullName"
-              onChange={(e) => handleSignupChange(e)}
+              name="Name"
+              onChange={handleSignupChange}
             />
-            <p style={{ color: "red" }}>{DataError.UserNameError}</p>
+            <p style={{ color: "red" }}>{dataError.NameError}</p>
             <input
               className="form-group_input"
               type="email"
               placeholder="Email"
               name="Email"
-              onChange={(e) => handleSignupChange(e)}
+              onChange={handleSignupChange}
             />
-            <p style={{ color: "red" }}>{DataError.EmailError}</p>
+            <p style={{ color: "red" }}>{dataError.EmailError}</p>
             <input
               className="form-group_input"
               type="password"
               placeholder="Password"
               name="Password"
-              onChange={(e) => handleSignupChange(e)}
+              onChange={handleSignupChange}
             />
-            <p style={{ color: "red" }}>{DataError.PasswordError}</p>
+            <p style={{ color: "red" }}>{dataError.PasswordError}</p>
             <input
               className="form-group_input"
               type="password"
               placeholder="Confirm Password"
               name="ConfirmPassword"
-              onChange={(e) => handleSignupChange(e)}
+              onChange={handleSignupChange}
             />
-            <p style={{ color: "red" }}>{DataError.ConfirmPasswordError}</p>
+            <p style={{ color: "red" }}>{dataError.ConfirmPasswordError}</p>
             <input
               className="form-group_input"
               type="date"
               name="Bdate"
-              onChange={(e) => handleSignupChange(e)}
+              onChange={handleSignupChange}
             />
-            <p style={{ color: "red" }}>{DataError.BdateError}</p>
+            <p style={{ color: "red" }}>{dataError.BdateError}</p>
+            <select
+              className="form-group_input country-select"
+              name="Country"
+              onChange={handleSignupChange}
+              value={data.Country}
+            >
+              {countries.map((country, index) => (
+                <option key={index} value={country}>
+                  {country}
+                </option>
+              ))}
+            </select>
+            <p style={{ color: "red" }}>{dataError.CountryError}</p>
             <button
               className="button button--form"
               type="button"
@@ -293,7 +325,7 @@ function Sign() {
             </button>
           </div>
         </div>
-        <fieldset className="fieldset">
+        <fieldset className="fieldset f1">
           <h2>Don't have an account?</h2>
           <p>We are delighted to have you With US!</p>
           <label htmlFor="noaccount" className="button">Signup</label>

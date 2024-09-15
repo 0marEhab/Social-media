@@ -5,7 +5,7 @@ const Alert = ({ type, message, strongMessage, icon, onClose }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
-    }, 6000); 
+    }, 3000); 
 
     return () => clearTimeout(timer);
   }, [onClose]);

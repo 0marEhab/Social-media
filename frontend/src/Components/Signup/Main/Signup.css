@@ -5,15 +5,14 @@
 }
 
 body {
-  background: url("../../../Assets//Images/still-life-books-versus-technology a.jpg") no-repeat center center;
-  background-size: cover; 
-  
+  background: url("../../../Assets/Images/still-life-books-versus-technology a.jpg") no-repeat center center;
+  background-size: cover;
   color: #fff;
   font-family: Helvetica, sans-serif;
   display: flex;
-  justify-content:left;
+  justify-content: center;
   align-items: center;
-  height: 100vh; 
+  height: 100vh;
 }
 
 h2 {
@@ -32,17 +31,14 @@ h2 {
 
 .form {
   max-width: 900px;
-  margin: 0; 
-  width: 900px;
+  width: 100%;
   display: flex;
   flex-direction: row;
   padding: 4rem;
-  height: 350px;
+  height: auto; /* Changed from 350px to auto for better responsiveness */
   border-radius: 0.2rem;
   position: relative;
-  
-
-
+  justify-content: center; /* Center the form */
 }
 
 .form_content {
@@ -62,42 +58,42 @@ h2 {
 .form-group_input {
   width: 100%;
   border-width: 0 0 2px 0;
-  border-bottom: 2px solid #ccc; 
+  border-bottom: 2px solid #ccc;
   padding: 0.5rem;
-  margin-bottom: 1.5rem;
-  transition: border-color 0.3s ease-in-out; 
-}
+  margin-bottom: 15px;
+  transition: border-color 0.3s ease-in-out;
+} 
 
 .form-group_input:focus {
-  border-bottom: 2px solid #8588F0; 
-  outline: none; 
+  border-bottom: 2.3px solid #8588F0;
+  outline: none;
 }
-
+p{
+  font-size: smaller;
+}
 .form_background {
   border-radius: 1rem;
   background-color: #fff;
-  padding: 3rem 2rem;
+  padding: 3rem 3rem;
   box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.4);
   width: 50%;
-  height: 178%;
+  height: auto; 
   margin: 0;
   position: absolute;
   top: 50%;
-  left: 0;
+  left: 14px;
   right: 0;
-  transform: translateY(-50%); /* Center vertically */
-  transition: all 0.3s cubic-bezier(0.04, 0.57, 0.15, 1.46);
-
-  
+  transform: translateY(-50%);
+  transition: all 1s cubic-bezier(0.04, 0.57, 0.15, 1.46);
 }
 
 .fieldset {
   flex: 1;
   margin: 0;
   border: 0;
-  padding: 0 15rem 0 0;  
+  padding: 0 15rem 0 0;
   font-size: 20px;
-  
+  text-align: center; /* Center fieldset content */
 }
 
 .fieldset:first-child {
@@ -105,7 +101,6 @@ h2 {
 }
 
 .fieldset:last-child {
-  padding-left: 5rem;
   padding-right: 0;
 }
 
@@ -133,8 +128,10 @@ h2 {
 .button--form {
   background: #8588F0;
   color: #fff;
-  float: right;
   margin-top: 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto; 
 }
 
 .button--form:hover {
@@ -144,7 +141,7 @@ h2 {
 }
 
 #noaccount:checked ~ .form_background {
-  transform: translate(3rem, -50%);
+  transform: translateY(-50%);
 }
 
 #noaccount:checked ~ .form_background .form-group--account {
@@ -154,14 +151,10 @@ h2 {
 #noaccount:checked ~ .form_background .form-group--noaccount {
   display: block;
   opacity: 0;
-  -webkit-animation-delay: 0.2s;
-          animation-delay: 0.2s;
-  -webkit-animation-duration: 0.3s;
-          animation-duration: 0.3s;
-  -webkit-animation-name: slidein;
-          animation-name: slidein;
-  -webkit-animation-fill-mode: forwards;
-          animation-fill-mode: forwards;
+  animation-delay: 0.2s;
+  animation-duration: 0.3s;
+  animation-name: slidein;
+  animation-fill-mode: forwards;
 }
 
 #account:checked ~ .form_background {
@@ -174,23 +167,10 @@ h2 {
 
 #account:checked ~ .form_background .form-group--account {
   display: block;
-  -webkit-animation-delay: 0.2s;
-          animation-delay: 0.2s;
-  -webkit-animation-duration: 0.3s;
-          animation-duration: 0.3s;
-  -webkit-animation-name: slidein;
-          animation-name: slidein;
-  -webkit-animation-fill-mode: forwards;
-          animation-fill-mode: forwards;
-}
-
-@-webkit-keyframes slidein {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  animation-delay: 0.2s;
+  animation-duration: 0.3s;
+  animation-name: slidein;
+  animation-fill-mode: forwards;
 }
 
 @keyframes slidein {
@@ -202,155 +182,68 @@ h2 {
   }
 }
 
-/* Alert styles */
-.alert {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 9999;
-  width: 80%;
-  max-width: 600px;
-  padding: 15px;
-  border-radius: 5px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  transition: 0.5s ease;
-  background-color: #fff;
-  display: flex;
-  align-items: center;
-}
+/* Responsive styles */
+@media only screen and (max-width: 784px) {
+  body {
+    justify-content: center;
+  }
 
-.startIcon {
-  margin-right: 10px;
-  font-size: 25px;
-  vertical-align: middle;
-  animation: moveIcon 2.5s infinite;
-}
+  .form {
+    flex-direction: column;
+    padding: 2rem;
+    height: auto;
+  }
 
-@keyframes moveIcon {
-  0% {
+  .form_background {
+    width: 90%;
+    height: auto;
+    padding: 2rem;
+    position: relative;
+    transform: translateY(0);
+    transition: all 0.8s cubic-bezier(0.04, 0.57, 0.15, 1.46);
+  }
+
+  .fieldset {
+    padding: 0;
+    font-size: 18px;
+    text-align: center; /* Center the fieldset text */
+  }
+
+  #noaccount:checked ~ .form_background {
     transform: translateY(0);
   }
-  50% {
-    transform: translateY(-10px);
-  }
-  100% {
+
+  #account:checked ~ .form_background {
     transform: translateY(0);
   }
-}
 
-.close {
-  position: absolute;
-  top: 10px;
-  right: 30px;
-  font-size: 1.5rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: inherit;
-}
-
-.close:hover {
-  color: #000;
-}
-
-.faTimes {
-  font-family: "Font Awesome 5 Free";
-  font-weight: 900;
-  font-size: 1.5rem;
-  color: inherit;
-  animation: blink-1 2.5s infinite both;
-}
-
-.alertSuccess {
-  border: 1px solid rgba(36, 241, 6, 0.46);
-  background-color: rgba(7, 149, 66, 0.12);
-  box-shadow: 0px 0px 2px #259c08;
-  color: #0ad406;
-}
-
-.alertSuccess:hover {
-  background-color: rgba(7, 149, 66, 0.35);
-}
-
-.alertInfo {
-  border: 1px solid rgba(6, 44, 241, 0.46);
-  background-color: rgba(7, 73, 149, 0.12);
-  box-shadow: 0px 0px 2px #0396ff;
-  color: #0396ff;
-  cursor: pointer;
-}
-
-.alertInfo:hover {
-  background-color: rgba(7, 73, 149, 0.35);
-}
-
-.alertDanger {
-  border: 1px solid rgba(241, 6, 6, 0.81);
-  background-color: rgba(220, 17, 1, 0.16);
-  box-shadow: 0px 0px 2px #ff0303;
-  color: #ff0303;
-}
-
-.alertDanger:hover {
-  background-color: rgba(220, 17, 1, 0.33);
-}
-
-.alertPrimary {
-  border: 1px solid rgba(6, 241, 226, 0.81);
-  background-color: rgba(1, 204, 220, 0.16);
-  box-shadow: 0px 0px 2px #03fff5;
-  color: #03d0ff;
-}
-
-.alertPrimary:hover {
-  background-color: rgba(1, 204, 220, 0.33);
-}
-
-.alertPrimaryIcon {
-  font-size: 18px;
-  color: #03d0ff;
-  text-shadow: none;
-}
-
-.squareBox {
-  position: absolute;
-  transform: rotate(45deg);
-  border-top-left-radius: 45px;
-  opacity: 0.3;
-}
-
-.boxThree {
-  background-image: linear-gradient(-90deg, #290a59 0%, #3d57f4 100%);
-  opacity: 0.06;
-  left: -80px;
-  top: -60px;
-  width: 500px;
-  height: 500px;
-  border-radius: 45px;
-}
-
-.boxFour {
-  background-image: linear-gradient(-90deg, #290a59 0%, #3d57f4 100%);
-  opacity: 0.06;
-  left: 150px;
-  top: -25px;
-  width: 550px;
-  height: 550px;
-  border-radius: 45px;
-}
-
-.message-font {
-  font-family: sans-serif;
-  font-weight: 900;
-  font-style: oblique;
-}
-
-@keyframes blink-1 {
-  0%, 50%, 100% {
-    opacity: 1;
+  .button--form {
+    float: none;
+    margin-top: 1rem;
+    margin-right: auto; /* Center the form button */
   }
-  25%, 75% {
-    opacity: 0;
+
+  /* Show the inactive fieldset below the active one */
+  #noaccount:checked ~ .form_background + .fieldset:last-child {
+    display: block;
+    margin-top: 2rem;
+  }
+
+  #account:checked ~ .form_background + .f1 {
+    display: block;
+    margin-top: 2rem;
+  }
+
+  /* Ensure the correct fieldset visibility */
+  .fieldset {
+    display: none;
+  }
+
+  #noaccount:checked ~ .fieldset:last-child {
+    display: block;
+  }
+
+  #account:checked ~ .fieldset:first-child {
+    display: block;
   }
 }
