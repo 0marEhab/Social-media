@@ -5,7 +5,8 @@ var logger = require("morgan");
 var db = require("./config/db");
 
 const cors = require("cors");
-const userRouter = require("./routes/userRouter")
+var error = require("./middleware/error_handle");
+const userRouter = require("./routes/userRouter");
 var app = express();
 
 app.use(cors());
@@ -15,8 +16,11 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/api",userRouter)
+app.use("/api", userRouter);
 
+app.use(error.notfound);
+
+app.use(error.errorhandler);
 
 db();
 
