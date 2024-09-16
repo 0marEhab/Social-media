@@ -49,3 +49,9 @@ export function validateCountry(country) {
   if (!country) return "Country Required";
   return "";
 }
+
+export function validateName(name) {
+  if (!name) return "Name Required";
+  if (name.length < 3) return "Name must be at least 3 characters";
+  return "";
+}
