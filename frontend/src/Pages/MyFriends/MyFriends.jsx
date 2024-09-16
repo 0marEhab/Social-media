@@ -34,7 +34,7 @@ export default function MyFriends() {
   }, []);
 
   if (loading) {
-    return <Loading/>;
+    return <Loading color={"#666AEC"}/>;
   }
 
   if (error) {

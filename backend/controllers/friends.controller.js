@@ -191,24 +191,34 @@ const deleteSentRequest = async (req, res) => {
 const getSuggestions = async (req, res) => {
   try {
     const userId = req.user.id;
-    const currentUser = await User.findById(userId).populate("friends");
+
+    const currentUser = await User.findById(userId)
+      .populate('friends')
+      .populate('requestedFriends')
+      .populate('friendRequests');
 
     if (!currentUser) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: 'User not found' });
     }
+    const pendingRequestUserIds = [
+      ...currentUser.requestedFriends.map((user) => user._id.toString()),
+      ...currentUser.friendRequests.map((user) => user._id.toString()) 
+    ];
     const excludeIds = [
       userId,
       ...currentUser.friends.map((friend) => friend._id.toString()),
+      ...pendingRequestUserIds
     ];
     const suggestions = await User.find({
       _id: { $nin: excludeIds },
-    }).select("_id name email profilePic");
+    }).select('_id name email profilePic');
 
     res.status(200).json(suggestions);
   } catch (error) {
-    res.status(500).json({ message: "Internal server error", error });
+    res.status(500).json({ message: 'Internal server error', error });
   }
 };
+
 
 module.exports = {
   sendFriendRequest,
