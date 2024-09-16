@@ -7,6 +7,7 @@ var db = require("./config/db");
 const cors = require("cors");
 var error = require("./middleware/error_handle");
 const userRouter = require("./routes/userRouter");
+const ticketRouter=require("./routes/ticketRouter");
 var app = express();
 
 app.use(cors());
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api", userRouter);
+app.use("/api",ticketRouter);
 
 app.use(error.notfound);
 
