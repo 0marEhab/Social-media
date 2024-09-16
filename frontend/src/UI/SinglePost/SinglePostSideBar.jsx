@@ -48,7 +48,7 @@ export default function FriendsSideBar() {
         <img
           src="https://randomuser.me/api/portraits/men/5.jpg"
           alt="user-img"
-          className="w-14 h-14 rounded-lg "
+          className="w-14 h-14 rounded-lg mt-4"
         />
       </div>
       <h2 className="text-xl font-bold text-white">Comments (148)</h2>
@@ -59,18 +59,25 @@ export default function FriendsSideBar() {
               <img
                 src={comment.img}
                 alt="user-img"
-                className="w-10 h-10 rounded-full"
+                className="w-10 h-10 rounded-full mb-8"
               />
               <div>
-                <p className="text-white font-semibold">{comment.username}</p>
+                <div className="flex items-center justify-between ">
+                  <p className="text-white font-semibold">{comment.username}</p>
+                  <p className="text-gray-400   ">20min ago</p>
+                </div>
                 <p className="text-white">{comment.comment}</p>
               </div>
-              <p className="text-gray-400">20 min</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 mt-4">
-            <FcLike className="cursor-pointer" />
-            <BiComment className="text-gray-400 cursor-pointer" />
+          <div className="flex items-center gap-3 mt-2 ml-12">
+            <button>
+              <FcLike />
+            </button>
+            <button>
+              {" "}
+              <BiComment className="text-gray-400" />
+            </button>
           </div>
         </div>
       ))}
@@ -80,7 +87,10 @@ export default function FriendsSideBar() {
           placeholder="Write a comment..."
           className=" outline-none bg-white w-full h-10 rounded-md text-black p-2"
         />
-        <AiOutlineSend className="absolute right-4 top-[30%] text-primary cursor-pointer" />
+        <button>
+          {" "}
+          <AiOutlineSend className="absolute right-8 top-[30%] text-primary" />
+        </button>
       </div>
     </div>
   );
