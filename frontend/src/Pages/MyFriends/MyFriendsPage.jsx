@@ -5,7 +5,7 @@ import FriendsSideBar from "../../Components/MyFriends/FriendsSideBar";
 import axios from "axios";
 import Loading from "../../Components/Layout/Loading";
 
-export default function MyFriends() {
+export default function MyFriendsPage() {
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

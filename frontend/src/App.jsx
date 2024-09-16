@@ -1,10 +1,11 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import MyFriends from "./Pages/MyFriends/MyFriends";
+import MyFriendsPage from "./Pages/MyFriends/MyFriendsPage";
 import Settings from "./Pages/Settings/Settings";
 import SinglePost from "./Pages/Posts/SinglePost";
 import Layout from "./Components/Layout/Layout";
 import Signing from "./Pages/Signing/Signing";
 import { Toaster } from 'react-hot-toast';
+import FriendRequestsPage from "./Pages/MyFriends/FriendRequestsPage";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -14,7 +15,7 @@ export default function App() {
       children: [
         {
           path: "/friends",
-          element: <MyFriends />,
+          element: <MyFriendsPage />,
         },
         {
           path: "/posts/:id",
@@ -24,6 +25,10 @@ export default function App() {
         {
           path: "/settings",
           element: <Settings />,
+        },
+        {
+          path: "/friend-requests",
+          element: <FriendRequestsPage />,
         },
       ],
     },
