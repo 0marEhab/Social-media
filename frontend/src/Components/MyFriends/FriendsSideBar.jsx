@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { sendFriendRequest } from "./../../Utils/api";
+import { sendFriendRequest } from "../../Utils/friends";
 import { toast } from "react-hot-toast";
 import Loading from "../Layout/Loading";
 import FriendSuggestionCard from "./FriendSuggestionCard";
