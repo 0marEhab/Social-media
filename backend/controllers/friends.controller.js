@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require("../models/User");
 
 const sendFriendRequest = async (req, res) => {
   try {
@@ -9,20 +9,27 @@ const sendFriendRequest = async (req, res) => {
     const recipient = await User.findById(recipientId);
 
     if (!requester || !recipient) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     if (requesterId === recipientId) {
-      return res.status(400).json({ message: 'Cannot send friend request to yourself' });
+      return res
+        .status(400)
+        .json({ message: "Cannot send friend request to yourself" });
     }
-    if (requester.friends.includes(recipientId) || recipient.friends.includes(requesterId)) {
-      return res.status(400).json({ message: 'Already friends' });
+    if (
+      requester.friends.includes(recipientId) ||
+      recipient.friends.includes(requesterId)
+    ) {
+      return res.status(400).json({ message: "Already friends" });
     }
     if (recipient.friendRequests.includes(requesterId)) {
-      return res.status(400).json({ message: 'Friend request already sent' });
+      return res.status(400).json({ message: "Friend request already sent" });
     }
     if (requester.requestedFriends.includes(recipientId)) {
-      return res.status(400).json({ message: 'Friend request already received' });
+      return res
+        .status(400)
+        .json({ message: "Friend request already received" });
     }
 
     recipient.friendRequests.push(requesterId);
@@ -31,9 +38,9 @@ const sendFriendRequest = async (req, res) => {
     await recipient.save();
     await requester.save();
 
-    res.status(200).json({ message: 'Friend request sent' });
+    res.status(200).json({ message: "Friend request sent" });
   } catch (error) {
-    res.status(500).json({ message: 'Internal server error', error });
+    res.status(500).json({ message: "Internal server error", error });
   }
 };
 
@@ -46,11 +53,11 @@ const acceptFriendRequest = async (req, res) => {
     const requester = await User.findById(requesterId);
 
     if (!user || !requester) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     if (!user.friendRequests.includes(requesterId)) {
-      return res.status(400).json({ message: 'Friend request does not exist' });
+      return res.status(400).json({ message: "Friend request does not exist" });
     }
 
     user.friendRequests.pull(requesterId);
@@ -62,9 +69,9 @@ const acceptFriendRequest = async (req, res) => {
     await user.save();
     await requester.save();
 
-    res.status(200).json({ message: 'Friend request accepted' });
+    res.status(200).json({ message: "Friend request accepted" });
   } catch (error) {
-    res.status(500).json({ message: 'Internal server error', error });
+    res.status(500).json({ message: "Internal server error", error });
   }
 };
 
@@ -77,11 +84,11 @@ const rejectFriendRequest = async (req, res) => {
     const requester = await User.findById(requesterId);
 
     if (!user || !requester) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     if (!user.friendRequests.includes(requesterId)) {
-      return res.status(400).json({ message: 'Friend request does not exist' });
+      return res.status(400).json({ message: "Friend request does not exist" });
     }
 
     user.friendRequests.pull(requesterId);
@@ -90,9 +97,9 @@ const rejectFriendRequest = async (req, res) => {
     await user.save();
     await requester.save();
 
-    res.status(200).json({ message: 'Friend request rejected' });
+    res.status(200).json({ message: "Friend request rejected" });
   } catch (error) {
-    res.status(500).json({ message: 'Internal server error', error });
+    res.status(500).json({ message: "Internal server error", error });
   }
 };
 
@@ -100,15 +107,18 @@ const getFriendRequests = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const user = await User.findById(userId).populate('friendRequests', 'name email profilePic');
+    const user = await User.findById(userId).populate(
+      "friendRequests",
+      "name email profilePic"
+    );
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     res.status(200).json(user.friendRequests);
   } catch (error) {
-    res.status(500).json({ message: 'Internal server error', error });
+    res.status(500).json({ message: "Internal server error", error });
   }
 };
 
@@ -116,32 +126,37 @@ const getFriends = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const user = await User.findById(userId).populate('friends', 'name email profilePic');
+    const user = await User.findById(userId).populate(
+      "friends",
+      "_id name email profilePic"
+    );
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     res.status(200).json(user.friends);
   } catch (error) {
-    res.status(500).json({ message: 'Internal server error', error });
+    res.status(500).json({ message: "Internal server error", error });
   }
 };
-
 
 const getSentRequests = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const user = await User.findById(userId).populate('requestedFriends', 'name email profilePic');
+    const user = await User.findById(userId).populate(
+      "requestedFriends",
+      "name email profilePic"
+    );
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     res.status(200).json(user.requestedFriends);
   } catch (error) {
-    res.status(500).json({ message: 'Internal server error', error });
+    res.status(500).json({ message: "Internal server error", error });
   }
 };
 
@@ -154,11 +169,11 @@ const deleteSentRequest = async (req, res) => {
     const recipient = await User.findById(recipientId);
 
     if (!user || !recipient) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     if (!user.requestedFriends.includes(recipientId)) {
-      return res.status(400).json({ message: 'Friend request does not exist' });
+      return res.status(400).json({ message: "Friend request does not exist" });
     }
 
     user.requestedFriends.pull(recipientId);
@@ -167,13 +182,33 @@ const deleteSentRequest = async (req, res) => {
     await user.save();
     await recipient.save();
 
-    res.status(200).json({ message: 'Sent friend request deleted' });
+    res.status(200).json({ message: "Sent friend request deleted" });
   } catch (error) {
-    res.status(500).json({ message: 'Internal server error', error });
+    res.status(500).json({ message: "Internal server error", error });
   }
 };
 
+const getSuggestions = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const currentUser = await User.findById(userId).populate("friends");
 
+    if (!currentUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const excludeIds = [
+      userId,
+      ...currentUser.friends.map((friend) => friend._id.toString()),
+    ];
+    const suggestions = await User.find({
+      _id: { $nin: excludeIds },
+    }).select("_id name email profilePic");
+
+    res.status(200).json(suggestions);
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error", error });
+  }
+};
 
 module.exports = {
   sendFriendRequest,
@@ -182,5 +217,6 @@ module.exports = {
   getFriendRequests,
   getFriends,
   getSentRequests,
-  deleteSentRequest
+  deleteSentRequest,
+  getSuggestions,
 };

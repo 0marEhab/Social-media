@@ -12,12 +12,12 @@ export default function FriendCard({ friend }) {
         className="w-16 h-16 rounded-2xl"
       />
       <h6 className="mt-3 font-bold text-gray-900">{friend.name}</h6>
-      <p className="text-sm font-normal text-gray-500">{friend.username}</p>
+      <p className="text-sm font-normal text-gray-500">{friend.email}</p>
 
-      <div className="flex space-x-2 items-center mt-5 bg-[#53D769] px-3 py-1 rounded-lg text-white">
+      <button className="flex space-x-2 items-center mt-5 bg-[#53D769] px-3 py-1 rounded-lg text-white">
         <FontAwesomeIcon icon={faCheck} />
         <p>Friends</p>
-      </div>
+      </button>
     </div>
   );
 }
