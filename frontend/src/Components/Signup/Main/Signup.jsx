@@ -1,6 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./Signup.css";
-import data from "./data.json";
 import Alert from "../Alert/Alert";
 import { countries } from "../Main/arr";
 import {
@@ -8,7 +7,8 @@ import {
   validatePassword,
   validateConfirmPassword,
   validateBirthdate,
-  validateCountry
+  validateCountry,
+  validateName
 } from "../Main/Functions/validation";
 
 function Sign() {
@@ -48,11 +48,7 @@ function Sign() {
     strongMessage: "",
   });
 
-  const loginEmailRef = useRef(null);
-  const loginPasswordRef = useRef(null);
-
   useEffect(() => {
-    // Check login form validity on changes
     handleLoginChange();
   }, [loginData]);
 
@@ -75,7 +71,7 @@ function Sign() {
         error = validateConfirmPassword(data.Password, value);
         break;
       case "Name":
-        error = value === "" ? "Required" : "";
+        error = validateName(value);
         break;
       case "Bdate":
         error = validateBirthdate(value);
@@ -197,7 +193,7 @@ function Sign() {
       setAlert({
         show: true,
         type: "primary",
-        strongMessage: `Welcome Back ${user.Name}! `,
+        strongMessage: `Welcome Back ${user.name}! `,
         message: "Login Successfully!",
       });
     } else {
@@ -212,6 +208,7 @@ function Sign() {
 
   return (
     <>
+    <div className="ste_thebody">
       {alert.show && (
         <Alert
           type={alert.type}
@@ -228,14 +225,14 @@ function Sign() {
         />
       )}
 
-      <form className="form spaceform">
-        <input id="noaccount" name="radioaccount" type="radio" className="radio radio--invisible" defaultChecked />
-        <input id="account" name="radioaccount" type="radio" className="radio radio--invisible" />
-        <div className="form_background">
-          <div className="form-group form-group--account">
-            <h3 className="form-group_title">Log in</h3>
+      <form className="stev_form stev_spaceform">
+        <input id="stev_noaccount" name="radioaccount" type="radio" className="stev_radio stev_radio--invisible" defaultChecked />
+        <input id="stev_account" name="radioaccount" type="radio" className="stev_radio stev_radio--invisible" />
+        <div className="stev_form_background">
+          <div className="stev_form-group stev_form-group--account">
+            <h3 className="stev_form-group_title">Log in</h3>
             <input
-              className="form-group_input"
+              className="stev_form-group_input"
               type="email"
               placeholder="Email"
               name="loginEmail"
@@ -244,7 +241,7 @@ function Sign() {
             />
             <p style={{ color: "red" }}>{loginError.EmailError}</p>
             <input
-              className="form-group_input"
+              className="stev_form-group_input"
               type="password"
               placeholder="Password"
               name="loginPassword"
@@ -253,7 +250,7 @@ function Sign() {
             />
             <p style={{ color: "red" }}>{loginError.PasswordError}</p>
             <button
-              className="button button--form"
+              className="stev_button stev_button--form"
               type="button"
               onClick={login}
               disabled={!isLoginFormValid()}
@@ -261,10 +258,10 @@ function Sign() {
               Log in
             </button>
           </div>
-          <div className="form-group form-group--noaccount">
-            <h3 className="form-group_title">Sign up</h3>
+          <div className="stev_form-group stev_form-group--noaccount">
+            <h3 className="stev_form-group_title">Sign up</h3>
             <input
-              className="form-group_input"
+              className="stev_form-group_input"
               type="text"
               placeholder="Full Name"
               name="Name"
@@ -272,7 +269,7 @@ function Sign() {
             />
             <p style={{ color: "red" }}>{dataError.NameError}</p>
             <input
-              className="form-group_input"
+              className="stev_form-group_input"
               type="email"
               placeholder="Email"
               name="Email"
@@ -280,7 +277,7 @@ function Sign() {
             />
             <p style={{ color: "red" }}>{dataError.EmailError}</p>
             <input
-              className="form-group_input"
+              className="stev_form-group_input"
               type="password"
               placeholder="Password"
               name="Password"
@@ -288,7 +285,7 @@ function Sign() {
             />
             <p style={{ color: "red" }}>{dataError.PasswordError}</p>
             <input
-              className="form-group_input"
+              className="stev_form-group_input"
               type="password"
               placeholder="Confirm Password"
               name="ConfirmPassword"
@@ -296,14 +293,14 @@ function Sign() {
             />
             <p style={{ color: "red" }}>{dataError.ConfirmPasswordError}</p>
             <input
-              className="form-group_input"
+              className="stev_form-group_input"
               type="date"
               name="Bdate"
               onChange={handleSignupChange}
             />
             <p style={{ color: "red" }}>{dataError.BdateError}</p>
             <select
-              className="form-group_input country-select"
+              className="stev_form-group_input stev_country-select"
               name="Country"
               onChange={handleSignupChange}
               value={data.Country}
@@ -316,7 +313,7 @@ function Sign() {
             </select>
             <p style={{ color: "red" }}>{dataError.CountryError}</p>
             <button
-              className="button button--form"
+              className="stev_button stev_button--form"
               type="button"
               disabled={!isFormValid()}
               onClick={signup}
@@ -325,17 +322,18 @@ function Sign() {
             </button>
           </div>
         </div>
-        <fieldset className="fieldset f1">
-          <h2>Don't have an account?</h2>
-          <p>We are delighted to have you With US!</p>
-          <label htmlFor="noaccount" className="button">Signup</label>
+        <fieldset className="stev_fieldset stev_f1">
+          <h2 className="stev_h2">Don't have an account?</h2>
+          <p className="ste_p">We are delighted to have you With US!</p>
+          <label htmlFor="stev_noaccount" className="stev_button">Signup</label>
         </fieldset>
-        <fieldset className="fieldset">
-          <h2>Have an account?</h2>
-          <p>Welcome Back Pal!</p>
-          <label htmlFor="account" className="button">Login</label>
+        <fieldset className="stev_fieldset">
+          <h2 className="stev_h2">Have an account?</h2>
+          <p className="ste_p">Welcome Back Pal!</p>
+          <label htmlFor="stev_account" className="stev_button">Login</label>
         </fieldset>
       </form>
+      </div>
     </>
   );
 }

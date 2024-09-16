@@ -1,10 +1,4 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
+.ste_thebody {
   background: url("../../../Assets/Images/still-life-books-versus-technology a.jpg") no-repeat center center;
   background-size: cover;
   color: #fff;
@@ -15,69 +9,71 @@ body {
   height: 100vh;
 }
 
-h2 {
+.stev_h2 {
   font-size: 2rem;
   font-weight: normal;
 }
 
-.based {
+.stev_based {
   margin: 1rem;
 }
 
-.based a {
+.stev_based a {
   color: #fff;
   font-weight: bold;
 }
 
-.form {
+.stev_form {
   max-width: 900px;
   width: 100%;
   display: flex;
   flex-direction: row;
   padding: 4rem;
-  height: auto; /* Changed from 350px to auto for better responsiveness */
+  height: auto;
   border-radius: 0.2rem;
   position: relative;
-  justify-content: center; /* Center the form */
+  justify-content: center;
 }
 
-.form_content {
+.stev_form_content {
   margin-bottom: 1rem;
 }
 
-.form-group {
+.stev_form-group {
   color: #333;
   opacity: 0;
 }
 
-.form-group_title {
+.stev_form-group_title {
   color: #8588F0;
   text-transform: uppercase;
 }
 
-.form-group_input {
+.stev_form-group_input {
   width: 100%;
   border-width: 0 0 2px 0;
   border-bottom: 2px solid #ccc;
   padding: 0.5rem;
   margin-bottom: 15px;
   transition: border-color 0.3s ease-in-out;
-} 
+}
 
-.form-group_input:focus {
+.stev_form-group_input:focus {
   border-bottom: 2.3px solid #8588F0;
   outline: none;
 }
-p{
+
+.ste_p {
   font-size: smaller;
 }
-.form_background {
+
+.stev_form_background {
   border-radius: 1rem;
   background-color: #fff;
   padding: 3rem 3rem;
   box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.4);
   width: 50%;
-  height: auto; 
+  height: auto;
   margin: 0;
   position: absolute;
   top: 50%;
@@ -87,30 +83,30 @@ p{
   transition: all 1s cubic-bezier(0.04, 0.57, 0.15, 1.46);
 }
 
-.fieldset {
+.stev_fieldset {
   flex: 1;
   margin: 0;
   border: 0;
   padding: 0 15rem 0 0;
   font-size: 20px;
-  text-align: center; /* Center fieldset content */
+  text-align: center;
 }
 
-.fieldset:first-child {
+.stev_fieldset:first-child {
   padding-left: 0;
 }
 
-.fieldset:last-child {
+.stev_fieldset:last-child {
   padding-right: 0;
 }
 
-.radio--invisible {
+.stev_radio--invisible {
   opacity: 0;
   height: 0;
   width: 0;
 }
 
-.button {
+.stev_button {
   text-transform: uppercase;
   padding: 0.6rem 3rem;
   border: 1px solid #fff;
@@ -121,34 +117,34 @@ p{
   margin-top: 1rem;
 }
 
-.button:hover {
+.stev_button:hover {
   background-color: rgba(0, 0, 0, 0.3);
 }
 
-.button--form {
+.stev_button--form {
   background: #8588F0;
   color: #fff;
   margin-top: 0;
   display: block;
   margin-left: auto;
-  margin-right: auto; 
+  margin-right: auto;
 }
 
-.button--form:hover {
+.stev_button--form:hover {
   background: white;
   color: #8588F0;
   border: 2px solid #8588F0;
 }
 
-#noaccount:checked ~ .form_background {
+#stev_noaccount:checked ~ .stev_form_background {
   transform: translateY(-50%);
 }
 
-#noaccount:checked ~ .form_background .form-group--account {
+#stev_noaccount:checked ~ .stev_form_background .stev_form-group--account {
   display: none;
 }
 
-#noaccount:checked ~ .form_background .form-group--noaccount {
+#stev_noaccount:checked ~ .stev_form_background .stev_form-group--noaccount {
   display: block;
   opacity: 0;
   animation-delay: 0.2s;
@@ -157,15 +153,15 @@ p{
   animation-fill-mode: forwards;
 }
 
-#account:checked ~ .form_background {
+#stev_account:checked ~ .stev_form_background {
   transform: translate(calc(100% - 3rem), -50%);
 }
 
-#account:checked ~ .form_background .form-group--noaccount {
+#stev_account:checked ~ .stev_form_background .stev_form-group--noaccount {
   display: none;
 }
 
-#account:checked ~ .form_background .form-group--account {
+#stev_account:checked ~ .stev_form_background .stev_form-group--account {
   display: block;
   animation-delay: 0.2s;
   animation-duration: 0.3s;
@@ -175,75 +171,73 @@ p{
 
 @keyframes slidein {
   from {
-    opacity: 0;
+      opacity: 0;
   }
   to {
-    opacity: 1;
+      opacity: 1;
   }
 }
 
 /* Responsive styles */
 @media only screen and (max-width: 784px) {
-  body {
-    justify-content: center;
+  .ste-thebody {
+      justify-content: center;
   }
 
-  .form {
-    flex-direction: column;
-    padding: 2rem;
-    height: auto;
+  .stev_form {
+      flex-direction: column;
+      padding: 2rem;
+      height: auto;
   }
 
-  .form_background {
-    width: 90%;
-    height: auto;
-    padding: 2rem;
-    position: relative;
-    transform: translateY(0);
-    transition: all 0.8s cubic-bezier(0.04, 0.57, 0.15, 1.46);
+  .stev_form_background {
+      width: 90%;
+      height: auto;
+      padding: 2rem;
+      position: relative;
+      transform: translateY(0);
+      transition: all 0.8s cubic-bezier(0.04, 0.57, 0.15, 1.46);
   }
 
-  .fieldset {
-    padding: 0;
-    font-size: 18px;
-    text-align: center; /* Center the fieldset text */
+  .stev_fieldset {
+      padding: 0;
+      font-size: 18px;
+      text-align: center;
   }
 
-  #noaccount:checked ~ .form_background {
-    transform: translateY(0);
+  #stev_noaccount:checked ~ .stev_form_background {
+      transform: translateY(0);
   }
 
-  #account:checked ~ .form_background {
-    transform: translateY(0);
+  #stev_account:checked ~ .stev_form_background {
+      transform: translateY(0);
   }
 
-  .button--form {
-    float: none;
-    margin-top: 1rem;
-    margin-right: auto; /* Center the form button */
+  .stev_button--form {
+      float: none;
+      margin-top: 1rem;
+      margin-right: auto;
   }
 
-  /* Show the inactive fieldset below the active one */
-  #noaccount:checked ~ .form_background + .fieldset:last-child {
-    display: block;
-    margin-top: 2rem;
+  #stev_noaccount:checked ~ .stev_form_background + .stev_fieldset:last-child {
+      display: block;
+      margin-top: 2rem;
   }
 
-  #account:checked ~ .form_background + .f1 {
-    display: block;
-    margin-top: 2rem;
+  #stev_account:checked ~ .stev_form_background + .stev_f1 {
+      display: block;
+      margin-top: 2rem;
   }
 
-  /* Ensure the correct fieldset visibility */
-  .fieldset {
-    display: none;
+  .stev_fieldset {
+      display: none;
   }
 
-  #noaccount:checked ~ .fieldset:last-child {
-    display: block;
+  #stev_noaccount:checked ~ .stev_fieldset:last-child {
+      display: block;
   }
 
-  #account:checked ~ .fieldset:first-child {
-    display: block;
+  #stev_account:checked ~ .stev_fieldset:first-child {
+      display: block;
   }
 }
