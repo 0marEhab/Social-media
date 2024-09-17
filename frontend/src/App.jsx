@@ -30,6 +30,7 @@ export default function App() {
           path: "/friend-requests",
           element: <FriendRequestsPage />,
         },
+        
       ],
     },
     {

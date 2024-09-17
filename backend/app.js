@@ -10,7 +10,7 @@ const userRouter = require("./routes/userRouter");
 const ticketRouter = require("./routes/ticketRouter");
 const friendsRoutes = require("./routes/friendsRouter");
 const postRouter = require("./routes/postRouter");
-const friendsRoutes = require("./routes/friendsRouter");
+
 var app = express();
 
 app.use(cors());

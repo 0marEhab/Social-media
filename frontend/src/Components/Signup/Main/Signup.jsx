@@ -8,10 +8,13 @@ import {
   validateConfirmPassword,
   validateBirthdate,
   validateCountry,
-  validateName
+  validateName,
 } from "../Main/Functions/validation";
+import axios from "axios";
+import summaryApi from "../../../../common/index";
+import { useNavigate } from "react-router-dom";
 
-function Sign() {
+export default function Signup() {
   const [data, setData] = useState({
     Email: "",
     Name: "",
@@ -101,7 +104,14 @@ function Sign() {
   };
 
   const isFormValid = () => {
-    const { EmailError, NameError, PasswordError, ConfirmPasswordError, BdateError, CountryError } = dataError;
+    const {
+      EmailError,
+      NameError,
+      PasswordError,
+      ConfirmPasswordError,
+      BdateError,
+      CountryError,
+    } = dataError;
     return (
       data.Email &&
       data.Name &&
@@ -121,14 +131,11 @@ function Sign() {
   const isLoginFormValid = () => {
     const { EmailError, PasswordError } = loginError;
     return (
-      loginData.Email &&
-      loginData.Password &&
-      !EmailError &&
-      !PasswordError
+      loginData.Email && loginData.Password && !EmailError && !PasswordError
     );
   };
 
-  const signup = () => {
+  const signup = async () => {
     if (!isFormValid()) {
       setAlert({
         show: true,
@@ -139,38 +146,95 @@ function Sign() {
       return;
     }
 
-    const newUser = {
-      email: data.Email,
-      password: data.Password,
-      name: data.Name,
-      bdate: data.Bdate,
-      country: data.Country,
-    };
+    try {
+      const response = await axios.post(summaryApi.signup.url, {
+        email: data.Email,
+        password: data.Password,
+        confirmPassword: data.ConfirmPassword,
+        name: data.Name,
+        birthDate: data.Bdate,
+        country: data.Country,
+      });
 
-    setUsers((prevUsers) => {
-      const updatedUsers = [...prevUsers, newUser];
-      localStorage.setItem("users", JSON.stringify(updatedUsers));
-      return updatedUsers;
-    });
+      setData({
+        Email: "",
+        Name: "",
+        Password: "",
+        ConfirmPassword: "",
+        Bdate: "",
+        Country: "Egypt",
+      });
 
-    setData({
-      Email: "",
-      Name: "",
-      Password: "",
-      ConfirmPassword: "",
-      Bdate: "",
-      Country: "Egypt",
-    });
+      console.log(response);
 
-    setAlert({
-      show: true,
-      type: "success",
-      strongMessage: "Well done! ",
-      message: "Your Account is Successfully Registered!",
-    });
+      if (response.status === 201) {
+        setAlert({
+          show: true,
+          type: "success",
+          strongMessage: "Well done! ",
+          message: "Your account has been created successfully.",
+        });
+      } else if (response.status === 400) {
+        setAlert({
+          show: true,
+          type: "danger",
+          strongMessage: "Bad Request!",
+          message:
+            "There was an issue with the data you provided. Please check and try again.",
+        });
+      }
+    } catch (error) {
+      if (error.response) {
+        // The server responded with a status code outside the range of 2xx
+        if (error.response.status === 400) {
+          setAlert({
+            show: true,
+            type: "danger",
+            strongMessage: "Bad Request!",
+            message:
+              "There was an issue with the data you provided. Please check and try again.",
+          });
+        } else if (error.response.status === 401) {
+          setAlert({
+            show: true,
+            type: "danger",
+            strongMessage: "Unauthorized!",
+            message:
+              "You are not authorized to perform this action. Please check your credentials.",
+          });
+        } else {
+          setAlert({
+            show: true,
+            type: "danger",
+            strongMessage: "Oh snap!",
+            message:
+              error.response.data.message || "An unexpected error occurred.",
+          });
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        setAlert({
+          show: true,
+          type: "danger",
+          strongMessage: "Oh snap!",
+          message:
+            "No response received from the server. Please try again later.",
+        });
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        setAlert({
+          show: true,
+          type: "danger",
+          strongMessage: "Oh snap!",
+          message: "An error occurred while setting up the request.",
+        });
+      }
+      console.error(error);
+    }
   };
 
-  const login = () => {
+  const navigate = useNavigate();
+  const login = async () => {
     if (!isLoginFormValid()) {
       setAlert({
         show: true,
@@ -184,158 +248,212 @@ function Sign() {
     const email = loginData.Email;
     const password = loginData.Password;
 
-    const storedUsers = JSON.parse(localStorage.getItem("users")) || users;
-
-    const user = storedUsers.find((u) => u.email === email && u.password === password);
-
-    if (user) {
-      localStorage.setItem("loggedInUser", JSON.stringify(user));
-      setAlert({
-        show: true,
-        type: "primary",
-        strongMessage: `Welcome Back ${user.name}! `,
-        message: "Login Successfully!",
+    try {
+      const response = await axios.post(summaryApi.login.url, {
+        email: email,
+        password: password,
       });
-    } else {
-      setAlert({
-        show: true,
-        type: "danger",
-        strongMessage: "Oh snap!",
-        message: "Change a few things up and try submitting again.",
-      });
+
+      const message = response.data.message;
+      const token = response.data.token;
+      console.log(response.data.message);
+
+      if (response.status === 200) {
+        setAlert({
+          show: true,
+          type: "primary",
+          strongMessage: `Welcome Back ${response.data.email}! `,
+          message: message,
+        });
+        localStorage.setItem("token", token);
+        navigate("/"); // Use navigate for redirection
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          setAlert({
+            show: true,
+            type: "danger",
+            strongMessage: "Unauthorized ! ",
+            message: "Invalid email or password. Please try again.",
+          });
+        } else {
+          setAlert({
+            show: true,
+            type: "danger",
+            strongMessage: "Oh snap!",
+            message:
+              error.response.data.message ||
+              "An error occurred while trying to log in.",
+          });
+        }
+      } else if (error.request) {
+        setAlert({
+          show: true,
+          type: "danger",
+          strongMessage: "Oh snap!",
+          message:
+            "No response received from the server. Please try again later.",
+        });
+      } else {
+        setAlert({
+          show: true,
+          type: "danger",
+          strongMessage: "Oh snap!",
+          message: "An error occurred while setting up the request.",
+        });
+      }
+      console.error(error);
     }
   };
 
   return (
     <>
-    <div className="ste_thebody">
-      {alert.show && (
-        <Alert
-          type={alert.type}
-          message={alert.message}
-          strongMessage={alert.strongMessage}
-          icon={
-            alert.type === "success"
-              ? "far fa-check-circle"
-              : alert.type === "primary"
-              ? "fa fa-thumbs-up"
-              : "far fa-times-circle"
-          }
-          onClose={handleAlertClose}
-        />
-      )}
+      <div className="ste_thebody">
+        {alert.show && (
+          <Alert
+            type={alert.type}
+            message={alert.message}
+            strongMessage={alert.strongMessage}
+            icon={
+              alert.type === "success"
+                ? "far fa-check-circle"
+                : alert.type === "primary"
+                ? "fa fa-thumbs-up"
+                : "far fa-times-circle"
+            }
+            onClose={handleAlertClose}
+          />
+        )}
 
-      <form className="stev_form stev_spaceform">
-        <input id="stev_noaccount" name="radioaccount" type="radio" className="stev_radio stev_radio--invisible" defaultChecked />
-        <input id="stev_account" name="radioaccount" type="radio" className="stev_radio stev_radio--invisible" />
-        <div className="stev_form_background">
-          <div className="stev_form-group stev_form-group--account">
-            <h3 className="stev_form-group_title">Log in</h3>
-            <input
-              className="stev_form-group_input"
-              type="email"
-              placeholder="Email"
-              name="loginEmail"
-              value={loginData.Email}
-              onChange={(e) => setLoginData({ ...loginData, Email: e.target.value })}
-            />
-            <p style={{ color: "red" }}>{loginError.EmailError}</p>
-            <input
-              className="stev_form-group_input"
-              type="password"
-              placeholder="Password"
-              name="loginPassword"
-              value={loginData.Password}
-              onChange={(e) => setLoginData({ ...loginData, Password: e.target.value })}
-            />
-            <p style={{ color: "red" }}>{loginError.PasswordError}</p>
-            <button
-              className="stev_button stev_button--form"
-              type="button"
-              onClick={login}
-              disabled={!isLoginFormValid()}
-            >
-              Log in
-            </button>
+        <form className="stev_form stev_spaceform">
+          <input
+            id="stev_noaccount"
+            name="radioaccount"
+            type="radio"
+            className="stev_radio stev_radio--invisible"
+            defaultChecked
+          />
+          <input
+            id="stev_account"
+            name="radioaccount"
+            type="radio"
+            className="stev_radio stev_radio--invisible"
+          />
+          <div className="stev_form_background">
+            <div className="stev_form-group stev_form-group--account">
+              <h3 className="stev_form-group_title">Log in</h3>
+              <input
+                className="stev_form-group_input"
+                type="email"
+                placeholder="Email"
+                name="loginEmail"
+                value={loginData.Email}
+                onChange={(e) =>
+                  setLoginData({ ...loginData, Email: e.target.value })
+                }
+              />
+              <p style={{ color: "red" }}>{loginError.EmailError}</p>
+              <input
+                className="stev_form-group_input"
+                type="password"
+                placeholder="Password"
+                name="loginPassword"
+                value={loginData.Password}
+                onChange={(e) =>
+                  setLoginData({ ...loginData, Password: e.target.value })
+                }
+              />
+              <p style={{ color: "red" }}>{loginError.PasswordError}</p>
+              <button
+                className="stev_button stev_button--form"
+                type="button"
+                onClick={login}
+                disabled={!isLoginFormValid()}
+              >
+                Log in
+              </button>
+            </div>
+            <div className="stev_form-group stev_form-group--noaccount">
+              <h3 className="stev_form-group_title">Sign up</h3>
+              <input
+                className="stev_form-group_input"
+                type="text"
+                placeholder="Full Name"
+                name="Name"
+                onChange={handleSignupChange}
+              />
+              <p style={{ color: "red" }}>{dataError.NameError}</p>
+              <input
+                className="stev_form-group_input"
+                type="email"
+                placeholder="Email"
+                name="Email"
+                onChange={handleSignupChange}
+              />
+              <p style={{ color: "red" }}>{dataError.EmailError}</p>
+              <input
+                className="stev_form-group_input"
+                type="password"
+                placeholder="Password"
+                name="Password"
+                onChange={handleSignupChange}
+              />
+              <p style={{ color: "red" }}>{dataError.PasswordError}</p>
+              <input
+                className="stev_form-group_input"
+                type="password"
+                placeholder="Confirm Password"
+                name="ConfirmPassword"
+                onChange={handleSignupChange}
+              />
+              <p style={{ color: "red" }}>{dataError.ConfirmPasswordError}</p>
+              <input
+                className="stev_form-group_input"
+                type="date"
+                name="Bdate"
+                onChange={handleSignupChange}
+              />
+              <p style={{ color: "red" }}>{dataError.BdateError}</p>
+              <select
+                className="stev_form-group_input stev_country-select"
+                name="Country"
+                onChange={handleSignupChange}
+                value={data.Country}
+              >
+                {countries.map((country, index) => (
+                  <option key={index} value={country}>
+                    {country}
+                  </option>
+                ))}
+              </select>
+              <p style={{ color: "red" }}>{dataError.CountryError}</p>
+              <button
+                className="stev_button stev_button--form"
+                type="button"
+                disabled={!isFormValid()}
+                onClick={signup}
+              >
+                Sign up
+              </button>
+            </div>
           </div>
-          <div className="stev_form-group stev_form-group--noaccount">
-            <h3 className="stev_form-group_title">Sign up</h3>
-            <input
-              className="stev_form-group_input"
-              type="text"
-              placeholder="Full Name"
-              name="Name"
-              onChange={handleSignupChange}
-            />
-            <p style={{ color: "red" }}>{dataError.NameError}</p>
-            <input
-              className="stev_form-group_input"
-              type="email"
-              placeholder="Email"
-              name="Email"
-              onChange={handleSignupChange}
-            />
-            <p style={{ color: "red" }}>{dataError.EmailError}</p>
-            <input
-              className="stev_form-group_input"
-              type="password"
-              placeholder="Password"
-              name="Password"
-              onChange={handleSignupChange}
-            />
-            <p style={{ color: "red" }}>{dataError.PasswordError}</p>
-            <input
-              className="stev_form-group_input"
-              type="password"
-              placeholder="Confirm Password"
-              name="ConfirmPassword"
-              onChange={handleSignupChange}
-            />
-            <p style={{ color: "red" }}>{dataError.ConfirmPasswordError}</p>
-            <input
-              className="stev_form-group_input"
-              type="date"
-              name="Bdate"
-              onChange={handleSignupChange}
-            />
-            <p style={{ color: "red" }}>{dataError.BdateError}</p>
-            <select
-              className="stev_form-group_input stev_country-select"
-              name="Country"
-              onChange={handleSignupChange}
-              value={data.Country}
-            >
-              {countries.map((country, index) => (
-                <option key={index} value={country}>
-                  {country}
-                </option>
-              ))}
-            </select>
-            <p style={{ color: "red" }}>{dataError.CountryError}</p>
-            <button
-              className="stev_button stev_button--form"
-              type="button"
-              disabled={!isFormValid()}
-              onClick={signup}
-            >
-              Sign up
-            </button>
-          </div>
-        </div>
-        <fieldset className="stev_fieldset stev_f1">
-          <h2 className="stev_h2">Don't have an account?</h2>
-          <p className="ste_p">We are delighted to have you With US!</p>
-          <label htmlFor="stev_noaccount" className="stev_button">Signup</label>
-        </fieldset>
-        <fieldset className="stev_fieldset">
-          <h2 className="stev_h2">Have an account?</h2>
-          <p className="ste_p">Welcome Back Pal!</p>
-          <label htmlFor="stev_account" className="stev_button">Login</label>
-        </fieldset>
-      </form>
+          <fieldset className="stev_fieldset stev_f1">
+            <h2 className="stev_h2">Don't have an account?</h2>
+            <p className="ste_p">We are delighted to have you With US!</p>
+            <label htmlFor="stev_noaccount" className="stev_button">
+              Signup
+            </label>
+          </fieldset>
+          <fieldset className="stev_fieldset">
+            <h2 className="stev_h2">Have an account?</h2>
+            <p className="ste_p">Welcome Back Pal!</p>
+            <label htmlFor="stev_account" className="stev_button">
+              Login
+            </label>
+          </fieldset>
+        </form>
       </div>
     </>
   );
 }
-
-export default Sign;

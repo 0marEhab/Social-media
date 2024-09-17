@@ -3,7 +3,7 @@ const createPost = async (req, res) => {
   try {
     const post = new Post({
       content: req.body.content,
-      user: req.body.id,
+      user: req.user._id,
       photo: req.body.photo,
       video: req.body.video,
       tags: req.body.tags,
@@ -12,7 +12,9 @@ const createPost = async (req, res) => {
     });
 
     const savedPost = await post.save();
-    res.status(201).json(savedPost);
+    res
+      .status(201)
+      .json({ posts: savedPost, message: "Post saved successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -23,7 +25,7 @@ const getAllPosts = async (req, res) => {
     const posts = await Post.find()
       .populate("user", "username")
       .populate("likes", "username")
-      .populate("comments.user", "username");
+      .populate("comments.user", "name");
     res.status(200).json(posts);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -35,7 +37,7 @@ const getPostById = async (req, res) => {
     const post = await Post.findById(req.params.id)
       .populate("user", "username")
       .populate("likes", "username")
-      .populate("comments.user", "username");
+      .populate("comments.user", "name");
 
     if (!post) return res.status(404).json({ message: "Post not found" });
     res.status(200).json(post);
@@ -59,7 +61,9 @@ const updatePost = async (req, res) => {
 
     if (!updatedPost)
       return res.status(404).json({ message: "Post not found" });
-    res.status(200).json(updatedPost);
+    res
+      .status(200)
+      .json({ updatedPost: updatedPost, message: "Post updated successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -83,7 +87,7 @@ const likePost = async (req, res) => {
 
     if (!post) return res.status(404).json({ message: "Post not found" });
 
-    const userId = req.body.user;
+    const userId = req.user._id;
     if (post.likes.includes(userId)) {
       post.likes.pull(userId);
     } else {
@@ -104,14 +108,14 @@ const addComment = async (req, res) => {
     if (!post) return res.status(404).json({ message: "Post not found" });
 
     const comment = {
-      user: req.body.user,
+      user: req.user._id,
       content: req.body.content,
     };
 
     post.comments.push(comment);
     await post.save();
 
-    res.status(200).json(post);
+    res.status(200).json({post:post,message:"comment created successfully"});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
