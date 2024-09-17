@@ -22,12 +22,15 @@ const createPost = async (req, res) => {
 
 const getAllPosts = async (req, res) => {
   try {
+    console.log("Fetching posts...");
     const posts = await Post.find()
-      .populate("user", "username")
-      .populate("likes", "username")
-      .populate("comments.user", "name");
+      .populate("user", "name")
+      .populate("likes", "name")
+      .populate("comments.user", "name")
+      .sort({ createdAt: -1 });
     res.status(200).json(posts);
   } catch (error) {
+    console.error("Error fetching posts:", error.message);
     res.status(500).json({ error: error.message });
   }
 };
@@ -35,8 +38,8 @@ const getAllPosts = async (req, res) => {
 const getPostById = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id)
-      .populate("user", "username")
-      .populate("likes", "username")
+      .populate("user", "name")
+      .populate("likes", "name")
       .populate("comments.user", "name");
 
     if (!post) return res.status(404).json({ message: "Post not found" });
@@ -82,8 +85,12 @@ const deletePost = async (req, res) => {
 };
 
 const likePost = async (req, res) => {
+  const id = req.params.id;
+  console.log(id);
+
   try {
-    const post = await Post.findById(req.params.id);
+    const post = await Post.findById(id);
+    console.log(id);
 
     if (!post) return res.status(404).json({ message: "Post not found" });
 
@@ -115,7 +122,9 @@ const addComment = async (req, res) => {
     post.comments.push(comment);
     await post.save();
 
-    res.status(200).json({post:post,message:"comment created successfully"});
+    res
+      .status(200)
+      .json({ post: post, message: "comment created successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
