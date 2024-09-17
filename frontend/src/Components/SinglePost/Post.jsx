@@ -2,60 +2,79 @@ import { BiDotsVerticalRounded } from "react-icons/bi";
 import { RiShareForwardFill } from "react-icons/ri";
 import { AiOutlineHeart } from "react-icons/ai";
 import { BiComment } from "react-icons/bi";
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+import axios from "axios"; // Assuming Axios for API calls
+import { useParams } from "react-router-dom";
+import moment from "moment";
 export default function Post() {
   const [showOptions, setShowOptions] = useState(false);
+  const [post, setPost] = useState();
+  const { id } = useParams();
+  if (post) {
+    var relativeTime = moment(post.createdAt).fromNow();
+  }
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/api/posts/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        setPost(response.data);
+      } catch (error) {
+        console.error("Error fetching the post", error);
+      }
+    };
+    fetchPost();
+  }, []);
+  console.log(post);
 
   const toggleOptions = () => {
     setShowOptions(!showOptions);
   };
 
-  var post = {
-    user: {
-      username: "Omar Ehab",
-      img: "https://randomuser.me/api/portraits/men/5.jpg",
-    },
-    time: "5min ago",
-    img: "https://picsum.photos/650/350",
-    title:
-      "The Best Fashion Instagrams of the Week: Céline Dion, Lizzo, and More",
-    content:
-      "If you are looking for a break from the cold, take a cue from Lizzo: This week, the singer headed to Disneyland in warm and sunny California. She dressed up for the occasion in pure Minnie Mouse style perfection, including a cartoon merch sweatshirt from the artist Shelby Swain, cycling shorts, and adorable pulled-up polka dot socks...",
-    likes: 326,
-    comments: 148,
-  };
+  if (!post) {
+    return <div>no post to show</div>;
+  }
 
   return (
     <div className="flex text-secondary flex-col justify-start items-start">
-      <div className=" opacity-65 bg-gray-200 w-24 h-14 rounded-xl flex justify-center items-center gap-3 mb-6 mt-6">
-        <button className="text-xl flex gap-3 ">
+      <div className="opacity-65 bg-gray-200 w-24 h-14 rounded-xl bg-transparent flex justify-center items-center gap-3 mb-6 mt-6">
+        <button className="text-xl flex gap-3">
           <p>&lt;</p> Back
         </button>
       </div>
 
-      <div className="flex justify-between items-center w-full mb-10">
+      <div className="flex flex-col justify-between items-start gap-3 lg:items-center lg:flex-row md:items-center md:flex-row w-full mb-10">
         <div className="flex items-center gap-3">
-          <img src={post.user.img} className="w-16 h-16 rounded-xl"></img>
+          <img
+            src={post.user.profilePic}
+            className="w-16 h-16 rounded-xl"
+            alt="user-img"
+          />
           <div>
-            <p>{post.user.username}</p>
-            <p className="opacity-50">{post.time}</p>
+            <p>{post.user.name}</p>
+            <p className="opacity-50">{relativeTime}</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex gap-5">
           <button className="flex items-center gap-1">
             <AiOutlineHeart />
             <p>{post.likes}</p>
           </button>
           <button className="flex items-center gap-1">
             <BiComment />
-            <p>{post.comments}</p>
+            <p>{post.comments.length}</p>
           </button>
           <button className="flex items-center gap-1">
-            <RiShareForwardFill className="cursor-pointer" /> <p>share</p>
+            <RiShareForwardFill className="cursor-pointer" /> <p>Share</p>
           </button>
-
           <button className="relative">
             <BiDotsVerticalRounded
               onClick={toggleOptions}
@@ -78,12 +97,11 @@ export default function Post() {
       </div>
 
       <div className="m-auto">
-        <img src={post.img} className="w-full rounded-2xl"></img>
+        <img src={post.photo} className="w-full rounded-2xl" alt="post-img" />
       </div>
 
       <div className="p-10">
-        <p className="text-4xl font-bold mb-6">{post.title}</p>
-        <p>{post.content}</p>
+        <p className="text-xl w-72 lg:w-full md:w-full mb-6">{post.content}</p>
       </div>
     </div>
   );

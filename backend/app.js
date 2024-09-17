@@ -3,7 +3,6 @@ var express = require("express");
 var path = require("path");
 var logger = require("morgan");
 var db = require("./config/db");
-
 const cors = require("cors");
 var error = require("./middleware/error_handle");
 const userRouter = require("./routes/userRouter");

@@ -13,16 +13,16 @@ const isAuth = require("../middleware/isAuth");
 
 router.post("/", isAuth, createPost);
 
-router.get("/", getAllPosts);
+router.get("/", isAuth, getAllPosts);
 
-router.get("/:id", getPostById);
+router.get("/:id", isAuth, getPostById);
 
 router.put("/:id", isAuth, updatePost);
 
 router.delete("/:id", isAuth, deletePost);
 
-router.put("/:id/like", isAuth, likePost);
+router.post("/like/:id", isAuth, likePost);
 
-router.post("/:id/comment", isAuth, addComment);
+router.post("/comment/:id", isAuth, addComment);
 
 module.exports = router;

@@ -4,7 +4,8 @@ import Settings from "./Pages/Settings/Settings";
 import SinglePost from "./Pages/Posts/SinglePost";
 import Layout from "./Components/Layout/Layout";
 import Signing from "./Pages/Signing/Signing";
-import { Toaster } from 'react-hot-toast';
+import Home from "./Pages/Home/Home";
+import { Toaster } from "react-hot-toast";
 import FriendRequestsPage from "./Pages/MyFriends/FriendRequestsPage";
 
 export default function App() {
@@ -13,6 +14,10 @@ export default function App() {
       path: "/",
       element: <Layout />,
       children: [
+        {
+          index: true,
+          element: <Home />,
+        },
         {
           path: "/friends",
           element: <MyFriendsPage />,
@@ -30,7 +35,6 @@ export default function App() {
           path: "/friend-requests",
           element: <FriendRequestsPage />,
         },
-        
       ],
     },
     {
