@@ -3,7 +3,16 @@ const Ticket = require("../models/Ticket");
 exports.getAllTickets = async (req, res) => {
   try {
     const tickets = await Ticket.find();
-    res.status(200).json(tickets);
+    const ticketsWithMediaUrl = tickets.map((ticket) => {
+      if (ticket.media) {
+        ticket.media = `${req.protocol}://${req.get("host")}/uploads/${
+          ticket.media
+        }`;
+      }
+      return ticket;
+    });
+
+    res.status(200).json(ticketsWithMediaUrl);
   } catch (err) {
     console.error("Error fetching tickets:", err);
     res.status(500).json({ message: "Failed to retrieve tickets" });
@@ -12,7 +21,9 @@ exports.getAllTickets = async (req, res) => {
 
 exports.createTicket = async (req, res) => {
   try {
-    const { name, email, message, media } = req.body;
+    const { name, email, message } = req.body;
+    const media = req.file ? req.file.filename : null;
+
     const newTicket = new Ticket({
       name: name,
       email: email,
