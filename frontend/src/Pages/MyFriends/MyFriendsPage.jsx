@@ -18,7 +18,7 @@ export default function MyFriendsPage() {
           {
             headers: {
               Authorization:
-                `Bearer ${import.meta.env.VITE_TOKEN}`,
+                `Bearer ${localStorage.getItem("token")}`,
             },
           }
         );

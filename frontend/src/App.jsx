@@ -7,6 +7,7 @@ import Signing from "./Pages/Signing/Signing";
 import Home from "./Pages/Home/Home";
 import { Toaster } from "react-hot-toast";
 import FriendRequestsPage from "./Pages/MyFriends/FriendRequestsPage";
+import Ticket from "./Pages/Ticket/Ticket";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -34,6 +35,10 @@ export default function App() {
         {
           path: "/friend-requests",
           element: <FriendRequestsPage />,
+        },
+        {
+          path: "/ticket",
+          element: <Ticket />,
         },
       ],
     },

@@ -8,7 +8,7 @@ export const sendFriendRequest = async (userId) => {
       { recipientId: userId },
       {
         headers: {
-          Authorization: `Bearer ${import.meta.env.VITE_TOKEN}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
     );
@@ -22,10 +22,10 @@ export const sendFriendRequest = async (userId) => {
 export const fetchRequests = async (setSentRequests, setReceivedRequests, toast, setLoading) => {
   try {
     const { data: sentData } = await axios.get(`${import.meta.env.VITE_API_URL}/friends/myrequests`, {
-      headers: { Authorization: `Bearer ${import.meta.env.VITE_TOKEN}` },
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     const { data: receivedData } = await axios.get(`${import.meta.env.VITE_API_URL}/friends/requests`, {
-      headers: { Authorization: `Bearer ${import.meta.env.VITE_TOKEN}` },
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     setSentRequests(sentData);
     setReceivedRequests(receivedData);
@@ -40,7 +40,7 @@ export const fetchRequests = async (setSentRequests, setReceivedRequests, toast,
 export const handleUnsendRequest = async (userId, setSentRequests) => {
   try {
     await axios.delete(`${import.meta.env.VITE_API_URL}/friends/request`, {
-      headers: { Authorization: `Bearer ${import.meta.env.VITE_TOKEN}` },
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       data: { recipientId: userId },
     });
     setSentRequests((prevRequests) =>
@@ -58,7 +58,7 @@ export const handleAcceptRequest = async (userId, setReceivedRequests) => {
       `${import.meta.env.VITE_API_URL}/friends/accept`,
       { requesterId: userId },
       {
-        headers: { Authorization: `Bearer ${import.meta.env.VITE_TOKEN}` },
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
     );
     setReceivedRequests((prevRequests) =>
@@ -76,7 +76,7 @@ export const handleRejectRequest = async (userId, setReceivedRequests) => {
       `${import.meta.env.VITE_API_URL}/friends/reject`,
       { requesterId: userId },
       {
-        headers: { Authorization: `Bearer ${import.meta.env.VITE_TOKEN}` },
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
     );
     setReceivedRequests((prevRequests) =>
