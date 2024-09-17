@@ -24,6 +24,7 @@ app.use("/api", userRouter);
 app.use("/api", ticketRouter);
 app.use("/api/friends", friendsRoutes);
 app.use("/api/posts", postRouter);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(error.notfound);
 

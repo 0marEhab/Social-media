@@ -17,7 +17,7 @@ export default function FriendsSideBar() {
           `${import.meta.env.VITE_API_URL}/friends/suggestions`,
           {
             headers: {
-              Authorization: `Bearer ${import.meta.env.VITE_TOKEN}`,
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }
         );
