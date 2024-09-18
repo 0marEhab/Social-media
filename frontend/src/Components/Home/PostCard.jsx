@@ -14,7 +14,9 @@ export default function PostCard({ post }) {
   const { user } = useContext(UserContext);
   const relativeTime = moment(post.createdAt).fromNow();
   const [likes, setLikes] = useState(post.likes);
-  const [isLiked, setIsLiked] = useState(likes.some(like => like._id === user._id));
+  const [isLiked, setIsLiked] = useState(
+    user ? likes.some((like) => like._id === user._id) : false
+  );
   const [showOptions, setShowOptions] = useState("");
 
   const toggleOptions = () => {
