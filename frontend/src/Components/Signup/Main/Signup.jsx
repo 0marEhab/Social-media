@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./Signup.css";
 import Alert from "../Alert/Alert";
 import { countries } from "../Main/arr";
@@ -13,8 +13,10 @@ import {
 import axios from "axios";
 import summaryApi from "../../../../common/index";
 import { useNavigate } from "react-router-dom";
+import UserContext from "../../../Contexts/UserContext";
 
 export default function Signup() {
+  const {setUser} = useContext(UserContext)
   const [data, setData] = useState({
     Email: "",
     Name: "",
@@ -259,6 +261,7 @@ export default function Signup() {
       console.log(response.data.message);
 
       if (response.status === 200) {
+        setUser(response.data.user)
         setAlert({
           show: true,
           type: "primary",
