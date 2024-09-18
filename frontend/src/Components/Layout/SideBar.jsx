@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "./../../Assets/Images/logo.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,11 +10,14 @@ import {
   faHome,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import UserContext from "../../Contexts/UserContext";
 
 export default function SideBar() {
+  const {setUser} = useContext(UserContext)
   const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("token");
+    setUser(null);
     navigate("/signing");
   };
 

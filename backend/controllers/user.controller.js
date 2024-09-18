@@ -39,7 +39,7 @@ exports.Login = async (req, res, next) => {
     res.json({
       token: token,
       message: "Login successful",
-      email: user.email,
+      user:user
     });
   } catch (err) {
     return next(err);
