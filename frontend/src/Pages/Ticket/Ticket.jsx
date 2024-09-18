@@ -58,9 +58,9 @@ const Ticket = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex justify-center items-center p-16">
-      <div className="w-2/3 mx-auto border rounded-xl shadow p-8 bg-white">
-        <h2 className="text-2xl font-semibold mb-4">Submit a Ticket</h2>
+    <div className="w-full min-h-screen flex justify-center items-center p-4 sm:p-8 md:p-16 bg-bg">
+      <div className="w-full max-w-2xl mx-auto border rounded-xl shadow p-6 sm:p-8 md:p-10 bg-white">
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4">Submit a Ticket</h2>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -68,11 +68,11 @@ const Ticket = () => {
         >
           {({ isSubmitting }) => (
             <Form className="space-y-4">
-              <div className="flex items-start space-x-2 w-full">
-                <div className="w-1/2">
+              <div className="flex flex-col sm:flex-row items-start sm:space-x-2 w-full space-y-4 sm:space-y-0">
+                <div className="w-full sm:w-1/2">
                   <TextField label="Name" name="name" />
                 </div>
-                <div className="w-1/2">
+                <div className="w-full sm:w-1/2">
                   <TextField label="Email" name="email" />
                 </div>
               </div>

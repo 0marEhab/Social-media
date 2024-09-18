@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   AiOutlineHeart,
   AiOutlineMessage,
@@ -8,10 +8,12 @@ import { BsThreeDots } from "react-icons/bs";
 import axios from "axios";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import UserContext from "../../Contexts/UserContext";
 export default function PostCard({ post }) {
+  const { user } = useContext(UserContext);
   const relativeTime = moment(post.createdAt).fromNow();
-  const [likes, setLikes] = useState(post.likes.length);
-  const [isLiked, setIsLiked] = useState(false); // Add this state to track whether the post is liked
+  const [likes, setLikes] = useState(post.likes);
+  const [isLiked, setIsLiked] = useState(likes.some(like => like._id === user._id));
   const [showOptions, setShowOptions] = useState("");
 
   const toggleOptions = () => {
@@ -30,7 +32,7 @@ export default function PostCard({ post }) {
         }
       );
       setIsLiked(!isLiked);
-      setLikes(response.data.likes.length);
+      setLikes(response.data.likes);
     } catch (error) {
       console.error("Error liking the post:", error);
     }
@@ -80,7 +82,6 @@ export default function PostCard({ post }) {
 
       <p className="text-gray-500 mt-2 mb-4">{post.content}</p>
       <p className="text-blue-500 font-bold cursor-pointer">
-        {" "}
         <Link to={`/posts/${post._id}`}>READ MORE</Link>
       </p>
       <div className="flex justify-between items-center mt-4">
@@ -92,7 +93,7 @@ export default function PostCard({ post }) {
             onClick={handleLike}
           >
             <AiOutlineHeart size={20} />
-            <span>{likes}</span>
+            <span>{likes.length}</span>
           </button>
           <button className="flex items-center gap-1">
             <AiOutlineMessage size={20} />

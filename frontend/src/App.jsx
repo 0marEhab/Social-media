@@ -8,37 +8,41 @@ import Home from "./Pages/Home/Home";
 import { Toaster } from "react-hot-toast";
 import FriendRequestsPage from "./Pages/MyFriends/FriendRequestsPage";
 import Ticket from "./Pages/Ticket/Ticket";
+import { UserProvider } from "./Contexts/UserContext";
+import ProtectedRoute from "./Components/Layout/ProtectedRoute";
 
 export default function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Layout />,
+      element: <ProtectedRoute />,
       children: [
         {
-          index: true,
-          element: <Home />,
-        },
-        {
-          path: "/friends",
-          element: <MyFriendsPage />,
-        },
-        {
-          path: "/posts/:id",
-          element: <SinglePost />,
-        },
+          path: "/",
+          element: <Layout />,
+          children: [
+            {
+              index: true,
+              element: <Home />,
+            },
+            {
+              path: "/friends",
+              element: <MyFriendsPage />,
+            },
+            {
+              path: "/posts/:id",
+              element: <SinglePost />,
+            },
 
-        {
-          path: "/settings",
-          element: <Settings />,
-        },
-        {
-          path: "/friend-requests",
-          element: <FriendRequestsPage />,
-        },
-        {
-          path: "/ticket",
-          element: <Ticket />,
+            {
+              path: "/settings",
+              element: <Settings />,
+            },
+            {
+              path: "/friend-requests",
+              element: <FriendRequestsPage />,
+            },
+          ],
         },
       ],
     },
@@ -46,10 +50,14 @@ export default function App() {
       path: "/Signing",
       element: <Signing />,
     },
+    {
+      path: "/ticket",
+      element: <Ticket />,
+    },
   ]);
 
   return (
-    <>
+    <UserProvider>
       <Toaster
         position="bottom-right"
         toastOptions={{
@@ -78,6 +86,6 @@ export default function App() {
         }}
       />
       <RouterProvider router={router} />
-    </>
+    </UserProvider>
   );
 }
