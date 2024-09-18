@@ -10,6 +10,7 @@ import FriendRequestsPage from "./Pages/MyFriends/FriendRequestsPage";
 import Ticket from "./Pages/Ticket/Ticket";
 import { UserProvider } from "./Contexts/UserContext";
 import ProtectedRoute from "./Components/Layout/ProtectedRoute";
+import Chat from "./Components/Chat/Chat";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -32,6 +33,10 @@ export default function App() {
             {
               path: "/posts/:id",
               element: <SinglePost />,
+            },
+            {
+              path: "/chat",
+              element: <Chat />,
             },
 
             {
