@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   AiOutlineHeart,
   AiOutlineMessage,
@@ -9,6 +9,7 @@ import axios from "axios";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import UserContext from "../../Contexts/UserContext";
+
 export default function PostCard({ post }) {
   const { user } = useContext(UserContext);
   const relativeTime = moment(post.createdAt).fromNow();
