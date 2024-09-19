@@ -10,6 +10,7 @@ import FriendRequestsPage from "./Pages/MyFriends/FriendRequestsPage";
 import Ticket from "./Pages/Ticket/Ticket";
 import { UserProvider } from "./Contexts/UserContext";
 import ProtectedRoute from "./Components/Layout/ProtectedRoute";
+import Profile from "./Pages/Profile/Profile";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -42,6 +43,11 @@ export default function App() {
               path: "/friend-requests",
               element: <FriendRequestsPage />,
             },
+            {
+              path: "/Profile",
+              element: <Profile />,
+            },
+           
           ],
         },
       ],
@@ -54,6 +60,7 @@ export default function App() {
       path: "/ticket",
       element: <Ticket />,
     },
+  
   ]);
 
   return (
