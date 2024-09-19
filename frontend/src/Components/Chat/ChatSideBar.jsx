@@ -13,9 +13,9 @@ export default function ChatSideBar({ onSelectConversation }) {
   ];
 
   return (
-    <aside className="w-full  bg-white border-r border-gray-200 h-full">
+    <aside className="w-full lg:w-1/4 bg-white border-r border-gray-200 h-full">
       <div className="px-10 py-2">
-       
+        {/* Search Bar */}
         <div className="relative mt-10 mb-8">
           <input
             type="text"
