@@ -7,8 +7,9 @@ import {
 import { BsThreeDots } from "react-icons/bs";
 import axios from "axios";
 import moment from "moment";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../../Contexts/UserContext";
+import summaryApi from "../../../common";
 
 export default function PostCard({ post }) {
   const { user } = useContext(UserContext);
@@ -17,7 +18,8 @@ export default function PostCard({ post }) {
   const [isLiked, setIsLiked] = useState(
     user ? likes.some((like) => like._id === user._id) : false
   );
-  const [showOptions, setShowOptions] = useState("");
+  const [showOptions, setShowOptions] = useState(false);
+  const navigate = useNavigate();
 
   const toggleOptions = () => {
     setShowOptions(!showOptions);
@@ -26,7 +28,7 @@ export default function PostCard({ post }) {
   const handleLike = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/posts/like/${post._id}`,
+        summaryApi.like.url.replace(":id", post._id),
         {},
         {
           headers: {
@@ -38,6 +40,46 @@ export default function PostCard({ post }) {
       setLikes(response.data.likes);
     } catch (error) {
       console.error("Error liking the post:", error);
+    }
+  };
+
+  const editPost = () => {
+    navigate(`/posts/edit/${post._id}`);
+  };
+
+  const deletePost = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this post?"
+    );
+    if (confirmDelete) {
+      try {
+        await axios.delete(summaryApi.delete.url.replace(":id", post._id), {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        alert("Post deleted successfully.");
+      } catch (error) {
+        console.error("Error deleting the post:", error);
+      }
+    }
+  };
+
+  const handleShare = async () => {
+    try {
+      const response = await axios.post(
+        summaryApi.share.url.replace(":id", post._id),
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      alert(response.data.message);
+    } catch (error) {
+      console.error("Error sharing the post:", error);
+      alert("Failed to share the post.");
     }
   };
 
@@ -55,24 +97,32 @@ export default function PostCard({ post }) {
             <p className="text-gray-500 text-sm">{relativeTime}</p>
           </div>
         </div>
-        <button className="relative">
-          <BsThreeDots
-            onClick={toggleOptions}
-            className="text-gray-500 cursor-pointer"
-          />
-          {showOptions && (
-            <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-              <ul className="py-2">
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700">
-                  Edit Post
-                </li>
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600">
-                  Delete Post
-                </li>
-              </ul>
-            </div>
-          )}
-        </button>
+        {user && user._id === post.user._id && (
+          <button className="relative">
+            <BsThreeDots
+              onClick={toggleOptions}
+              className="text-gray-500 cursor-pointer"
+            />
+            {showOptions && (
+              <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                <ul className="py-2">
+                  <li
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700"
+                    onClick={editPost}
+                  >
+                    Edit Post
+                  </li>
+                  <li
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600"
+                    onClick={deletePost}
+                  >
+                    Delete Post
+                  </li>
+                </ul>
+              </div>
+            )}
+          </button>
+        )}
       </div>
 
       <div>
@@ -98,12 +148,18 @@ export default function PostCard({ post }) {
             <AiOutlineHeart size={20} />
             <span>{likes.length}</span>
           </button>
-          <button className="flex items-center gap-1">
+          <button
+            className="flex items-center gap-1"
+            onClick={() => navigate(`/posts/${post._id}`)}
+          >
             <AiOutlineMessage size={20} />
             <span>{post.comments.length}</span>
           </button>
         </div>
-        <button className="flex items-center gap-1 text-gray-500">
+        <button
+          className="flex items-center gap-1 text-gray-500"
+          onClick={handleShare}
+        >
           <AiOutlineShareAlt size={20} />
           Share
         </button>

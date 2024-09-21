@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
+import summaryApi from "../../common";
 
 const UserContext = createContext();
 
@@ -10,7 +11,7 @@ export const UserProvider = ({ children }) => {
 
     if (token) {
       axios
-        .get(`${import.meta.env.VITE_API_URL}/getUser`, {
+        .get(summaryApi.user.url, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -28,7 +29,9 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>
+    <UserContext.Provider value={{ user, setUser }}>
+      {children}
+    </UserContext.Provider>
   );
 };
 

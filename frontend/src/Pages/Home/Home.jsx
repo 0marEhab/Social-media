@@ -4,6 +4,7 @@ import HomeSideBar from "../../Components/Home/HomeSideBar";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Loading from "./../../Components/Layout/Loading";
+import summaryApi from "../../../common";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -11,7 +12,7 @@ const Home = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/posts", {
+        const response = await axios.get(summaryApi.posts.url, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },

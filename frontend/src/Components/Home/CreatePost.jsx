@@ -1,51 +1,57 @@
+import { CgClose } from "react-icons/cg";
 import {
   AiOutlineCamera,
   AiOutlineVideoCamera,
   AiOutlinePlus,
   AiOutlineRight,
 } from "react-icons/ai";
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import axios from "axios";
+import summaryApi from "../../../common";
+import UserContext from "../../Contexts/UserContext";
 
 export default function CreatePost() {
+  const { user } = useContext(UserContext);
+  console.log(user);
+
   const [content, setContent] = useState("");
+  const [image, setImage] = useState(null);
+  const [video, setVideo] = useState(""); // Add video state if needed
+  const [tags, setTags] = useState([]); // State for tags
+  const [privacy, setPrivacy] = useState("public"); // State for privacy
   const textareaRef = useRef(null);
-  const [post, setPost] = useState({
-    content: content,
-    photo: "https://via.placeholder.com/350x300",
-    video: "",
-    comments: [],
-    likes: [],
-    // user: "",
-    date: new Date(),
-    privacy: "public",
-    tags: [],
-    postType: "text",
-  });
+  const fileInputRef = useRef(null);
 
   const createPost = async () => {
     try {
-      const createdPost = {
-        content: content,
-        photo: post.photo,
-        // user: user._id,
-        date: post.date,
-        privacy: post.privacy,
-        tags: post.tags,
-        postType: post.postType,
-        comments: post.comments.length,
-        likes: post.likes.length,
-      };
+      const formData = new FormData();
+      formData.append("content", content);
+      formData.append("user", user._id);
+      if (image) {
+        const blob = await fetch(image).then((res) => res.blob());
+        const file = new File([blob], "image.png", { type: "image/png" });
+        formData.append("photo", file);
+      }
+      if (video) {
+        formData.append("video", video);
+      }
+      formData.append("tags", JSON.stringify(tags));
+      formData.append("privacy", privacy);
 
-      const response = await axios.post(
-        "http://localhost:3000/api/posts",
-        createdPost,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await axios.post(summaryApi.create.url, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      console.log("Post created:", response.data);
+      setContent("");
+      setImage(null);
+      setVideo("");
+      setTags([]);
+      setPrivacy("public");
+      window.location.reload();
     } catch (error) {
       console.error("Error creating post:", error);
     }
@@ -58,12 +64,21 @@ export default function CreatePost() {
     setContent(e.target.value);
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    console.log(file);
+    if (file) {
+      setImage(file);
+    }
+  };
+
+  const handleCameraClick = () => {
+    fileInputRef.current.click();
+  };
+
   const handleShare = (e) => {
     e.preventDefault();
     createPost();
-    console.log(content);
-    setContent("");
-    window.location.reload();
   };
 
   return (
@@ -71,7 +86,7 @@ export default function CreatePost() {
       <form onSubmit={handleShare}>
         <div className="flex items-center gap-4">
           <img
-            src="https://randomuser.me/api/portraits/men/10.jpg"
+            src="https://via.placeholder.com/30x30"
             alt="user-profile"
             className="w-12 h-12 rounded-lg"
           />
@@ -84,11 +99,39 @@ export default function CreatePost() {
             rows={1}
           />
         </div>
+        {image && (
+          <div className="mt-4 relative">
+            <button
+              className="absolute top-2 right-5 text-white"
+              onClick={() => {
+                setImage(null);
+                fileInputRef.current.value = "";
+              }}
+            >
+              <CgClose size={24} />
+            </button>
+            <img
+              src={URL.createObjectURL(image)}
+              alt="Preview"
+              className="w-full rounded-lg"
+            />
+          </div>
+        )}
         <div className="flex justify-between items-center mt-4">
           <div className="flex gap-3 text-gray-500">
-            <div className="bg-gray-200 px-2 py-2 rounded-lg hover:text-blue-500 cursor-pointer">
+            <div
+              className="bg-gray-200 px-2 py-2 rounded-lg hover:text-blue-500 cursor-pointer"
+              onClick={handleCameraClick}
+            >
               <AiOutlineCamera size={20} />
             </div>
+            <input
+              type="file"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+              accept="image/*"
+            />
             <div className="bg-gray-200 px-2 py-2 rounded-lg hover:text-blue-500 cursor-pointer">
               <AiOutlineVideoCamera size={20} />
             </div>

@@ -8,8 +8,8 @@ const postSchema = new mongoose.Schema(
     },
     likes: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        createdAt: { type: Date, default: Date.now },
       },
     ],
     comments: [
@@ -17,6 +17,38 @@ const postSchema = new mongoose.Schema(
         user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         content: { type: String, required: true },
         createdAt: { type: Date, default: Date.now },
+        replies: [
+          {
+            user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+            content: { type: String, required: true },
+            createdAt: { type: Date, default: Date.now },
+            replies: [
+              {
+                user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+                content: { type: String, required: true },
+                createdAt: { type: Date, default: Date.now },
+                likes: [
+                  {
+                    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+                    createdAt: { type: Date, default: Date.now },
+                  },
+                ],
+              },
+            ],
+            likes: [
+              {
+                user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+                createdAt: { type: Date, default: Date.now },
+              },
+            ],
+          },
+        ],
+        likes: [
+          {
+            user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+            createdAt: { type: Date, default: Date.now },
+          },
+        ],
       },
     ],
     photo: { type: String },
