@@ -23,17 +23,28 @@ const createPost = async (req, res) => {
 const getAllPosts = async (req, res) => {
   try {
     console.log("Fetching posts...");
-    const posts = await Post.find()
+    const userId = req.user._id;
+    const userFriends = req.user.friends;
+
+    const posts = await Post.find({
+      $or: [
+        { privacy: 'public' },
+        { privacy: 'friends', user: { $in: userFriends } },
+      ],
+      privacy: { $ne: 'private' },
+    })
       .populate("user", "name")
       .populate("likes", "name")
       .populate("comments.user", "name")
       .sort({ createdAt: -1 });
+
     res.status(200).json(posts);
   } catch (error) {
     console.error("Error fetching posts:", error.message);
     res.status(500).json({ error: error.message });
   }
 };
+
 
 const getPostById = async (req, res) => {
   try {
