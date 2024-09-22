@@ -12,8 +12,8 @@ import Ticket from "./Pages/Ticket/Ticket";
 import { UserProvider } from "./Contexts/UserContext";
 import ProtectedRoute from "./Components/Layout/ProtectedRoute";
 import Chat from "./Components/Chat/Chat";
+import SearchResults from "./Pages/SearchResult/SearchResults";
 import { SharedPostsProvider } from "./Contexts/SharedPostsContext";
-
 export default function App() {
   const router = createBrowserRouter([
     {
@@ -51,6 +51,10 @@ export default function App() {
             {
               path: "/friend-requests",
               element: <FriendRequestsPage />,
+            },
+            {
+              path: "/search-results",
+              element: <SearchResults />,
             },
           ],
         },

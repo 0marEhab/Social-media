@@ -41,8 +41,16 @@ const createPost = async (req, res) => {
 const getAllPosts = async (req, res) => {
   try {
     console.log("Fetching posts...");
-    const posts = await Post.find()
-      .populate("user", "name profilePic")
+    const userFriends = req.user.friends;
+
+    const posts = await Post.find({
+      $or: [
+        { privacy: "public" },
+        { privacy: "friends", user: { $in: userFriends } },
+      ],
+      privacy: { $ne: "private" },
+    })
+      .populate("user", "name")
       .populate("likes", "name")
       .populate("comments.user", "name")
       .populate({
