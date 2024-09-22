@@ -8,8 +8,8 @@ const postSchema = new mongoose.Schema(
     },
     likes: [
       {
-        user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-        createdAt: { type: Date, default: Date.now },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
       },
     ],
     comments: [
@@ -29,30 +29,32 @@ const postSchema = new mongoose.Schema(
                 createdAt: { type: Date, default: Date.now },
                 likes: [
                   {
-                    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-                    createdAt: { type: Date, default: Date.now },
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "User",
                   },
                 ],
               },
             ],
             likes: [
               {
-                user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-                createdAt: { type: Date, default: Date.now },
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
               },
             ],
           },
         ],
         likes: [
           {
-            user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-            createdAt: { type: Date, default: Date.now },
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
           },
         ],
       },
     ],
-    photo: { type: String },
-    video: { type: String },
+    media: {
+      photo: { type: String }, // Store the filename for photo
+      video: { type: String }, // Store the filename for video
+    },
     tags: [{ type: String }],
     privacy: {
       type: String,

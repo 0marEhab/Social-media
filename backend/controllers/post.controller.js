@@ -1,15 +1,29 @@
 const Post = require("../models/Post");
 const mongoose = require("mongoose");
-
 const createPost = async (req, res) => {
-  const media = req.file ? req.file.filename : null;
+  let mediaType = {};
+  console.log("Uploaded files:", req.files); // Log all uploaded files for debugging
+
+  if (req.files) {
+    // Check if photo is uploaded
+    if (req.files.photo && req.files.photo.length > 0) {
+      const photo = req.files.photo[0].filename; // Get the filename of the uploaded photo
+      console.log("Photo filename:", photo);
+      mediaType.photo = photo; // Assign to mediaType
+    }
+    // Check if video is uploaded
+    if (req.files.video && req.files.video.length > 0) {
+      const video = req.files.video[0].filename; // Get the filename of the uploaded video
+      console.log("Video filename:", video);
+      mediaType.video = video; // Assign to mediaType
+    }
+  }
 
   try {
     const post = new Post({
       content: req.body.content,
       user: req.user._id,
-      photo: media,
-      video: req.body.video,
+      media: mediaType, // Use mediaType for the media fields
       tags: req.body.tags,
       privacy: req.body.privacy,
       postType: req.body.postType,
@@ -31,7 +45,12 @@ const getAllPosts = async (req, res) => {
       .populate("user", "name profilePic")
       .populate("likes", "name")
       .populate("comments.user", "name")
+      .populate({
+        path: "sharedPost", // Populate the original post that was shared
+        populate: { path: "user", select: "name profilePic" }, // Populate user of the original post
+      })
       .sort({ createdAt: -1 });
+
     res.status(200).json(posts);
   } catch (error) {
     console.error("Error fetching posts:", error.message);
@@ -538,16 +557,17 @@ const sharePost = async (req, res) => {
   try {
     const postId = req.params.id;
 
-    const originalPost = await Post.findById(postId);
+    const originalPost = await Post.findById(postId).populate(
+      "user",
+      "name email"
+    );
 
     if (!originalPost) {
       return res.status(404).json({ message: "Original post not found" });
     }
-
     const sharedPost = new Post({
       content: originalPost.content,
-      photo: originalPost.photo,
-      video: originalPost.video,
+      media: originalPost.media,
       tags: originalPost.tags,
       user: req.user._id,
       sharedPost: originalPost._id,
@@ -557,7 +577,18 @@ const sharePost = async (req, res) => {
 
     await sharedPost.save();
 
-    res.status(201).json({ message: "Post shared successfully", sharedPost });
+    res.status(201).json({
+      message: "Post shared successfully",
+      sharedPost: {
+        ...sharedPost._doc,
+        originalPost: {
+          content: originalPost.content,
+          media: originalPost.media,
+          tags: originalPost.tags,
+          user: originalPost.user,
+        },
+      },
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

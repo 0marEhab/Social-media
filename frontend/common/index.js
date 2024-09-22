@@ -1,6 +1,8 @@
 const urlDomain = "http://localhost:3000";
-
 const summaryApi = {
+  domain: {
+    url: "http://localhost:3000",
+  },
   login: {
     url: `${urlDomain}/api/login`,
   },
@@ -36,6 +38,9 @@ const summaryApi = {
   },
   share: {
     url: `${urlDomain}/api/posts/share/:id`,
-  }
+  },
+  createTicket: {
+    url: `${urlDomain}/api/createTicket`,
+  },
 };
 export default summaryApi;

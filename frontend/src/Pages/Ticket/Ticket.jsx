@@ -7,6 +7,7 @@ import MediaUploader from "../../Components/FormFields/MediaUploader";
 import SubmitButton from "../../Components/FormFields/SubmitButton";
 import axios from "axios";
 import toast from "react-hot-toast";
+import summaryApi from "../../../common";
 
 const Ticket = () => {
   const [image, setImage] = useState(null);
@@ -37,15 +38,11 @@ const Ticket = () => {
       formData.append("media", file);
     }
     try {
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/createTicket`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      await axios.post(summaryApi.createTicket.url, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       toast.success("Ticket sent successfully!");
       resetForm();
       setImage(null);
@@ -60,7 +57,9 @@ const Ticket = () => {
   return (
     <div className="w-full min-h-screen flex justify-center items-center p-4 sm:p-8 md:p-16 bg-bg">
       <div className="w-full max-w-2xl mx-auto border rounded-xl shadow p-6 sm:p-8 md:p-10 bg-white">
-        <h2 className="text-xl sm:text-2xl font-semibold mb-4">Submit a Ticket</h2>
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4">
+          Submit a Ticket
+        </h2>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}

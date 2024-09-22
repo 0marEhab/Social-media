@@ -58,7 +58,11 @@ export default function SinglePostSideBar() {
             },
           }
         );
-        setComments([...comments, response.data]);
+        console.log(response.data);
+        setComments([
+          ...comments,
+          response.data.post.comments[comments.length],
+        ]);
         setNewComment("");
       } catch (error) {
         console.error("Error adding comment", error);

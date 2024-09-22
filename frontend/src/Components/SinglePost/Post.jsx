@@ -14,6 +14,13 @@ export default function Post() {
   const [showLikes, setShowLikes] = useState(false);
   const { user } = useContext(UserContext);
   const [post, setPost] = useState();
+  const [likes, setLikes] = useState(post ? post.likes : []);
+  const [isLiked, setIsLiked] = useState(false);
+  useEffect(() => {
+    if (post && user) {
+      setIsLiked(post.likes.some((like) => like._id === user._id));
+    }
+  }, [post, user]);
   console.log(post);
   const navigate = useNavigate();
 
@@ -32,15 +39,30 @@ export default function Post() {
             },
           }
         );
-
         setPost(response.data);
       } catch (error) {
         console.error("Error fetching the post", error);
       }
     };
     fetchPost();
-  }, []);
-
+  }, [id]);
+  const handleLike = async () => {
+    try {
+      const response = await axios.post(
+        summaryApi.like.url.replace(":id", post._id),
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setIsLiked((prev) => !prev);
+      setLikes(response.data.likes);
+    } catch (error) {
+      console.error("Error liking the post:", error);
+    }
+  };
   const toggleOptions = () => {
     setShowOptions(!showOptions);
   };
@@ -92,7 +114,10 @@ export default function Post() {
   return (
     <div className="flex text-secondary flex-col justify-start items-start">
       <div className="opacity-65 bg-gray-200 w-24 h-14 rounded-xl bg-transparent flex justify-center items-center gap-3 mb-6 mt-6">
-        <button className="text-xl flex gap-3">
+        <button
+          className="text-xl flex gap-3"
+          onClick={() => navigate(-1)} // Go back to the previous page
+        >
           <p>&lt;</p> Back
         </button>
       </div>
@@ -100,7 +125,7 @@ export default function Post() {
       <div className="flex flex-col justify-between items-start gap-3 lg:items-center lg:flex-row md:items-center md:flex-row w-full mb-10">
         <div className="flex items-center gap-3">
           <img
-            src="http://via.placeholder.com/30x30"
+            // src={`${summaryApi.domain.url}/uploads/${post.user.profilePic}`}
             className="w-16 h-16 rounded-xl"
             alt="user-img"
           />
@@ -111,9 +136,14 @@ export default function Post() {
         </div>
 
         <div className="flex gap-5">
-          <button className="flex items-center gap-1">
-            <AiOutlineHeart />
-            <p>{post.likes.length}</p>
+          <button
+            className={`flex items-center gap-1 ${
+              isLiked ? "text-red-500" : ""
+            }`}
+            onClick={handleLike}
+          >
+            <AiOutlineHeart size={20} />
+            <span>{likes.length}</span>
           </button>
           <div>
             <button onClick={toggleLikes} className="flex items-center gap-1">
@@ -124,7 +154,7 @@ export default function Post() {
               <div className="flex flex-col gap-1 mt-2">
                 {post.likes.map((like) => (
                   <p key={like._id} className="text-gray-700">
-                    {user.name}
+                    {like.name}
                   </p>
                 ))}
               </div>
@@ -163,7 +193,22 @@ export default function Post() {
       </div>
 
       <div className="m-auto">
-        <img src={post.photo} className="w-full rounded-2xl" alt="post-img" />
+        {/* Check if there is a photo and render it */}
+        {post.media.photo ? (
+          <img
+            src={`${summaryApi.domain.url}/uploads/${post.media.photo}`}
+            className="w-full rounded-2xl"
+            alt="post-img"
+          />
+        ) : post.media.video ? (
+          <video controls className="w-full rounded-2xl" alt="post-video">
+            <source
+              src={`${summaryApi.domain.url}/uploads/${post.media.video}`}
+              type="video/mp4"
+            />
+            Your browser does not support the video tag.
+          </video>
+        ) : null}
       </div>
 
       <div className="p-10">

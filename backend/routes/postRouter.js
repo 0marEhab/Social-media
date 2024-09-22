@@ -26,7 +26,7 @@ const {
 } = require("../controllers/post.controller");
 const isAuth = require("../middleware/isAuth");
 
-router.post("/", isAuth, upload.single("photo"), createPost);
+router.post("/", isAuth, upload, createPost);
 
 router.get("/", isAuth, getAllPosts);
 

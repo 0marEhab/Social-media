@@ -12,13 +12,11 @@ import UserContext from "../../Contexts/UserContext";
 
 export default function CreatePost() {
   const { user } = useContext(UserContext);
-  console.log(user);
-
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
-  const [video, setVideo] = useState(""); // Add video state if needed
-  const [tags, setTags] = useState([]); // State for tags
-  const [privacy, setPrivacy] = useState("public"); // State for privacy
+  const [video, setVideo] = useState(null);
+  const [tags, setTags] = useState([]);
+  const [privacy, setPrivacy] = useState("public");
   const textareaRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -27,17 +25,21 @@ export default function CreatePost() {
       const formData = new FormData();
       formData.append("content", content);
       formData.append("user", user._id);
+
+      // Append image if available
       if (image) {
-        const blob = await fetch(image).then((res) => res.blob());
-        const file = new File([blob], "image.png", { type: "image/png" });
-        formData.append("photo", file);
+        formData.append("photo", image); // Ensure this matches the field name in multer
       }
+
+      // Append video if available
       if (video) {
-        formData.append("video", video);
+        formData.append("video", video); // Ensure this matches the field name in multer
       }
+
       formData.append("tags", JSON.stringify(tags));
       formData.append("privacy", privacy);
 
+      // Make the POST request
       const response = await axios.post(summaryApi.create.url, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -45,15 +47,26 @@ export default function CreatePost() {
         },
       });
 
+      // Log success and reset form fields
       console.log("Post created:", response.data);
       setContent("");
       setImage(null);
-      setVideo("");
+      setVideo(null);
       setTags([]);
       setPrivacy("public");
+
+      // Optionally, you can handle success feedback to the user
+
+      // Reload the page or update the state to reflect the new post
       window.location.reload();
     } catch (error) {
+      // Enhanced error handling
       console.error("Error creating post:", error);
+
+      // Optionally, display an error message to the user
+      alert(
+        `Error creating post: ${error.response?.data?.error || error.message}`
+      );
     }
   };
 
@@ -66,13 +79,19 @@ export default function CreatePost() {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    console.log(file);
     if (file) {
-      setImage(file);
+      if (file.type.startsWith("image/")) {
+        setImage(file);
+      } else if (file.type.startsWith("video/")) {
+        setVideo(file);
+      }
     }
   };
 
   const handleCameraClick = () => {
+    fileInputRef.current.click();
+  };
+  const handleVideoClick = () => {
     fileInputRef.current.click();
   };
 
@@ -82,7 +101,7 @@ export default function CreatePost() {
   };
 
   return (
-    <div className="flex flex-col gap-8 bg-white p-5 rounded-lg shadow-md w-full max-w-xl mx-auto">
+    <div className="flex flex-col gap-8 bg-white p-5 rounded-lg shadow-md w-full max-w-xl mx-auto ">
       <form onSubmit={handleShare}>
         <div className="flex items-center gap-4">
           <img
@@ -117,6 +136,24 @@ export default function CreatePost() {
             />
           </div>
         )}
+        {video && (
+          <div className="mt-4 relative">
+            <button
+              className="absolute top-2 right-5 text-white"
+              onClick={() => {
+                setVideo(null);
+                fileInputRef.current.value = "";
+              }}
+            >
+              <CgClose size={24} />
+            </button>
+            <video
+              controls
+              src={URL.createObjectURL(video)}
+              className="w-full rounded-lg"
+            />
+          </div>
+        )}
         <div className="flex justify-between items-center mt-4">
           <div className="flex gap-3 text-gray-500">
             <div
@@ -130,9 +167,12 @@ export default function CreatePost() {
               ref={fileInputRef}
               style={{ display: "none" }}
               onChange={handleFileChange}
-              accept="image/*"
+              accept="image/*,video/*"
             />
-            <div className="bg-gray-200 px-2 py-2 rounded-lg hover:text-blue-500 cursor-pointer">
+            <div
+              onClick={handleVideoClick}
+              className="bg-gray-200 px-2 py-2 rounded-lg hover:text-blue-500 cursor-pointer"
+            >
               <AiOutlineVideoCamera size={20} />
             </div>
             <div className="bg-gray-200 px-2 py-2 rounded-lg hover:text-blue-500 cursor-pointer">

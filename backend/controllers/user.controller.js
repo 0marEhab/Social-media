@@ -39,7 +39,7 @@ exports.Login = async (req, res, next) => {
     res.json({
       token: token,
       message: "Login successful",
-      user:user
+      user: user,
     });
   } catch (err) {
     return next(err);
@@ -76,5 +76,28 @@ exports.updateProfile = async (req, res, next) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "update failed" });
+  }
+};
+
+exports.uploadProfilePicture = async (req, res, next) => {
+  try {
+    const user = req.user;
+    console.log(user);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const profilePic = req.file ? req.file.filename : null; // Get the filename of the uploaded photo
+    // Update user's profile picture
+    user.profilePic = profilePic;
+    console.log(user.profilePic);
+    await user.save();
+
+    return res.status(200).json({
+      message: "Profile picture uploaded successfully",
+      user,
+    });
+  } catch (err) {
+    next(err);
   }
 };
