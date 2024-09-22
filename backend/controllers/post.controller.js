@@ -23,7 +23,6 @@ const createPost = async (req, res) => {
 const getAllPosts = async (req, res) => {
   try {
     console.log("Fetching posts...");
-    const userId = req.user._id;
     const userFriends = req.user.friends;
 
     const posts = await Post.find({
