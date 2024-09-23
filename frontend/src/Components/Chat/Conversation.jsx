@@ -1,30 +1,61 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState, useRef } from "react";
 import {
   IoCall,
   IoVideocam,
   IoAdd,
   IoEllipsisHorizontal,
 } from "react-icons/io5";
+import summaryApi from "../../../common";
+import { format } from "timeago.js";
 
 export default function Conversation({
   selectedConversation,
   handleBackToSidebar,
+  user,
 }) {
-  console.log(selectedConversation);
-  const messages = [
-    {
-      id: 1,
-      sender: "Alice",
-      time: "4 min",
-      content: "did you see his post ",
-    },
-    {
-      id: 2,
-      sender: "Marriet Miles",
-      time: "4 min",
-      content: "Yes, I saw his post yesterday",
-    },
-  ];
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    const getMessages = async () => {
+      try {
+        const res = await axios.get(
+          `${summaryApi.getMessage.url}/${selectedConversation._id}`
+        );
+        setMessages(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getMessages();
+  }, [selectedConversation]);
+
+  // Scroll to the bottom of the messages container
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const handleMessage = async (e) => {
+    e.preventDefault();
+    const message = {
+      sender: user._id,
+      text: newMessage,
+      conversationId: selectedConversation._id,
+    };
+    try {
+      const res = await axios.post(summaryApi.postMessage.url, message);
+      setMessages([...messages, res.data]);
+      setNewMessage("");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="h-full flex flex-col pt-6 md:p-0">
@@ -41,7 +72,7 @@ export default function Conversation({
         </div>
         <div>
           <button
-            className=" ml-10 bg-blue-500 text-white  shadow-md p-2 rounded-md "
+            className="ml-10 bg-blue-500 text-white shadow-md p-2 rounded-md"
             onClick={handleBackToSidebar}
           >
             ← Back
@@ -56,41 +87,46 @@ export default function Conversation({
       </div>
 
       {/* Chat Messages */}
-      <div className="flex-1 p-4 overflow-y-auto space-y-4">
+      <div className="flex-1 p-4 overflow-y-auto space-y-4 max-h-[calc(100vh-150px)]">
         {messages.map((message) => (
           <div
-            key={message.id}
+            key={message._id}
             className={`flex ${
-              message.sender === selectedConversation.name
-                ? "justify-end"
-                : "justify-start"
+              user._id === message.sender ? "justify-end" : "justify-start"
             }`}
           >
             <div
               className={`max-w-xs p-3 rounded-lg ${
-                message.sender === selectedConversation.name
+                user._id === message.sender
                   ? "bg-blue-500 text-white"
                   : "bg-gray-200 text-black"
               }`}
             >
               <div className="flex gap-6 items-center">
-                <p>{message.content}</p>
-                <span className="text-xs ">{message.time}</span>
+                <p>{message.text}</p>
+                <span className="text-xs">{format(message.createdAt)}</span>
               </div>
             </div>
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Typing and Input Section */}
-      <div className="flex items-center p-4 border-t">
-        <button className="text-blue-500">+</button>
-        <input
-          type="text"
-          placeholder="Start typing..."
-          className="flex-1 mx-4 px-4 py-2 border rounded-full"
-        />
-        <button className="text-gray-500">😊</button>
+      <div className="sticky bottom-0 bg-white p-4 border-t w-full">
+        <div className="flex items-center">
+          <button className="text-blue-500">+</button>
+          <form onSubmit={handleMessage} className="w-full mx-4">
+            <input
+              type="text"
+              placeholder="Start typing..."
+              className="flex-1 w-full px-4 py-2 border rounded-full"
+              onChange={(e) => setNewMessage(e.target.value)}
+              value={newMessage}
+            />
+          </form>
+          <button className="text-gray-500">😊</button>
+        </div>
       </div>
     </div>
   );

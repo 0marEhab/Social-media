@@ -39,7 +39,7 @@ exports.Login = async (req, res, next) => {
     res.json({
       token: token,
       message: "Login successful",
-      user:user
+      user: user,
     });
   } catch (err) {
     return next(err);
@@ -76,5 +76,23 @@ exports.updateProfile = async (req, res, next) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "update failed" });
+  }
+};
+
+exports.getUserById = async (req, res, next) => {
+  const userId = req.query.userId;
+  const username = req.query.username;
+  try {
+    const user = userId
+      ? await User.findById(userId)
+      : await User.findOne({ username: username });
+    if (!user) {
+      const error = new Error("User not found");
+      error.statusCode = 404;
+      throw error;
+    }
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json(err);
   }
 };

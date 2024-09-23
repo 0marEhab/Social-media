@@ -7,5 +7,17 @@ const summaryApi = {
   signup: {
     url: `${urlDomain}/api/signup`,
   },
+  getConversation: {
+    url: `${urlDomain}/api/getConversation/`,
+  },
+  getUserById: {
+    url: `${urlDomain}/api/getUserById`,
+  },
+  getMessage: {
+    url: `${urlDomain}/api/getMessage`,
+  },
+  postMessage: {
+    url: `${urlDomain}/api/sendMessage`,
+  },
 };
 export default summaryApi;

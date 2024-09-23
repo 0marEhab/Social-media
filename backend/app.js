@@ -9,6 +9,7 @@ const userRouter = require("./routes/userRouter");
 const ticketRouter = require("./routes/ticketRouter");
 const friendsRoutes = require("./routes/friendsRouter");
 const postRouter = require("./routes/postRouter");
+const chatRouter = require("./routes/chatRouter");
 
 var app = express();
 
@@ -20,10 +21,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api", userRouter);
+app.use("/api", chatRouter);
 app.use("/api", ticketRouter);
 app.use("/api/friends", friendsRoutes);
 app.use("/api/posts", postRouter);
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use(error.notfound);
 

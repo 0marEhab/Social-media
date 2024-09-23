@@ -10,7 +10,7 @@ export const UserProvider = ({ children }) => {
 
     if (token) {
       axios
-        .get(`${import.meta.env.VITE_API_URL}/getUser`, {
+        .get(`http://localhost:3000/api/getUser`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -28,7 +28,9 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>
+    <UserContext.Provider value={{ user, setUser }}>
+      {children}
+    </UserContext.Provider>
   );
 };
 

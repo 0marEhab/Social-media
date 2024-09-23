@@ -1,7 +1,7 @@
 import React from "react";
 import FriendCard from "./FriendCard";
 
-export default function ChatSideBar({ onSelectConversation }) {
+export default function ChatSideBar({ conversation, onSelectConversation,user }) {
   const friends = [
     { id: 1, name: "Alice", lastMessage: "Hey, how's it going?" },
     { id: 2, name: "Bob", lastMessage: "Let's catch up tomorrow!" },
@@ -29,13 +29,13 @@ export default function ChatSideBar({ onSelectConversation }) {
         {/* Inbox */}
         <h2 className="text-3xl font-semibold mb-4">Inbox</h2>
         <ul className="space-y-3 overflow-auto h-[80vh]">
-          {friends.map((friend) => (
+          {conversation.map((c) => (
             <li
-              key={friend.id}
+              key={c.id}
               className="cursor-pointer"
-              onClick={() => onSelectConversation(friend)}
+              onClick={() => onSelectConversation(c)}
             >
-              <FriendCard friend={friend} />
+              <FriendCard conversation={c} currentUser={user} />
             </li>
           ))}
         </ul>
