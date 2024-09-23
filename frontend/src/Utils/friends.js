@@ -1,10 +1,10 @@
 import axios from "axios";
-import {toast} from "react-hot-toast"
+import { toast } from "react-hot-toast";
 
 export const sendFriendRequest = async (userId) => {
   try {
     const response = await axios.post(
-      `${import.meta.env.VITE_API_URL}/friends/request`,
+      `http://localhost:3000/api/friends/request`,
       { recipientId: userId },
       {
         headers: {
@@ -19,14 +19,25 @@ export const sendFriendRequest = async (userId) => {
   }
 };
 
-export const fetchRequests = async (setSentRequests, setReceivedRequests, toast, setLoading) => {
+export const fetchRequests = async (
+  setSentRequests,
+  setReceivedRequests,
+  toast,
+  setLoading
+) => {
   try {
-    const { data: sentData } = await axios.get(`${import.meta.env.VITE_API_URL}/friends/myrequests`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    const { data: receivedData } = await axios.get(`${import.meta.env.VITE_API_URL}/friends/requests`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
+    const { data: sentData } = await axios.get(
+      `http://localhost:3000/api/friends/myrequests`,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
+    const { data: receivedData } = await axios.get(
+      `http://localhost:3000/api/friends/requests`,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
     setSentRequests(sentData);
     setReceivedRequests(receivedData);
   } catch (error) {
@@ -39,7 +50,7 @@ export const fetchRequests = async (setSentRequests, setReceivedRequests, toast,
 
 export const handleUnsendRequest = async (userId, setSentRequests) => {
   try {
-    await axios.delete(`${import.meta.env.VITE_API_URL}/friends/request`, {
+    await axios.delete(`http://localhost:3000/api/friends/request`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       data: { recipientId: userId },
     });
@@ -55,7 +66,7 @@ export const handleUnsendRequest = async (userId, setSentRequests) => {
 export const handleAcceptRequest = async (userId, setReceivedRequests) => {
   try {
     await axios.post(
-      `${import.meta.env.VITE_API_URL}/friends/accept`,
+      `http://localhost:3000/api/friends/accept`,
       { requesterId: userId },
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -73,7 +84,7 @@ export const handleAcceptRequest = async (userId, setReceivedRequests) => {
 export const handleRejectRequest = async (userId, setReceivedRequests) => {
   try {
     await axios.post(
-      `${import.meta.env.VITE_API_URL}/friends/reject`,
+      `http://localhost:3000/api/friends/reject`,
       { requesterId: userId },
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
