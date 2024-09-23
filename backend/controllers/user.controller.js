@@ -93,6 +93,27 @@ exports.getUserById = async (req, res, next) => {
     }
     res.status(200).json(user);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json(err);}
+  }
+exports.uploadProfilePicture = async (req, res, next) => {
+  try {
+    const user = req.user;
+    console.log(user);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const profilePic = req.file ? req.file.filename : null; // Get the filename of the uploaded photo
+    // Update user's profile picture
+    user.profilePic = profilePic;
+    console.log(user.profilePic);
+    await user.save();
+
+    return res.status(200).json({
+      message: "Profile picture uploaded successfully",
+      user,
+    });
+  } catch (err) {
+    next(err);
   }
 };

@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
+import summaryApi from "../../common";
 
 const UserContext = createContext();
 
@@ -10,7 +11,7 @@ export const UserProvider = ({ children }) => {
 
     if (token) {
       axios
-        .get(`http://localhost:3000/api/getUser`, {
+        .get(summaryApi.user.url, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

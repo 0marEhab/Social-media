@@ -14,11 +14,10 @@ export default function MyFriendsPage() {
     const fetchFriends = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/friends/get`,
+          `http://localhost:3000/api/friends/get`,
           {
             headers: {
-              Authorization:
-                `Bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }
         );
@@ -34,7 +33,7 @@ export default function MyFriendsPage() {
   }, []);
 
   if (loading) {
-    return <Loading color={"#666AEC"}/>;
+    return <Loading color={"#666AEC"} />;
   }
 
   if (error) {

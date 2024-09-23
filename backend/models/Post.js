@@ -17,10 +17,44 @@ const postSchema = new mongoose.Schema(
         user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         content: { type: String, required: true },
         createdAt: { type: Date, default: Date.now },
+        replies: [
+          {
+            user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+            content: { type: String, required: true },
+            createdAt: { type: Date, default: Date.now },
+            replies: [
+              {
+                user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+                content: { type: String, required: true },
+                createdAt: { type: Date, default: Date.now },
+                likes: [
+                  {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "User",
+                  },
+                ],
+              },
+            ],
+            likes: [
+              {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+              },
+            ],
+          },
+        ],
+        likes: [
+          {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+          },
+        ],
       },
     ],
-    photo: { type: String },
-    video: { type: String },
+    media: {
+      photo: { type: String }, // Store the filename for photo
+      video: { type: String }, // Store the filename for video
+    },
     tags: [{ type: String }],
     privacy: {
       type: String,

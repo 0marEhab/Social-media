@@ -1,24 +1,42 @@
 const multer = require("multer");
-const path = require("path");
+const fs = require("fs");
 
+// Define storage
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
+  destination: function (req, file, cb) {
+    const dir = "uploads/";
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
+    cb(null, dir);
   },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + "-" + file.originalname);
   },
 });
 
+// Define file filter
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "video/mp4",
+    "video/webm",
+  ];
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error("Invalid file type"), false);
+    cb(new Error("Invalid file type. Only images and videos are allowed."));
   }
 };
 
-const upload = multer({ storage, fileFilter });
+// Export multer for multiple file fields
+const upload = multer({ storage, fileFilter }).fields([
+  { name: "photo", maxCount: 1 },
+  { name: "video", maxCount: 1 },
+  { name: "media", maxCount: 1 },
+]);
 
 module.exports = upload;

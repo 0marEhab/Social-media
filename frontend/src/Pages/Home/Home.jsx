@@ -4,6 +4,7 @@ import HomeSideBar from "../../Components/Home/HomeSideBar";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Loading from "./../../Components/Layout/Loading";
+import summaryApi from "../../../common";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -11,7 +12,7 @@ const Home = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/posts", {
+        const response = await axios.get(summaryApi.posts.url, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -29,7 +30,7 @@ const Home = () => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-11 gap-10 bg-bg">
-      <div className="col-span-11 md:col-span-8 lg:col-span-7 p-12 ">
+      <div className="col-span-11 md:col-span-8 lg:col-span-7 p-12 ml-44  ">
         <CreatePost />
         {loading ? (
           <Loading color={"#000"} />

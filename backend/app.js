@@ -10,6 +10,7 @@ const ticketRouter = require("./routes/ticketRouter");
 const friendsRoutes = require("./routes/friendsRouter");
 const postRouter = require("./routes/postRouter");
 const chatRouter = require("./routes/chatRouter");
+const searchRouter = require("./routes/searchRouter");
 
 var app = express();
 
@@ -17,12 +18,16 @@ app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false }));
 
+app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api", userRouter);
 app.use("/api", chatRouter);
+app.use("/api", searchRouter);
 app.use("/api", ticketRouter);
+app.use("/api/friends", friendsRoutes);
 app.use("/api/friends", friendsRoutes);
 app.use("/api/posts", postRouter);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
