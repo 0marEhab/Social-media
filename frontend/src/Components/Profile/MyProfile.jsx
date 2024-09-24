@@ -1,11 +1,15 @@
-import React, { useReducer } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 import Photos from "./Photos";
 import Post from './Post';
 import Videos from './Videos';
 import Details from './Details';
 import { FaAngleLeft } from "react-icons/fa";
+import summaryApi from "../../../common/index";
+import axios from 'axios';
+import { Link, useParams } from 'react-router-dom';
+import Loading from '../Layout/Loading';
 
-// Reducer function to handle visibility
+
 const reducer = (state, action) => {
   switch (action.type) {
     case 'SHOW_POSTS':
@@ -22,29 +26,104 @@ const reducer = (state, action) => {
 };
 
 export default function Profile() {
-  // Initial state with 'posts' as default
   const [state, dispatch] = useReducer(reducer, { activeTab: 'posts' });
+  const [data, setData] = useState(null);
+  const { id } = useParams(); 
+
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(summaryApi.profile.url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setData(response.data.user);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    const fetchUserById = async (userId) => {
+    
+      console.log(userId);
+      try {
+        const response = await axios.get(`${summaryApi.profile.url}/${userId}`);
+        setData(response.data.user);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        fetchUserProfile();
+        throw error;
+
+      }
+    };
+
+
+if(!id){
+    fetchUserProfile();
+    
+}else{
+    fetchUserById(id);
+}
+  }, []);
+
+  if (!data) {
+    return <Loading color={"#666AEC"}/>;
+  }
+
+  // Destructure user data
+  const {
+    _id,
+    name,
+    email,
+    birthDate,
+    country,
+    isAdmin,
+    createdAt,
+    updatedAt,
+    friendRequests,
+    friends,
+    notifications,
+    posts,
+    profilePic,
+  } = data;
+  const postsCount=posts.length;
+  console.log("User Data:", data); 
+
+ 
+
+
 
   return (
     <>
-      {/* Outer container with gray background covering sides and top */}
       <div className="bg-gray-100 min-h-screen">
-        {/* Inner container centered with white content */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-28">
             {/* Left Column: Details */}
             <div className="flex flex-col lg:w-1/4 w-full mt-10 lg:mt-20 lg:items-start">
               {/* Button above Details */}
               <div className="mb-4 lg:mb-0">
-              <button className="font-serif bg-gray-200 text-gray-500 font-semibold px-4 py-2 rounded-2xl w-36 h-16 mb-8 flex items-center justify-center space-x-2">
-                <FaAngleLeft size={24}/>
-                <span>Back</span>
-              </button>
+                <Link to="/">
+                <button className="font-serif bg-gray-200 text-gray-500 font-semibold px-4 py-2 rounded-2xl w-36 h-16 mb-8 flex items-center justify-center space-x-2">
+                  <FaAngleLeft size={24}/>
+                  <span>Back</span>
+                </button>
+              </Link>
 
               </div>
-              {/* Center Details on mobile screens */}
               <div className="w-full lg:max-w-xs mx-auto lg:mx-0">
-                <Details />
+              
+                <Details  
+                  name={name}
+                  email={email}
+                  birthDate={birthDate}
+                  country={country}
+                  friends={friends}
+                  profilePic={profilePic}
+                  postsCount={postsCount} />
               </div>
             </div>
 
@@ -80,7 +159,6 @@ export default function Profile() {
                 </div>
               </div>
 
-              {/* Content Rendering Based on Active Tab */}
               {state.activeTab === 'posts' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-6 pb-6">
                   <Post className="w-full h-full" />
