@@ -4,8 +4,8 @@ import summaryApi from "../../../common";
 
 export default function FriendCard({ conversation, currentUser }) {
   const [user, setUser] = useState(null);
-
   const token = localStorage.getItem("token");
+
   useEffect(() => {
     const friendId = conversation.members.find((m) => m !== currentUser._id);
 
@@ -28,7 +28,7 @@ export default function FriendCard({ conversation, currentUser }) {
   }, [currentUser, conversation]);
 
   return (
-    <li className="flex items-center justify-between p-2 bg-gray-100 hover:bg-gray-200 flex-wrap rounded-lg cursor-pointer">
+    <div className="flex items-center justify-between p-2 bg-gray-100 hover:bg-gray-200 flex-wrap rounded-lg cursor-pointer">
       <div className="flex items-center space-x-2">
         <img
           src={user ? user.profilePic : "https://via.placeholder.com/40"}
@@ -44,6 +44,6 @@ export default function FriendCard({ conversation, currentUser }) {
         3:03pm
         <span className="ml-2 text-red-500">●</span>
       </div>
-    </li>
+    </div>
   );
 }
