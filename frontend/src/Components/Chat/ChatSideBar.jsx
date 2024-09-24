@@ -1,17 +1,11 @@
 import React from "react";
 import FriendCard from "./FriendCard";
 
-export default function ChatSideBar({ conversation, onSelectConversation,user }) {
-  const friends = [
-    { id: 1, name: "Alice", lastMessage: "Hey, how's it going?" },
-    { id: 2, name: "Bob", lastMessage: "Let's catch up tomorrow!" },
-    { id: 3, name: "Charlie", lastMessage: "Can you send the report?" },
-    { id: 4, name: "Charlie", lastMessage: "Can you send the report?" },
-    { id: 5, name: "Charlie", lastMessage: "Can you send the report?" },
-    { id: 6, name: "Charlie", lastMessage: "Can you send the report?" },
-    { id: 7, name: "omar", lastMessage: "Can you send the report?" },
-  ];
-
+export default function ChatSideBar({
+  conversation,
+  onSelectConversation,
+  user,
+}) {
   return (
     <aside className="w-full lg:w-1/4 bg-white border-r border-gray-200 h-full">
       <div className="px-10 py-2">
@@ -29,9 +23,9 @@ export default function ChatSideBar({ conversation, onSelectConversation,user })
         {/* Inbox */}
         <h2 className="text-3xl font-semibold mb-4">Inbox</h2>
         <ul className="space-y-3 overflow-auto h-[80vh]">
-          {conversation.map((c) => (
+          {conversation.map((c, index) => (
             <li
-              key={c.id}
+              key={c.id || index} // Use index as a fallback if id is not unique
               className="cursor-pointer"
               onClick={() => onSelectConversation(c)}
             >

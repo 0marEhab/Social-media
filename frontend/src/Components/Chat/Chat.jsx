@@ -1,29 +1,50 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import ChatSideBar from "./ChatSideBar";
 import Conversation from "./Conversation";
 import UserContext from "../../Contexts/UserContext";
 import axios from "axios";
 import summaryApi from "../../../common";
+import { io } from "socket.io-client";
+
 export default function Chat() {
   const { user } = useContext(UserContext);
   const [conversations, setConversations] = useState([]);
-
+  const socket = useRef();
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
 
   useEffect(() => {
-    const getConversations = async () => {
-      try {
-        const res = await axios.get(summaryApi.getConversation.url + user._id);
+    socket.current = io("ws://localhost:8900");
+  }, []);
 
-        setConversations(res.data);
-      } catch (err) {
-        console.log(err);
+  useEffect(() => {
+    if (user) {
+      socket.current.emit("addUser", user._id);
+      socket.current.on("getUsers", (users) => {
+        console.log(users);
+      });
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const getConversations = async () => {
+      // Ensure user is available before making the API request
+      if (user && user._id) {
+        try {
+          const res = await axios.get(
+            summaryApi.getConversation.url + user._id
+          );
+          setConversations(res.data);
+        } catch (err) {
+          console.log(err);
+        }
       }
     };
     getConversations();
-  }, [user]);
+  }, [user]); // This effect runs whenever `user` changes
 
+
+  
   const handleSelectConversation = (conversation) => {
     setSelectedConversation(conversation);
     setIsSidebarVisible(false);
@@ -53,12 +74,11 @@ export default function Chat() {
       >
         {selectedConversation ? (
           <div className="relative w-full h-full text-center">
-            {/* Show back button */}
-
             <Conversation
               user={user}
               selectedConversation={selectedConversation}
               handleBackToSidebar={handleBackToSidebar}
+              socket={socket}
             />
           </div>
         ) : (

@@ -13,10 +13,28 @@ export default function Conversation({
   selectedConversation,
   handleBackToSidebar,
   user,
+  socket,
 }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [arrivalMessage, setArrivalMessage] = useState(null);
   const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    socket.current.on("getMessage", (data) => {
+      setArrivalMessage({
+        sender: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    arrivalMessage &&
+      selectedConversation?.members.includes(arrivalMessage.sender) &&
+      setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage, selectedConversation]);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -32,7 +50,6 @@ export default function Conversation({
     getMessages();
   }, [selectedConversation]);
 
-  // Scroll to the bottom of the messages container
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -43,14 +60,38 @@ export default function Conversation({
 
   const handleMessage = async (e) => {
     e.preventDefault();
+    const tempId = Date.now(); // Generate a temporary key
     const message = {
+      _id: tempId, // Temporary ID
       sender: user._id,
       text: newMessage,
       conversationId: selectedConversation._id,
+      createdAt: Date.now(), // Add createdAt for consistency
     };
+
+    const receiverId = selectedConversation.members.find(
+      (member) => member !== user._id
+    );
+
+    socket.current.emit("sendMessage", {
+      senderId: user._id,
+      receiverId,
+      text: newMessage,
+    });
+
+    // Optimistically add the new message to the state with a temporary key
+    setMessages([...messages, message]);
+
     try {
-      const res = await axios.post(summaryApi.postMessage.url, message);
-      setMessages([...messages, res.data]);
+      const res = await axios.post(summaryApi.postMessage.url, {
+        sender: user._id,
+        text: newMessage,
+        conversationId: selectedConversation._id,
+      });
+      // Replace the temporary message with the one from the server
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) => (msg._id === tempId ? res.data : msg))
+      );
       setNewMessage("");
     } catch (err) {
       console.log(err);
@@ -90,7 +131,7 @@ export default function Conversation({
       <div className="flex-1 p-4 overflow-y-auto space-y-4 max-h-[calc(100vh-150px)]">
         {messages.map((message) => (
           <div
-            key={message._id}
+            key={Math.random()}
             className={`flex ${
               user._id === message.sender ? "justify-end" : "justify-start"
             }`}

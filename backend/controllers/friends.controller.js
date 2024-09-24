@@ -1,5 +1,5 @@
 const User = require("../models/User");
-
+const Conversation = require("../models/Conversation");
 const sendFriendRequest = async (req, res) => {
   try {
     const { recipientId } = req.body;
@@ -60,6 +60,10 @@ const acceptFriendRequest = async (req, res) => {
       return res.status(400).json({ message: "Friend request does not exist" });
     }
 
+    const newConversation = new Conversation({
+      members: [userId, requesterId],
+    });
+
     user.friendRequests.pull(requesterId);
     user.friends.push(requesterId);
 
@@ -68,6 +72,7 @@ const acceptFriendRequest = async (req, res) => {
 
     await user.save();
     await requester.save();
+    await newConversation.save();
 
     res.status(200).json({ message: "Friend request accepted" });
   } catch (error) {
