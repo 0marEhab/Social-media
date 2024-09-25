@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate,useLocation } from "react-router-dom";
 import Logo from "./../../Assets/Images/logo.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -19,6 +19,12 @@ export default function SideBar() {
     localStorage.removeItem("token");
     setUser(null);
     navigate("/signing");
+  };
+  const location = useLocation();
+  const handleProfileLink = () => {
+    if (location.pathname === '/profile') {
+      window.location.reload(); 
+    }
   };
 
   return (
@@ -40,13 +46,14 @@ export default function SideBar() {
         <FontAwesomeIcon icon={faCalendar} />
       </Link>
       <Link
-        to="/"
+        to="/chat"
         className="p-3 mb-3 rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
       >
         <FontAwesomeIcon icon={faEnvelope} />
       </Link>
       <Link
-        to="/"
+        to="/profile"
+        onClick={handleProfileLink}
         className="p-3 mb-3 rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
       >
         <FontAwesomeIcon icon={faUser} />

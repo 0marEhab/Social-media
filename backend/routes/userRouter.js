@@ -8,6 +8,9 @@ router.post("/login", userController.Login);
 router.get("/getUser", isAuth, userController.Profile);
 router.get("/getUserById", isAuth, userController.getUserById);
 router.put("/editUser", isAuth, userController.updateProfile);
+router.get('/getUser/:id', userController.getUserProfile);
+
+
 
 router.post(
   "/uploadProfilePicture",
