@@ -11,6 +11,7 @@ const friendsRoutes = require("./routes/friendsRouter");
 const postRouter = require("./routes/postRouter");
 const chatRouter = require("./routes/chatRouter");
 const searchRouter = require("./routes/searchRouter");
+const adminRouter = require("./routes/adminRouter");
 
 var app = express();
 
@@ -30,6 +31,7 @@ app.use("/api", ticketRouter);
 app.use("/api/friends", friendsRoutes);
 app.use("/api/friends", friendsRoutes);
 app.use("/api/posts", postRouter);
+app.use("/api/admin", adminRouter);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use(error.notfound);
