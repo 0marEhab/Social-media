@@ -28,7 +28,6 @@ app.use("/api", chatRouter);
 app.use("/api", searchRouter);
 app.use("/api", ticketRouter);
 app.use("/api/friends", friendsRoutes);
-app.use("/api/friends", friendsRoutes);
 app.use("/api/posts", postRouter);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 

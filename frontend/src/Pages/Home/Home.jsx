@@ -30,7 +30,7 @@ const Home = () => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-11 gap-10 bg-bg">
-      <div className="col-span-11 md:col-span-8 lg:col-span-7 p-12 ml-44  ">
+      <div className="col-span-11 md:col-span-8 lg:col-span-7 p-12 lg:ml-44  ">
         <CreatePost />
         {loading ? (
           <Loading color={"#000"} />

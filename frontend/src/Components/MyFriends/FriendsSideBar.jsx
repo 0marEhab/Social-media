@@ -4,6 +4,7 @@ import { sendFriendRequest } from "../../Utils/friends";
 import { toast } from "react-hot-toast";
 import Loading from "../Layout/Loading";
 import FriendSuggestionCard from "./FriendSuggestionCard";
+import summaryApi from "../../../common";
 
 export default function FriendsSideBar() {
   const [suggestions, setSuggestions] = useState([]);
@@ -13,14 +14,11 @@ export default function FriendsSideBar() {
     const fetchSuggestions = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
-          `http://localhost:3000/api/friends/suggestions`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
+        const response = await axios.get(summaryApi.suggestions.url, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
         setSuggestions(response.data);
       } catch (error) {
         console.error("Error fetching suggestions:", error);
