@@ -10,11 +10,13 @@ import moment from "moment";
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../../Contexts/UserContext";
 import summaryApi from "../../../common";
-
+import Swal from "sweetalert2";
+import PostOptions from "./PostOptions"; // Import the refactored dropdown component
 export default function PostCard({ post }) {
   const { user, setSharedPosts } = useContext(UserContext);
   const relativeTime = moment(post.createdAt).fromNow();
   const [likes, setLikes] = useState(post.likes);
+
   const [isLiked, setIsLiked] = useState(
     user ? likes.some((like) => like._id === user._id) : false
   );
@@ -43,22 +45,82 @@ export default function PostCard({ post }) {
     }
   };
 
-  const editPost = () => {
-    navigate(`/posts/edit/${post._id}`);
+  const editPost = async () => {
+    try {
+      navigate(`/posts/edit/${post._id}`);
+      Swal.fire({
+        icon: "success",
+        title: "Post is ready for editing!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong with editing!",
+      });
+    }
   };
 
   const deletePost = async () => {
-    if (window.confirm("Are you sure you want to delete this post?")) {
-      try {
-        await axios.delete(summaryApi.delete.url.replace(":id", post._id), {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(summaryApi.delete.url.replace(":id", post._id), {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+
+          // Show success alert and reload the window after a delay
+          Swal.fire("Deleted!", "Your post has been deleted.", "success").then(
+            () => {
+              navigate(0);
+            }
+          );
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Something went wrong with deleting!",
+          });
+        }
+      }
+    });
+  };
+
+  const reportPost = async () => {
+    try {
+      const response = await axios.post(
+        summaryApi.reportPost.url.replace(":id", post._id),
+        {
+          userId: user._id,
+          reportedReason: "Inappropriate Content", // Placeholder reason, update based on your radio input handling
+        },
+        {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        });
-        alert("Post deleted successfully.");
-      } catch (error) {
-        console.error("Error deleting the post:", error);
-      }
+        }
+      );
+
+      console.log(response.data);
+      Swal.fire("Reported!", "This post has been reported.", "success");
+    } catch (error) {
+      Swal.fire(
+        "Error",
+        "Something went wrong with reporting the post.",
+        "error"
+      );
     }
   };
 
@@ -73,21 +135,26 @@ export default function PostCard({ post }) {
           },
         }
       );
-
       var { sharedPost } = response.data;
 
-      alert("Post shared successfully!");
-
-      console.log("Shared post details:", sharedPost);
-      console.log("Shared post name:", sharedPost.originalPost.user.name);
-
-      // Optionally update shared posts in the parent or context
+      Swal.fire({
+        icon: "success",
+        title: "Post shared successfully!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      setTimeout(() => {
+        navigate(`/posts/${sharedPost._id}`);
+      }, 1000);
       if (setSharedPosts) {
         setSharedPosts((prevPosts) => [...prevPosts, sharedPost]);
       }
     } catch (error) {
-      console.error("Error sharing the post:", error);
-      alert("Failed to share the post.");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Failed to share the post.",
+      });
     }
   };
 
@@ -96,47 +163,49 @@ export default function PostCard({ post }) {
       {/* Post Header */}
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-3">
-          <img
-            src={post.user.profilePic}
-            alt={`${post.user.name}'s profile`}
-            className="w-12 h-12 rounded-full"
-          />
+          <Link to={`/profile/${post.user._id}`}>
+            {" "}
+            <img
+              src={post.user.profilePic}
+              alt={`${post.user.name}'s profile`}
+              className="w-12 h-12 rounded-full"
+            />
+          </Link>
+
           <div>
-            <h4 className="font-bold">{post.user.name}</h4>
-            <p className="text-gray-500 text-sm">{relativeTime}</p>
-            {/* Show the "Shared from" message only for shared posts */}
+            <Link to={`/profile/${post.user._id}`}>
+              <h4 className="font-bold hover:underline">{post.user.name}</h4>
+            </Link>
+            <p className="text-gray-500 text-sm">
+              {relativeTime} • {post.privacy}
+            </p>
+
             {post.sharedPost && (
               <h6>Shared from: {post.sharedPost.user.name}</h6>
             )}
           </div>
         </div>
-        {/* Show options (Edit, Delete) if the post belongs to the current user */}
-        {user && user._id === post.user._id && (
-          <button className="relative">
-            <BsThreeDots
-              onClick={toggleOptions}
-              className="text-gray-500 cursor-pointer"
+        
+
+        <button className="relative">
+          <BsThreeDots
+            onClick={toggleOptions}
+            className="text-gray-500 cursor-pointer"
+          />
+          {showOptions && (
+            <PostOptions
+              post={post}
+              postId={post._id}
+              editPost={user && user._id === post.user._id ? editPost : null}
+              deletePost={
+                user && user._id === post.user._id ? deletePost : null
+              }
+              reportPost={
+                user && user._id !== post.user._id ? reportPost : null
+              }
             />
-            {showOptions && (
-              <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                <ul className="py-2">
-                  <li
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700"
-                    onClick={editPost}
-                  >
-                    Edit Post
-                  </li>
-                  <li
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600"
-                    onClick={deletePost}
-                  >
-                    Delete Post
-                  </li>
-                </ul>
-              </div>
-            )}
-          </button>
-        )}
+          )}
+        </button>
       </div>
 
       {/* Post Content */}
@@ -145,15 +214,13 @@ export default function PostCard({ post }) {
           <img
             src={`${summaryApi.domain.url}/uploads/${post.media.photo}`}
             alt="post content"
-            className="w-full h-48 object-cover object-center rounded-lg mb-4"
-            name="photo"
+            className="w-full max-h-[400px] object-cover object-center rounded-lg mb-4"
           />
         )}
-
         {post.media?.video && (
           <video
             controls
-            className="w-full h-48 object-cover object-center rounded-lg mb-4"
+            className="w-full max-h-[400px] object-cover object-center rounded-lg mb-4"
           >
             <source
               src={`${summaryApi.domain.url}/uploads/${post.media.video}`}
@@ -162,7 +229,6 @@ export default function PostCard({ post }) {
             Your browser does not support the video tag.
           </video>
         )}
-
         <p className="text-gray-500 mt-2 mb-4">{post.content}</p>
         <p className="text-blue-500 font-bold cursor-pointer">
           <Link to={`/posts/${post._id}`}>READ MORE</Link>

@@ -37,6 +37,9 @@ const summaryApi = {
   addComment: {
     url: `${urlDomain}/api/posts/comment/:id`,
   },
+  likeComment: {
+    url: `${urlDomain}/api/posts/:id/comment/:commentId/like`,
+  },
   delete: {
     url: `${urlDomain}/api/posts/:id`,
   },
@@ -54,6 +57,15 @@ const summaryApi = {
   },
   createTicket: {
     url: `${urlDomain}/api/createTicket`,
+  },
+  myFriends: {
+    url: `${urlDomain}/api/friends/get`,
+  },
+  suggestions: {
+    url: `${urlDomain}/api/friends/suggestions`,
+  },
+  reportPost: {
+    url: `${urlDomain}/api/posts/reportPost/:id`,
   },
 };
 

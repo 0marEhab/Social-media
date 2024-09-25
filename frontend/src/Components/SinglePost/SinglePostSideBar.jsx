@@ -6,32 +6,16 @@ import { useParams } from "react-router-dom";
 import moment from "moment";
 import summaryApi from "../../../common";
 import UserContext from "../../Contexts/UserContext";
-
-export default function SinglePostSideBar() {
+import { BsThreeDots } from "react-icons/bs";
+export default function SinglePostSideBar({ comments }) {
   const { user } = useContext(UserContext);
-  const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const { id } = useParams();
   const [relativeTimes, setRelativeTimes] = useState([]);
-
-  useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const response = await axios.get(
-          summaryApi.post.url.replace(":id", id),
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-        setComments(response.data.comments);
-      } catch (error) {
-        console.error("Error fetching comments", error);
-      }
-    };
-    fetchComments();
-  }, [id]);
+  const [showOptions, setShowOptions] = useState(false);
+  const toggleOptions = () => {
+    setShowOptions(!showOptions);
+  };
 
   useEffect(() => {
     const updateRelativeTimes = () => {
@@ -95,8 +79,34 @@ export default function SinglePostSideBar() {
                 className="w-10 h-10 rounded-full"
               />
               <div>
-                <div className="flex items-center justify-between gap-12 lg:gap-[150px] md:gap-[525px] w-full">
-                  <p className="text-white font-semibold">{user.name}</p>
+                <div className="flex items-center justify-between gap-12 lg:gap-[200px] md:gap-[525px] w-full">
+                  <div className="flex items-center gap-5">
+                    <p className="text-white font-semibold">{user.name}</p>
+                    <button className="relative">
+                      <BsThreeDots
+                        onClick={() => toggleOptions(index)}
+                        className="text-gray-500 cursor-pointer"
+                      />
+                      {showOptions && (
+                        <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                          <ul className="py-2">
+                            <li
+                              className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700"
+                              // onClick={editComment}
+                            >
+                              Edit Post
+                            </li>
+                            <li
+                              className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600"
+                              // onClick={deleteComment}
+                            >
+                              Delete Post
+                            </li>
+                          </ul>
+                        </div>
+                      )}
+                    </button>
+                  </div>
                   <p className="text-gray-400 text-sm">
                     {relativeTimes[index]}
                   </p>

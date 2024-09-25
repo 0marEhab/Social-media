@@ -1,4 +1,5 @@
 const Post = require("../models/Post");
+const User = require("../models/User");
 const mongoose = require("mongoose");
 const User = require("../models/User");
 
@@ -6,18 +7,18 @@ const User = require("../models/User");
 
 const createPost = async (req, res) => {
   let mediaType = {};
-  console.log("Uploaded files:", req.files); 
+  console.log("Uploaded files:", req.files);
 
   if (req.files) {
     if (req.files.photo && req.files.photo.length > 0) {
-      const photo = req.files.photo[0].filename; 
+      const photo = req.files.photo[0].filename;
       console.log("Photo filename:", photo);
-      mediaType.photo = photo; 
+      mediaType.photo = photo;
     }
     if (req.files.video && req.files.video.length > 0) {
-      const video = req.files.video[0].filename; 
+      const video = req.files.video[0].filename;
       console.log("Video filename:", video);
-      mediaType.video = video; 
+      mediaType.video = video;
     }
   }
 
@@ -25,18 +26,17 @@ const createPost = async (req, res) => {
     const post = new Post({
       content: req.body.content,
       user: req.user._id,
-      media: mediaType, 
+      media: mediaType,
       tags: req.body.tags,
       privacy: req.body.privacy,
-      postType: req.body.postType,
     });
 
     const savedPost = await post.save();
 
     await User.findByIdAndUpdate(
       req.user._id,
-      { $push: { posts: savedPost._id } }, 
-      { new: true } 
+      { $push: { posts: savedPost._id } },
+      { new: true }
     );
 
     res
@@ -63,8 +63,8 @@ const getAllPosts = async (req, res) => {
       .populate("likes", "name")
       .populate("comments.user", "name")
       .populate({
-        path: "sharedPost", // Populate the original post that was shared
-        populate: { path: "user", select: "name profilePic" }, // Populate user of the original post
+        path: "sharedPost",
+        populate: { path: "user", select: "name profilePic" },
       })
       .sort({ createdAt: -1 });
 
@@ -88,7 +88,25 @@ const getPostById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 const updatePost = async (req, res) => {
+  let mediaType = {};
+  console.log("Uploaded files:", req.files); // Log all uploaded files for debugging
+
+  if (req.files) {
+    // Check if photo is uploaded
+    if (req.files.photo && req.files.photo.length > 0) {
+      const photo = req.files.photo[0].filename; // Get the filename of the uploaded photo
+      console.log("Photo filename:", photo);
+      mediaType.photo = photo; // Assign to mediaType
+    }
+    // Check if video is uploaded
+    if (req.files.video && req.files.video.length > 0) {
+      const video = req.files.video[0].filename; // Get the filename of the uploaded video
+      console.log("Video filename:", video);
+      mediaType.video = video; // Assign to mediaType
+    }
+  }
   try {
     const post = await Post.findById(req.params.id);
 
@@ -104,8 +122,7 @@ const updatePost = async (req, res) => {
       req.params.id,
       {
         content: req.body.content,
-        photo: req.body.photo,
-        video: req.body.video,
+        media: mediaType, // Use mediaType for the media fields
         tags: req.body.tags,
         privacy: req.body.privacy,
       },
@@ -120,17 +137,30 @@ const updatePost = async (req, res) => {
 
 const deletePost = async (req, res) => {
   try {
+    // Find the post by ID
     const post = await Post.findById(req.params.id);
 
-    if (!post) return res.status(404).json({ message: "Post not found" });
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
 
+    // Check if the current user is the owner of the post
     if (post.user.toString() !== req.user._id.toString()) {
       return res
         .status(403)
         .json({ message: "Unauthorized to delete this post" });
     }
 
+    // Delete the post
     await Post.findByIdAndDelete(req.params.id);
+
+    // Remove the post ID from the user's posts array
+    await User.findByIdAndUpdate(
+      req.user._id, // The user's ID
+      { $pull: { posts: req.params.id } }, // Pull the post ID from the user's posts array
+      { new: true } // Return the updated document
+    );
+
     res.status(200).json({ message: "Post deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -589,7 +619,6 @@ const sharePost = async (req, res) => {
       user: req.user._id,
       sharedPost: originalPost._id,
       privacy: originalPost.privacy,
-      postType: originalPost.postType,
     });
 
     await sharedPost.save();
@@ -606,6 +635,55 @@ const sharePost = async (req, res) => {
         },
       },
     });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const reportPost = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    post.reported = true;
+    post.reportedBy = req.user._id;
+    post.reportedReason = req.body.reportedReason;
+    await post.save();
+    res
+      .status(200)
+      .json({ message: "Post reported successfully", reportedPost: post });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const getReportedPosts = async (req, res) => {
+  try {
+    const reportedPosts = await Post.find({ reported: true })
+      .populate({
+        path: "reportedBy",
+        select: "name email",
+      })
+      .exec();
+
+    res.status(200).json({ reportedPosts: reportedPosts });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+const getReportedPost = async (req, res) => {
+  try {
+    const postId = req.params.id;
+
+    const post = await Post.findOne({ _id: postId, reported: true });
+
+    if (!post) {
+      return res.status(404).json({ message: "Reported post not found" });
+    }
+
+    res.status(200).json({ reportedPost: post });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -633,4 +711,7 @@ module.exports = {
   editReplyOnRepliedComment,
   deleteReplyOnRepliedComment,
   sharePost,
+  getReportedPosts,
+  reportPost,
+  getReportedPost,
 };

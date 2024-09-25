@@ -23,6 +23,9 @@ const {
   editReplyOnRepliedComment,
   deleteReplyOnRepliedComment,
   sharePost,
+  getReportedPosts,
+  reportPost,
+  getReportedPost,
 } = require("../controllers/post.controller");
 const isAuth = require("../middleware/isAuth");
 
@@ -84,5 +87,11 @@ router.delete(
 router.get("/:id/comment/:commentId/replies", isAuth, getRepliesByCommentId);
 
 router.post("/share/:id", isAuth, sharePost);
+
+router.get("/reportedPosts", isAuth, getReportedPosts);
+
+router.get("/reported", isAuth, getReportedPost);
+
+router.post("/reportPost/:id", isAuth, reportPost);
 
 module.exports = router;

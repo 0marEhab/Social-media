@@ -2,16 +2,20 @@ import { CgClose } from "react-icons/cg";
 import {
   AiOutlineCamera,
   AiOutlineVideoCamera,
-  AiOutlinePlus,
   AiOutlineRight,
 } from "react-icons/ai";
-import { useState, useRef, useContext } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import axios from "axios";
 import summaryApi from "../../../common";
 import UserContext from "../../Contexts/UserContext";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Link, useNavigate } from "react-router-dom";
 export default function CreatePost() {
+  const navigate = useNavigate();
+
   const { user } = useContext(UserContext);
+  console.log(user);
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const [video, setVideo] = useState(null);
@@ -28,12 +32,12 @@ export default function CreatePost() {
 
       // Append image if available
       if (image) {
-        formData.append("photo", image); // Ensure this matches the field name in multer
+        formData.append("photo", image);
       }
 
       // Append video if available
       if (video) {
-        formData.append("video", video); // Ensure this matches the field name in multer
+        formData.append("video", video);
       }
 
       formData.append("tags", JSON.stringify(tags));
@@ -47,24 +51,23 @@ export default function CreatePost() {
         },
       });
 
-      // Log success and reset form fields
-      console.log("Post created:", response.data);
+      // Success toast notification with onClose callback to reload window
+      toast.success("Post created successfully!", {
+        onClose: () => {
+          navigate("/posts/" + response.data.post._id);
+        },
+        autoClose: 3000, // Optionally, set a duration for the toast
+      });
+
+      // Reset form fields
       setContent("");
       setImage(null);
       setVideo(null);
       setTags([]);
       setPrivacy("public");
-
-      // Optionally, you can handle success feedback to the user
-
-      // Reload the page or update the state to reflect the new post
-      window.location.reload();
     } catch (error) {
-      // Enhanced error handling
-      console.error("Error creating post:", error);
-
-      // Optionally, display an error message to the user
-      alert(
+      // Error toast notification
+      toast.error(
         `Error creating post: ${error.response?.data?.error || error.message}`
       );
     }
@@ -101,14 +104,16 @@ export default function CreatePost() {
   };
 
   return (
-    <div className="flex flex-col gap-8 bg-white p-5 rounded-lg shadow-md w-full max-w-xl mx-auto ">
+    <div className="flex flex-col bg-white p-5 rounded-lg shadow-md w-full max-w-xl mx-auto">
       <form onSubmit={handleShare}>
         <div className="flex items-center gap-4">
+          {/* <Link to={`/profile/${user._id}`}> */}
           <img
-            src="https://via.placeholder.com/30x30"
+            src="https://via.placeholder.com/48"
             alt="user-profile"
             className="w-12 h-12 rounded-lg"
           />
+          {/* </Link> */}
           <textarea
             ref={textareaRef}
             value={content}
@@ -121,7 +126,7 @@ export default function CreatePost() {
         {image && (
           <div className="mt-4 relative">
             <button
-              className="absolute top-2 right-5 text-white"
+              className="absolute top-2 right-5 z-50 text-white"
               onClick={() => {
                 setImage(null);
                 fileInputRef.current.value = "";
@@ -132,14 +137,14 @@ export default function CreatePost() {
             <img
               src={URL.createObjectURL(image)}
               alt="Preview"
-              className="w-full rounded-lg"
+              className="w-full rounded-lg  max-h-[400px] object-center"
             />
           </div>
         )}
         {video && (
           <div className="mt-4 relative">
             <button
-              className="absolute top-2 right-5 text-white"
+              className="absolute top-2 right-5 z-50 text-white"
               onClick={() => {
                 setVideo(null);
                 fileInputRef.current.value = "";
@@ -150,7 +155,7 @@ export default function CreatePost() {
             <video
               controls
               src={URL.createObjectURL(video)}
-              className="w-full rounded-lg"
+              className="w-full rounded-lg  object-cover object-center"
             />
           </div>
         )}
@@ -175,9 +180,6 @@ export default function CreatePost() {
             >
               <AiOutlineVideoCamera size={20} />
             </div>
-            <div className="bg-gray-200 px-2 py-2 rounded-lg hover:text-blue-500 cursor-pointer">
-              <AiOutlinePlus size={20} />
-            </div>
           </div>
           <button
             type="submit"
@@ -187,6 +189,7 @@ export default function CreatePost() {
           </button>
         </div>
       </form>
+      <ToastContainer />
     </div>
   );
 }

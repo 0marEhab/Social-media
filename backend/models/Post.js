@@ -61,17 +61,15 @@ const postSchema = new mongoose.Schema(
       enum: ["public", "private", "friends"],
       default: "public",
     },
-    postType: {
-      type: String,
-      enum: ["text", "photo", "video"],
-      default: "text",
-    },
     sharedPost: { type: mongoose.Schema.Types.ObjectId, ref: "Post" },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
+    reported: { type: Boolean, default: false },
+    reportedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    reportedReason: { type: String },
   },
   { timestamps: true }
 );

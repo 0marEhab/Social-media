@@ -4,7 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const FriendSuggestionCard = ({ suggestion, handleFriendRequest }) => {
   return (
-    <div className="flex items-center justify-between gap-3 my-10" key={suggestion._id}>
+    <div
+      className="flex items-center justify-between gap-3 my-4"
+      key={suggestion._id}
+    >
       <div className="flex space-x-2">
         <img
           src={suggestion.profilePic}
@@ -13,7 +16,9 @@ const FriendSuggestionCard = ({ suggestion, handleFriendRequest }) => {
         />
         <div className="flex flex-col items-start justify-center gap-0.5">
           <p className="text-[14px] font-bold text-white">{suggestion.name}</p>
-          <p className="text-[12px] font-normal text-white">{suggestion.email}</p>
+          <p className="text-[12px] font-normal text-white">
+            {suggestion.email}
+          </p>
         </div>
       </div>
       <button
