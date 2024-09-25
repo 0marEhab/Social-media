@@ -15,6 +15,7 @@ import Chat from "./Components/Chat/Chat";
 import SearchResults from "./Pages/SearchResult/SearchResults";
 import { SharedPostsProvider } from "./Contexts/SharedPostsContext";
 import Profile from "./Pages/Profile/Profile";
+
 export default function App() {
   const router = createBrowserRouter([
     {
@@ -57,10 +58,15 @@ export default function App() {
               path: "/search-results",
               element: <SearchResults />,
             },
-            { 
+            {
               path: "/Profile",
               element: <Profile />,
             },
+            {
+              path: "/Profile/:id",
+              element: <Profile />,
+
+            }
            
           ],
         },

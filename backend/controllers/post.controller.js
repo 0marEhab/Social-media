@@ -1,21 +1,23 @@
 const Post = require("../models/Post");
 const mongoose = require("mongoose");
+const User = require("../models/User");
+
+
+
 const createPost = async (req, res) => {
   let mediaType = {};
-  console.log("Uploaded files:", req.files); // Log all uploaded files for debugging
+  console.log("Uploaded files:", req.files); 
 
   if (req.files) {
-    // Check if photo is uploaded
     if (req.files.photo && req.files.photo.length > 0) {
-      const photo = req.files.photo[0].filename; // Get the filename of the uploaded photo
+      const photo = req.files.photo[0].filename; 
       console.log("Photo filename:", photo);
-      mediaType.photo = photo; // Assign to mediaType
+      mediaType.photo = photo; 
     }
-    // Check if video is uploaded
     if (req.files.video && req.files.video.length > 0) {
-      const video = req.files.video[0].filename; // Get the filename of the uploaded video
+      const video = req.files.video[0].filename; 
       console.log("Video filename:", video);
-      mediaType.video = video; // Assign to mediaType
+      mediaType.video = video; 
     }
   }
 
@@ -23,16 +25,23 @@ const createPost = async (req, res) => {
     const post = new Post({
       content: req.body.content,
       user: req.user._id,
-      media: mediaType, // Use mediaType for the media fields
+      media: mediaType, 
       tags: req.body.tags,
       privacy: req.body.privacy,
       postType: req.body.postType,
     });
 
     const savedPost = await post.save();
+
+    await User.findByIdAndUpdate(
+      req.user._id,
+      { $push: { posts: savedPost._id } }, 
+      { new: true } 
+    );
+
     res
       .status(201)
-      .json({ posts: savedPost, message: "Post saved successfully" });
+      .json({ post: savedPost, message: "Post saved successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -30,12 +30,11 @@ export default function Profile() {
   const [data, setData] = useState(null);
   const { id } = useParams(); 
 
-
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(summaryApi.profile.url, {
+        const response = await axios.get(summaryApi.user.url, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -49,9 +48,8 @@ export default function Profile() {
 
     const fetchUserById = async (userId) => {
     
-      console.log(userId);
       try {
-        const response = await axios.get(`${summaryApi.profile.url}/${userId}`);
+        const response = await axios.get(`${summaryApi.user.url}/${userId}`);
         setData(response.data.user);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -91,8 +89,6 @@ if(!id){
     profilePic,
   } = data;
   const postsCount=posts.length;
-  console.log("User Data:", data); 
-
  
 
 
@@ -108,7 +104,9 @@ if(!id){
               <div className="mb-4 lg:mb-0">
                 <Link to="/">
                 <button className="font-serif bg-gray-200 text-gray-500 font-semibold px-4 py-2 rounded-2xl w-36 h-16 mb-8 flex items-center justify-center space-x-2">
-                  <FaAngleLeft size={24}/>
+                  <FaAngleLeft 
+                    size={24}
+                  />
                   <span>Back</span>
                 </button>
               </Link>
@@ -160,44 +158,51 @@ if(!id){
               </div>
 
               {state.activeTab === 'posts' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-6 pb-6">
-                  <Post className="w-full h-full" />
-                  <Post className="w-full h-full" />
-                  <Post className="w-full h-full" />
-                  <Post className="w-full h-full" />
-                  <Post className="w-full h-full" />
-                  <Post className="w-full h-full" />
-                  <Post className="w-full h-full" />
-                  <Post className="w-full h-full" />
-                </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-6 pb-6">
+              {posts.map((post, index) => (
+                (post.privacy === "public" || ((post.privacy === "friends" ) && friends.find(_id))) && (
+                  <Post 
+                    key={index} 
+                    post={post} 
+                    profilePic={profilePic} 
+                    name={name} 
+                    className="w-full h-full" 
+                  />
+                )
+              ))}
+            </div>
+            
               )}
               {state.activeTab === 'photos' && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-6 pb-6">
-                  <Photos className="w-full h-full" />
-                  <Photos className="w-full h-full" />
-                  <Photos className="w-full h-full" />
-                  <Photos className="w-full h-full" />
-                  <Photos className="w-full h-full" />
-                  <Photos className="w-full h-full" />
-                  <Photos className="w-full h-full" />
-                  <Photos className="w-full h-full" />
+                  {posts.map((post, index) => (
+                    //friends privacy needs to be tried! NOTE!!!!
+                ((post.privacy === "public" || ((post.privacy === "friends" ) && friends.find(_id))) && (post.postType=="photo")) && (
+                  <Photos 
+                    photo={post.media.photo} 
+                    className="w-full h-full" 
+                  />
+                )
+              ))}
                 </div>
               )}
               {state.activeTab === 'videos' && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-6 pb-6">
-                  <Videos className="w-full h-full" />
-                  <Videos className="w-full h-full" />
-                  <Videos className="w-full h-full" />
-                  <Videos className="w-full h-full" />
-                  <Videos className="w-full h-full" />
-                  <Videos className="w-full h-full" />
-                  <Videos className="w-full h-full" />
-                  <Videos className="w-full h-full" />
+           {posts.map((post, index) => (
+                ((post.privacy === "public" || ((post.privacy === "friends" ) && friends.find(_id))) && (post.postType=="video")) && (
+                  <Videos 
+                    video={post.media.video} 
+                    className="w-full h-full" 
+                  />
+                )
+              ))}
                 </div>
               )}
               {state.activeTab === 'events' && (
                 <div className="w-full h-full px-6 pb-6">
-                  <p>Events content goes here...</p>
+                  <p>
+                    Events content goes here...
+                  </p>
                 </div>
               )}
             </div>
