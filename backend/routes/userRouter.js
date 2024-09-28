@@ -16,8 +16,8 @@ router.post(
 router.get("/getUser", isAuth, userController.Profile);
 router.get("/getUserById", isAuth, userController.getUserById);
 router.put("/editUser", isAuth, userController.updateProfile);
-router.get("/getUser/:id", userController.getUserProfile);
-router.get("/getUsers", userController.getUsers);
+router.get("/getUser/:id", isAuth, userController.getUserProfile);
+router.get("/getUsers", isAuth, userController.getUsers);
 
 router.delete("/deleteUser/:id", isAuth, userController.deleteUserById);
 
