@@ -1,11 +1,20 @@
 const User = require("../models/User");
 const generateToken = require("../config/generateToken");
 exports.Signup = async (req, res, next) => {
-  const { name, email, password, confirmPassword, birthDate, country } =
-    req.body;
-  console.log(req.body);
+  const { name, email, password, confirmPassword, birthDate, country } = req.body;
+  
   try {
-    const user = User.create({
+    // Check if email is already in use
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      return res.status(400).json({
+        message: "Email is already in use",
+      });
+    }
+
+    // Create new user if email is not already in use
+    const user = await User.create({
       name,
       email,
       password,
@@ -18,11 +27,12 @@ exports.Signup = async (req, res, next) => {
       message: "User created successfully!",
     });
   } catch (err) {
-    const error = new Error("Could not create user");
+    const error = new Error("Could not create user, Please Enter Valid Data");
     error.statusCode = 500;
     return next(error);
   }
 };
+
 
 exports.Login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -57,7 +67,7 @@ console.log(userId);
       )
       .populate({
         path: 'posts',
-        select: '_id title content createdAt likes comments media privacy postType user', // Select specific fields for posts
+        select: '_id title content createdAt likes comments media privacy user', // Select specific fields for posts
       });
 
     if (!user) {

@@ -8,19 +8,18 @@ import axios from 'axios';
 export default function Post({ post, profilePic, name, user }) {
   const userProfilePic = "https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/9290037d-a5b2-4f50-aea3-9f3f2b53b441";
   const userProfileName = "Jane";
+  
 
   const examplePost = {
     id: post._id,
     content: post.content,
     likes: post.likes.length,
     comments: post.comments.length,
-    media: post.postType === 'text' ? null : post.media,
+    media: post.media?Object.keys(post.media):["text"],
     privacy: post.privacy,
-    postType: post.postType,
     user: post.user,
     createdAt: post.createdAt,
   };
-
   // Check if the current user has already liked the post
   const userHasLiked = post.likes.some(like => like._id === user);
 
@@ -125,17 +124,18 @@ export default function Post({ post, profilePic, name, user }) {
 
         {/* Conditionally render based on content type */}
         <Link to={`/posts/${examplePost.id}`}>
-          {examplePost.postType === 'photo' && (
+          {examplePost.media[0] === 'photo' && (
             <img
               className="w-full h-auto rounded-lg object-cover mb-3 max-h-[300px]"
               src={`${summaryApi.domain.url}/uploads/${post.media.photo}`}
+              
               alt="Post content"
             />
           )}
         </Link>
 
         <Link to={`/posts/${examplePost.id}`}>
-          {examplePost.postType === 'video' && (
+          {examplePost.media[0] === 'video' && (
             <video className="w-full h-auto rounded-lg mb-3" style={{
               width: '480px', 
               height: '300px',
@@ -147,7 +147,7 @@ export default function Post({ post, profilePic, name, user }) {
         </Link>
 
         <Link to={`/posts/${examplePost.id}`}>
-          {examplePost.postType === 'text' && (
+          {examplePost.media[0] === 'text' && (
             <p className="text-sm mb-4">
               {shouldShowReadMore && (
                 <button className="text-blue-500 ml-1" onClick={handleContentToggle}>
