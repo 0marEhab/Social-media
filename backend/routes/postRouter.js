@@ -81,5 +81,15 @@ router.delete(
   deleteReplyOnRepliedComment
 );
 
+router.get("/:id/comment/:commentId/replies", isAuth, getRepliesByCommentId);
+
+router.post("/share/:id", isAuth, sharePost);
+
+router.get("/reportedPosts", isAuth, getReportedPosts);
+
+router.get("/reported", isAuth, getReportedPost);
+
+router.post("/reportPost/:id", isAuth, reportPost);
+
 // Export the router
 module.exports = router;
