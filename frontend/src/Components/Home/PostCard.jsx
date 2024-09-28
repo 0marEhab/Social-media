@@ -13,6 +13,7 @@ import summaryApi from "../../../common";
 import Swal from "sweetalert2";
 import PostOptions from "./PostOptions"; // Import the refactored dropdown component
 export default function PostCard({ post }) {
+  console.log(post);
   const { user, setSharedPosts } = useContext(UserContext);
   const relativeTime = moment(post.createdAt).fromNow();
   const [likes, setLikes] = useState(post.likes);
@@ -166,7 +167,9 @@ export default function PostCard({ post }) {
           <Link to={`/profile/${post.user._id}`}>
             {" "}
             <img
-              src={post.user.profilePic}
+              src={
+                post ? summaryApi.domain.url + "/" + post.user.profilePic : ""
+              }
               alt={`${post.user.name}'s profile`}
               className="w-12 h-12 rounded-full"
             />
@@ -185,7 +188,6 @@ export default function PostCard({ post }) {
             )}
           </div>
         </div>
-        
 
         <button className="relative">
           <BsThreeDots

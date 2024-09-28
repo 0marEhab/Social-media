@@ -22,7 +22,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  "/public/images",
+  express.static(path.join(__dirname, "public/images"))
+);
 
 app.use("/api", userRouter);
 app.use("/api", chatRouter);

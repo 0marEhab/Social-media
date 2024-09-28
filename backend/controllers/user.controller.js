@@ -49,15 +49,17 @@ exports.Login = async (req, res, next) => {
 exports.Profile = async (req, res, next) => {
   try {
     const userId = req.user._id; // Get user ID from req.user
-console.log(userId);
+    console.log(userId);
     // Find the user by ID and populate friends and posts
     const user = await User.findById(userId)
-      .populate('friends',
-      '_id name email profilePic', // Select specific fields for friends
+      .populate(
+        "friends",
+        "_id name email profilePic" // Select specific fields for friends
       )
       .populate({
-        path: 'posts',
-        select: '_id title content createdAt likes comments media privacy postType user', // Select specific fields for posts
+        path: "posts",
+        select:
+          "_id title content createdAt likes comments media privacy postType user", // Select specific fields for posts
       });
 
     if (!user) {
@@ -73,26 +75,37 @@ console.log(userId);
   }
 };
 
-
 exports.updateProfile = async (req, res, next) => {
-  const { name, email, password, birthDate, country } = req.body;
-
+  console.log("here");
+  const { name, email, birthDate, country } = req.body;
   try {
     const user = await User.findByIdAndUpdate(
       req.user._id,
-      {
-        name,
-        email,
-        password,
-        birthDate,
-        country,
-      },
+      { name, email, birthDate, country },
       { new: true }
     );
-    res.status(200).json({ user, message: "update profile" });
+    res.status(200).json({ user, message: "Profile updated successfully" });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "update failed" });
+    res.status(500).json({ message: "Profile update failed" });
+  }
+};
+
+exports.updateProfilePic = async (req, res, next) => {
+  const profilePic = req.file;
+  console.log(profilePic.path) // Assuming you're storing the file path
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { profilePic: profilePic.path },
+      { new: true }
+    );
+    res
+      .status(200)
+      .json({ user, message: "Profile picture updated successfully" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Profile picture update failed" });
   }
 };
 
@@ -113,43 +126,18 @@ exports.getUserById = async (req, res, next) => {
     res.status(500).json(err);
   }
 };
-exports.uploadProfilePicture = async (req, res, next) => {
-  try {
-    const user = req.user;
-    console.log(user);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    const profilePic = req.file ? req.file.filename : null; // Get the filename of the uploaded photo
-    // Update user's profile picture
-    user.profilePic = profilePic;
-    console.log(user.profilePic);
-    await user.save();
-
-    return res.status(200).json({
-      message: "Profile picture uploaded successfully",
-      user,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-
-
-
 
 exports.getUserProfile = async (req, res, next) => {
-  const { id } = req.params; 
+  const { id } = req.params;
 
   try {
-    const user = await User.findById(id).populate('friends',
-    '_id name email profilePic', 
-    ).populate(
-    'posts',
-    '_id title content createdAt likes comments media privacy postType user ',
-  ); 
-  
+    const user = await User.findById(id)
+      .populate("friends", "_id name email profilePic")
+      .populate(
+        "posts",
+        "_id title content createdAt likes comments media privacy postType user "
+      );
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -157,5 +145,22 @@ exports.getUserProfile = async (req, res, next) => {
   } catch (error) {
     console.error("Error fetching user:", error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.deleteAccount = async (req, res, next) => {
+  try {
+    const user = await User.findByIdAndDelete(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Optionally, handle file deletion (like profile pictures) from storage (e.g., Cloudinary, local storage)
+
+    res.status(200).json({ message: "Account deleted successfully" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to delete account" });
   }
 };

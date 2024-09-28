@@ -6,6 +6,12 @@ const summaryApi = {
   login: {
     url: `${urlDomain}/api/login`,
   },
+  editProfile: {
+    url: `${urlDomain}/api/editUser`,
+  },
+  editProfilePic: {
+    url: `${urlDomain}/api/update-profile-pic`,
+  },
   signup: {
     url: `${urlDomain}/api/signup`,
   },
@@ -15,7 +21,7 @@ const summaryApi = {
   getUserById: {
     url: `${urlDomain}/api/getUserById`,
   },
- 
+
   getMessage: {
     url: `${urlDomain}/api/getMessage`,
   },

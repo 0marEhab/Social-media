@@ -1,9 +1,6 @@
 const Post = require("../models/Post");
 const User = require("../models/User");
 const mongoose = require("mongoose");
-const User = require("../models/User");
-
-
 
 const createPost = async (req, res) => {
   let mediaType = {};
@@ -59,7 +56,7 @@ const getAllPosts = async (req, res) => {
       ],
       privacy: { $ne: "private" },
     })
-      .populate("user", "name")
+      .populate("user", "name profilePic")
       .populate("likes", "name")
       .populate("comments.user", "name")
       .populate({
