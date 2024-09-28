@@ -7,6 +7,17 @@ const upload = require("../middleware/upload");
 const profilePicMulter = require("../middleware/profilePicMulter");
 router.post("/signup", userController.Signup);
 router.post("/login", userController.Login);
+<<<<<<< Updated upstream
+=======
+router.get("/getUser", isAuth, userController.Profile);
+router.get("/getUserById", isAuth, userController.getUserById);
+router.put("/editUser", isAuth, userController.updateProfile);
+router.get('/getUser/:id', userController.getUserProfile);
+router.get('/getUsers', userController.getUsers);
+
+
+
+>>>>>>> Stashed changes
 router.post(
   "/uploadProfilePicture",
   isAuth, // Ensure user is authenticated

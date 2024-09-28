@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "date-fns": "^4.1.0",
+    "react-toastify": "^10.0.5",
+    "socket.io-client": "^4.8.0",
+    "sweetalert2": "^11.14.1"
+  }
+}

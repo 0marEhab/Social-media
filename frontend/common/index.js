@@ -38,6 +38,9 @@ const summaryApi = {
   posts: {
     url: `${urlDomain}/api/posts`,
   },
+  tickets: {
+    url: `${urlDomain}/api/tickets`,
+  },
   like: {
     url: `${urlDomain}/api/posts/like/:id`,
   },
@@ -62,12 +65,6 @@ const summaryApi = {
   users: {
     url: `${urlDomain}/api/getUsers`,
   },
-  tickets: {
-    url: `${urlDomain}/api/tickets`,
-  },
-  stats: {
-    url: `${urlDomain}/api/admin/stats`,
-  },
   share: {
     url: `${urlDomain}/api/posts/share/:id`,
   },
@@ -90,7 +87,9 @@ const summaryApi = {
     url: `${urlDomain}/api/posts/:id/comment/:commentId/edit`,
   },
   replyComment: {
-    url: `${urlDomain}/api/posts/:id/comment/:commentId/reply`,
+    url: `${urlDomain}/api/posts/:id/comment/:commentId/reply`},
+  stats: {
+    url: `${urlDomain}/api/admin/stats`
   }
 };
 

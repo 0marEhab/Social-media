@@ -12,6 +12,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import Loading from "../../Components/Layout/Loading";
+<<<<<<< Updated upstream
+=======
+import SideBar from '../../Components/DashBoard/SideBar';
+>>>>>>> Stashed changes
 import summaryApi from '../../../common';
 
 function DashBoard() {
@@ -102,6 +106,10 @@ function DashBoard() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-10">
+<<<<<<< Updated upstream
+=======
+      <SideBar/>
+>>>>>>> Stashed changes
       <h1 className="text-xl font-semibold mb-2">Dashboard</h1>
       <p className='text-l mb-6'>
         <FontAwesomeIcon icon={faHome}/> / Dashboard

@@ -47,6 +47,10 @@ function Tickets() {
         <div className="grid grid-cols-3 gap-6 ">
             {content}
         </div>
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
     </div>
   )
 }

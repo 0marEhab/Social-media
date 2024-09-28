@@ -1,6 +1,12 @@
 const Post = require("../models/Post");
 const User = require("../models/User");
 const mongoose = require("mongoose");
+<<<<<<< Updated upstream
+=======
+
+
+
+>>>>>>> Stashed changes
 
 const createPost = async (req, res) => {
   let mediaType = {};

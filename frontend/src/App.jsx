@@ -6,6 +6,10 @@ import Layout from "./Components/Layout/Layout";
 import Signing from "./Pages/Signing/Signing";
 import Home from "./Pages/Home/Home";
 import EditPost from "./Pages/Home/EditPost";
+import DashBoard from "./Pages/DashBoard/DashBoard";
+import Posts from "./Pages/DashBoard/Posts";
+import Tickets from "./Pages/DashBoard/Tickets";
+import Users from "./Pages/DashBoard/Users";
 import { Toaster } from "react-hot-toast";
 import FriendRequestsPage from "./Pages/MyFriends/FriendRequestsPage";
 import Ticket from "./Pages/Ticket/Ticket";
@@ -15,7 +19,6 @@ import Chat from "./Components/Chat/Chat";
 import SearchResults from "./Pages/SearchResult/SearchResults";
 import { SharedPostsProvider } from "./Contexts/SharedPostsContext";
 import Profile from "./Pages/Profile/Profile";
-import DashBoard from "./Pages/DashBoard/DashBoard";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -72,9 +75,18 @@ export default function App() {
               path: "/DashBoard",
               element: <DashBoard />,
             },
-            
-            
-           
+            {
+              path: "/Posts",
+              element: <Posts />,
+            },
+            {
+              path: "/Tickets",
+              element: <Tickets />,
+            }, 
+            {
+              path: "/Users",
+              element: <Users />,
+            },    
           ],
         },
       ],
