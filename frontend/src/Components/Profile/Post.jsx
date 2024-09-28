@@ -9,18 +9,17 @@ export default function Post({ post, profilePic, name, user }) {
   const userProfilePic = "https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/9290037d-a5b2-4f50-aea3-9f3f2b53b441";
   const userProfileName = "Jane";
   
-
   const examplePost = {
     id: post._id,
     content: post.content,
     likes: post.likes.length,
     comments: post.comments.length,
-    media: post.media?Object.keys(post.media):["text"],
+    media: post.media ? Object.keys(post.media) : ["text"],
     privacy: post.privacy,
     user: post.user,
     createdAt: post.createdAt,
   };
-  // Check if the current user has already liked the post
+
   const userHasLiked = post.likes.some(like => like._id === user);
 
   const [liked, setLiked] = useState(userHasLiked);
@@ -39,11 +38,7 @@ export default function Post({ post, profilePic, name, user }) {
           },
         }
       );
-
-      // Toggle the liked state
       setLiked(!liked);
-
-      // Update the like count based on the response
       setLikeCount(response.data.likes.length);
     } catch (error) {
       console.error("Error liking the post:", error);
@@ -54,7 +49,7 @@ export default function Post({ post, profilePic, name, user }) {
     setShowFullContent(!showFullContent);
   };
 
-  function addNewlinesAfterEverySixWordsOrLongWords(text, maxWordLength = 10, longWordLimit = 53) {
+  function addNewlinesAfterEverySixWordsOrLongWords(text, maxWordLength = 10, longWordLimit = 50) {
     const words = text.split(' ');
     const result = [];
 
@@ -84,8 +79,8 @@ export default function Post({ post, profilePic, name, user }) {
 
   return (
     <div className="col-span-1">
-      <div className="bg-white rounded-3xl border-2 border-gray-200 p-14 flex flex-col justify-between">
-        <div className="flex items-center mb-4 ">
+      <div className="bg-white rounded-3xl border-2 border-gray-200 p-6 flex flex-col justify-between">
+        <div className="flex items-center mb-4">
           <div className="flex-1 flex items-center">
             <img
               src={profilePic}
@@ -122,13 +117,12 @@ export default function Post({ post, profilePic, name, user }) {
           </div>
         </div>
 
-        {/* Conditionally render based on content type */}
+        {/* Conditionally render media */}
         <Link to={`/posts/${examplePost.id}`}>
           {examplePost.media[0] === 'photo' && (
             <img
-              className="w-full h-auto rounded-lg object-cover mb-3 max-h-[300px]"
+              className="w-full h-48 object-cover rounded-lg mb-3"
               src={`${summaryApi.domain.url}/uploads/${post.media.photo}`}
-              
               alt="Post content"
             />
           )}
@@ -136,64 +130,49 @@ export default function Post({ post, profilePic, name, user }) {
 
         <Link to={`/posts/${examplePost.id}`}>
           {examplePost.media[0] === 'video' && (
-            <video className="w-full h-auto rounded-lg mb-3" style={{
-              width: '480px', 
-              height: '300px',
-            }} controls>
+            <video className="w-full h-48 object-cover rounded-lg mb-3" controls>
               <source src={`${summaryApi.domain.url}/uploads/${post.media.video}`} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           )}
         </Link>
+ 
+
 
         <Link to={`/posts/${examplePost.id}`}>
           {examplePost.media[0] === 'text' && (
-            <p className="text-sm mb-4">
+            <div className="text-sm mb-3 h-48 overflow-hidden">
+              <p className="whitespace-pre-line">{displayedContent}</p>
               {shouldShowReadMore && (
                 <button className="text-blue-500 ml-1" onClick={handleContentToggle}>
                   {showFullContent ? 'Read Less' : 'Read More'}
                 </button>
               )}
-            </p>
+            </div>
           )}
         </Link>
 
-        <Link to={`/posts/${examplePost.id}`}>
-          <p className="text-sm mb-4">
-            {displayedContent}
-            {shouldShowReadMore && (
-              <button className="text-blue-500 ml-1" onClick={handleContentToggle}>
-                {showFullContent ? 'Read Less' : 'Read More'}
-              </button>
-            )}
-          </p>
-        </Link>
+     
 
-        {/* Like, comment, and share section */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            {/* Heart for likes */}
-            <div className="flex items-center space-x-1 cursor-pointer" onClick={handleLike}>
-              {liked ? <FaHeart className="text-red-500" /> : 
-              <FaRegHeart 
-                className="text-gray-600" 
-              />}
-              <span className="text-sm">{likeCount}</span>
+            <div className="flex items-center">
+              <button onClick={handleLike}>
+                {liked ? (
+                  <FaHeart className="text-red-500" />
+                ) : (
+                  <FaRegHeart className="text-gray-500" />
+                )}
+              </button>
+              <span className="text-sm ml-1">{likeCount}</span>
             </div>
-            {/* Comment icon */}
-            <Link to={`/posts/${examplePost.id}`}>
-              <div className="flex items-center space-x-1">
-                <FaRegComment 
-                  className="text-gray-600" 
-                />
-                <span className="text-sm">{examplePost.comments}</span>
-              </div>
-            </Link>
-          </div>
-          {/* Share button */}
-          <div className="flex items-center space-x-1 cursor-pointer">
-            <p className="text-sm font-semibold">Share</p>
-            <FaShare className="text-gray-600" />
+            <div className="flex items-center">
+              <FaRegComment className="text-gray-500" />
+              <span className="text-sm ml-1">{examplePost.comments}</span>
+            </div>
+            <div className="flex items-center">
+              <FaShare className="text-gray-500" />
+            </div>
           </div>
         </div>
       </div>

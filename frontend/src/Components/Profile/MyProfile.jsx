@@ -39,6 +39,7 @@ export default function Profile() {
             Authorization: `Bearer ${token}`,
           },
         });
+        console.log(response.data.user, "Steven");
 
         setData(response.data.user);
         setActiveUser(true);
@@ -48,22 +49,32 @@ export default function Profile() {
     };
 
     const fetchUserById = async (userId) => {
+      console.log(userId, "Hereeeeeeeeeebabe");
     
       try {
-        const response = await axios.get(`${summaryApi.user.url}/${userId}`);
+        const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+    
+        // Make the request with the Authorization header
+        const response = await axios.get(`${summaryApi.user.url}/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+    
+        console.log(response.data.user, "Steven");
         setData(response.data.user);
-          console.log(response.data.user,"Steven");
-
         setActiveUser(false);
-
+    
       } catch (error) {
         console.error("Error fetching user data:", error);
+    
+        // Fallback to fetching the profile if the user-specific request fails
         fetchUserProfile();
         setActiveUser(true);
         throw error;
-
       }
     };
+    
 
 
 if(!id){
@@ -93,6 +104,7 @@ if(!id){
     notifications,
     posts,
     profilePic,
+    requestedFriends,
   } = data;
 
   const postsCount=posts.length;
@@ -129,7 +141,8 @@ if(!id){
                   profilePic={profilePic}
                   postsCount={postsCount}
                   activeUser={activeUser}
-                  friendRequests={friendRequests} />
+                  friendRequests={friendRequests}
+                  requestedFriends={requestedFriends} />
               </div>
             </div>
 
@@ -166,9 +179,10 @@ if(!id){
               </div>
 
               {state.activeTab === 'posts' && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-6 pb-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-6 pb-6 ">
               {posts.map((post, index) => (
-                (post.privacy === "public" || ((post.privacy === "friends" )|| 
+                (post.privacy === "public" || 
+                  ((post.privacy === "friends"&& friends.some(friend => friend._id === activeUser?._id) )|| 
                 (activeUser==true && post.privacy==="private"))) && (
                   <Post 
                     key={index} 
@@ -187,7 +201,7 @@ if(!id){
                   {posts.map((post, index) => (
                     //friends privacy needs to be tried! NOTE!!!!
                 ((post.privacy === "public" || 
-                  ((post.privacy === "friends" ) && friends.find(_id)) || 
+                  ((post.privacy === "friends" ) && friends.some(friend => friend._id === activeUser?._id)) || 
                   (activeUser==true && post.privacy==="private") ) && 
                   ((post.media?Object.keys(post.media):["text"])=="photo")) && (
                   <Photos 
@@ -202,7 +216,7 @@ if(!id){
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-6 pb-6">
            {posts.map((post, index) => (
                 ((post.privacy === "public" || 
-                  ((post.privacy === "friends" ) && friends.find(_id)) || 
+                  ((post.privacy === "friends" ) && friends.some(friend => friend._id === activeUser?._id)) || 
                 (activeUser==true && post.privacy==="private")) && 
                 ((post.media?Object.keys(post.media):["text"])=="video")) && (
                   <Videos 
@@ -214,7 +228,7 @@ if(!id){
                 </div>
               )}
               {state.activeTab === 'events' && (
-                <div className="w-full h-full px-6 pb-6">
+                <div className="w-full h-64 px-6 pb-6">
                   <p>
                     Events content goes here...
                   </p>

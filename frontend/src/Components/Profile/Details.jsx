@@ -4,25 +4,49 @@ import { Link,useNavigate } from 'react-router-dom';
 import summaryApi from "../../../common/index";
 import axios from 'axios';
 import { toast } from "react-hot-toast";
-import { sendFriendRequest } from "../../Utils/friends";
+import { sendFriendRequest,handleAcceptRequest } from "../../Utils/friends";
 
 
 
-export default function Details({_id,name,email,birthDate,country,friends,profilePic,postsCount,activeUser,friendRequests}) {
+export default function Details({
+    _id,
+    name,
+    email,
+    birthDate,
+    country,
+    friends,
+    profilePic,
+    postsCount,
+    activeUser,
+    friendRequests,
+    requestedFriends,setReceivedRequests
+}) 
+{
 
     const [activeUserId,setActiveUserId]=useState('');
     const [friendStatus,SetFriendStatus]=useState('');
 
     const handleFriendStatus=()=>{
-        if(friendRequests.length == 0){
+        if(friendRequests.length == 0 && requestedFriends.length == 0 ){
             SetFriendStatus("Add Friend");
         }
-        friendRequests.map((requestID)=>{
-            if(activeUserId === requestID){
-                SetFriendStatus("Request Sent");
-            }
-            else{SetFriendStatus("Add Friend");}
-        })
+        else if(friendRequests.length != 0){
+            friendRequests.map((requestID)=>{
+                if(activeUserId === requestID){
+                    SetFriendStatus("Request Sent");
+                }
+                else{SetFriendStatus("Add Friend");}
+            })
+        }
+        else if(requestedFriends.length != 0){
+            requestedFriends.map((requestID)=>{
+                if(activeUserId === requestID){
+                    SetFriendStatus("Accept Request");
+                }
+                else{SetFriendStatus("Add Friend");}
+            })
+        }
+        
     }
 
     useEffect(() => {
@@ -49,6 +73,7 @@ export default function Details({_id,name,email,birthDate,country,friends,profil
     console.log(activeUserId,"Active UserID");
     console.log(_id,"Shown Profile ID");
     console.log(friendRequests);
+    console.log(requestedFriends);
 
 
   const handleNavigation = (id) => {
@@ -62,7 +87,8 @@ export default function Details({_id,name,email,birthDate,country,friends,profil
     }
   };
   const friendsCount =friends.length;
-  const handleFriendRequest = async () => {
+
+  const handleFriend = async () => {
     if(friendStatus=="Add Friend"){
     try {
       await sendFriendRequest(_id);
@@ -72,6 +98,9 @@ export default function Details({_id,name,email,birthDate,country,friends,profil
     } catch (error) {
       toast.error("Failed to send friend request.");
     }
+}
+else if(friendStatus=="Accept Request"){
+    handleAcceptRequest(_id,setReceivedRequests);
 }
   };
 
@@ -83,8 +112,8 @@ export default function Details({_id,name,email,birthDate,country,friends,profil
                     <img
                         className="w-36 h-26 rounded-lg"
                         //need to changed later after fixing uploading
-                        src={profilePic}
-                        alt={`${name}'s profile`}
+                      src=  {_id ? summaryApi.domain.url + "/" + profilePic : ""}             
+                      alt={`${name}'s profile`}
                         />
                 </div>
 
@@ -102,12 +131,16 @@ export default function Details({_id,name,email,birthDate,country,friends,profil
                             <p>Posts</p>
                         </div>
                     </div>
-                    <div className="text-center">
-                        <div className="flex items-center space-x-1 cursor-pointer">
-                            <span className="font-bold">{friendsCount}</span>
-                            <p>Friends</p>
+                    <Link to="/friends">
+
+                        <div className="text-center">
+                            
+                            <div className="flex items-center space-x-1 cursor-pointer">
+                                <span className="font-bold">{friendsCount}</span>
+                                <p>Friends</p>
+                            </div>
                         </div>
-                    </div>
+                    </Link>
                 </div>
 
                 {/* Buttons */}
@@ -132,7 +165,7 @@ export default function Details({_id,name,email,birthDate,country,friends,profil
                     </button>
                 )}
                 {(!friends.some((friend) => friend._id === activeUserId ) && !activeUser) && (
-                    <button className="bg-green-500 font-serif text-white text-l px-4 py-2 rounded-lg flex items-center" onClick={handleFriendRequest}>
+                    <button className="bg-green-500 font-serif text-white text-l px-4 py-2 rounded-lg flex items-center" onClick={handleFriend}>
                       
                         {friendStatus}
                     </button>
@@ -168,7 +201,9 @@ export default function Details({_id,name,email,birthDate,country,friends,profil
 
                 {/* Friends List */}
                 <div className="px-10 py-4">
-                    <h3 className="text-sm font-semibold text-gray-700 font-serif mb-4">Friends</h3>
+                    <Link to="/friends">
+                        <h3 className="text-sm font-semibold text-gray-700 font-serif mb-4">Friends</h3>
+                    </Link>
                     <div className="flex space-x-2">
                         <div className="grid grid-cols-5 gap-4 ">
                             {friends.map((friend, index) => (
@@ -176,7 +211,7 @@ export default function Details({_id,name,email,birthDate,country,friends,profil
                                 <img
                                     key={index}
                                     className="w-18 h-12 rounded-lg"
-                                    src={friend.profilePic}
+                                    src=  {friend._id ? summaryApi.domain.url + "/" + friend.profilePic : ""}             
                                     alt={friend.name}
                                     title={friend.name}
                                 />
