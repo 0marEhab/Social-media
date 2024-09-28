@@ -63,29 +63,33 @@ export default function HomeSideBar() {
   };
 
   return (
-    <div className="bg-secondary rounded-l-3xl flex flex-col justify-between px-10 py-16 mt-4">
-      <div className="w-full flex justify-end">
+    <div className="bg-secondary  flex flex-col lg:w-[15%] w-1/4  gap-12 px-10 py-16 fixed top-0 right-0 overflow-hidden z-50 h-screen ">
+      <div className="w-max flex justify-end">
+        {/* <Link to={`/profile/${user._id}`}> */}
         <img
-          src={`https://via.placeholder.com/56`}
+          src={`https://via.placeholder.com/64`}
           alt="user-img"
-          className="w-14 h-14 rounded-lg mt-4"
+          className="lg:w-14 lg:h-14 w-16 h-16  rounded-lg mt-4"
         />
+        {/* </Link> */}
       </div>
-      <h2 className="text-xl font-bold text-white">My Friends</h2>
-      <div className="flex gap-4 mt-4">
-        {friends.slice(0, 3).map((friend, index) => (
-          <Link
-            to={`/profile/${friend._id}`}
-            className="flex items-center gap-2"
-            key={index}
-          >
-            <img
-              src={friend.profilePic}
-              alt="user-img"
-              className="w-10 h-10 rounded-lg border border-black outline outline-cyan-800"
-            />
-          </Link>
-        ))}
+      <div className="flex flex-col gap-4">
+        <h2 className="text-xl font-bold text-white">My Friends</h2>
+        <div className="flex gap-4 mt-2">
+          {friends.slice(0, 3).map((friend, index) => (
+            <Link
+              to={`/profile/${friend._id}`}
+              className="flex items-center gap-2"
+              key={index}
+            >
+              <img
+                src={friend.profilePic}
+                alt="user-img"
+                className="w-10 h-10 rounded-lg border border-black outline outline-cyan-800"
+              />
+            </Link>
+          ))}
+        </div>
       </div>
       {friends.length > 5 && (
         <Link to="/friends" className="text-gray-500  hover:underline">
@@ -93,23 +97,27 @@ export default function HomeSideBar() {
         </Link>
       )}
 
-      <h2 className="text-xl font-bold text-white mt-4">Friends Suggestions</h2>
       <div className="flex flex-col mt-4">
-        {loading ? (
-          <Loading color={"#fff"} />
-        ) : suggestions.length === 0 ? (
-          <p className="text-white text-sm">No suggestions available</p>
-        ) : (
-          suggestions
-            .slice(0, 2)
-            .map((suggestion) => (
-              <FriendSuggestionCard
-                key={suggestion._id}
-                suggestion={suggestion}
-                handleFriendRequest={handleFriendRequest}
-              />
-            ))
-        )}
+        <h2 className="text-xl font-bold text-white mt-4">
+          Friends Suggestions
+        </h2>
+        <div className="flex flex-col gap-4 mt-2">
+          {loading ? (
+            <Loading color={"#fff"} />
+          ) : suggestions.length === 0 ? (
+            <p className="text-white text-sm">No suggestions available</p>
+          ) : (
+            suggestions
+              .slice(0, 2)
+              .map((suggestion) => (
+                <FriendSuggestionCard
+                  key={suggestion._id}
+                  suggestion={suggestion}
+                  handleFriendRequest={handleFriendRequest}
+                />
+              ))
+          )}
+        </div>
       </div>
       {suggestions.length > 3 && (
         <Link to="/friends" className="text-gray-500  hover:underline">

@@ -9,7 +9,7 @@ export default function SinglePost() {
   const [loading, setLoading] = useState(true);
   const [comments, setComments] = useState([]);
   const { id } = useParams();
-
+  const [likes, setLikes] = useState([]);
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -22,6 +22,7 @@ export default function SinglePost() {
           }
         );
         setComments(response.data.comments);
+        setLikes(response.data.comments.map((comment) => comment.likes.length));
       } catch (error) {
         console.error("Error fetching comments", error);
       } finally {
@@ -32,14 +33,14 @@ export default function SinglePost() {
   }, [id]);
   return (
     <div className="grid grid-cols-1 lg:grid-cols-11 gap-10 bg-bg">
-      <div className="col-span-11 md:col-span-8 lg:col-span-7 p-12 ">
+      <div className="col-span-11 md:col-span-8 lg:col-span-8 p-12 ">
         <Post />
       </div>
-      <div className="col-span-11 md:col-span-8 lg:col-span-4 px-10">
+      <div className="col-span-11 md:col-span-8 lg:col-span-3 ">
         {loading ? (
           <Loading color={"#000"} />
         ) : (
-          <SinglePostSideBar comments={comments} />
+          <SinglePostSideBar initialLikes={likes} initialComments={comments} />
         )}{" "}
       </div>
     </div>

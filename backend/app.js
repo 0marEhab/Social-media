@@ -12,14 +12,15 @@ const postRouter = require("./routes/postRouter");
 const chatRouter = require("./routes/chatRouter");
 const searchRouter = require("./routes/searchRouter");
 const adminRouter = require("./routes/adminRouter");
+const bodyParser = require("body-parser");
 
 var app = express();
 
 app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "public")));

@@ -35,20 +35,29 @@ const EditPost = () => {
             },
           }
         );
-        setPost(response.data);
-        setContent(response.data.content || ""); // Set content from post
-        setPrivacy(response.data.privacy || "public"); // Set privacy from post
-        setTags(response.data.tags || []); // Set tags from post
-        if (response.data.media) {
-          if (response.data.media.photo) {
-            setImageFile(response.data.media.photo);
+        console.log(response.data);
+
+        if (response.data) {
+          setPost(response.data); // Set the whole post object
+          setContent(response.data.content || ""); // Set content from post
+          setPrivacy(response.data.privacy || "public"); // Set privacy from post
+          setTags(response.data.tags || []); // Set tags from post
+
+          // Handle media files if they exist
+          if (response.data.media) {
+            if (response.data.media.photo) {
+              setImageFile(response.data.media.photo);
+            }
+            if (response.data.media.video) {
+              setVideoFile(response.data.media.video);
+            }
           }
-          if (response.data.media.video) {
-            setVideoFile(response.data.media.video);
-          }
+        } else {
+          throw new Error("Post data is undefined");
         }
       } catch (err) {
         toast.error("Error fetching post data.");
+        console.error(err.message);
       } finally {
         setLoading(false);
       }
@@ -79,6 +88,7 @@ const EditPost = () => {
   const handleCameraClick = () => {
     fileInputRef.current.click();
   };
+
   const handleVideoClick = () => {
     fileInputRef.current.click();
   };
@@ -91,8 +101,8 @@ const EditPost = () => {
 
   const handleClosePhoto = (e) => {
     e.preventDefault();
-    setImageFile(null);
     fileInputRef.current.value = "";
+    setImageFile(null);
   };
 
   const handleTagsInput = (e) => {
@@ -115,6 +125,7 @@ const EditPost = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+
     const formData = new FormData();
     formData.append("content", content);
     formData.append("privacy", privacy);
@@ -133,23 +144,17 @@ const EditPost = () => {
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
+            // No need to specify 'Content-Type', browser handles it
           },
         }
       );
 
-      console.log(response);
       toast.success("Post updated successfully!");
-      setContent("");
-      setImageFile(null);
-      setVideoFile(null);
-      setTags([]);
-      setPrivacy("public");
       navigate(`/posts/${id}`);
     } catch (err) {
-      console.error(err.response);
       toast.error("Error updating post.");
+      console.error(err.response || err.message);
     }
   };
 
@@ -167,7 +172,7 @@ const EditPost = () => {
             id="content"
             name="content"
             value={content}
-            onChange={handleChange}
+            onChange={(e) => setContent(e.target.value)} // Update content directly
             rows="4"
             className="w-full border rounded-lg p-2"
             required
@@ -221,13 +226,13 @@ const EditPost = () => {
               <AiOutlineVideoCamera size={20} />
             </div>
           </div>
-          {post.media?.photo ? (
+          {post?.media?.photo ? (
             <div className="mt-4 relative">
               <button
                 className="absolute top-2 right-5 z-50 text-white"
-                onClick={handleClosePhoto} // No need to pass `e`, React does it automatically
+                onClick={handleClosePhoto}
               >
-                <CgClose size={24} />
+                <CgClose size={24} onClick={handleClosePhoto} />
               </button>
               <img
                 src={`${summaryApi.domain.url}/uploads/${post.media.photo}`}
@@ -253,7 +258,7 @@ const EditPost = () => {
             )
           )}
 
-          {post.media?.video ? (
+          {post?.media?.video ? (
             <div className="mt-4 relative">
               <button
                 className="absolute top-2 right-5 z-50 text-white"
@@ -263,14 +268,9 @@ const EditPost = () => {
               </button>
               <video
                 controls
-                className="w-full max-h-[400px] object-cover object-center rounded-lg mb-4"
-              >
-                <source
-                  src={`${summaryApi.domain.url}/uploads/${post.media.video}`}
-                  type="video/mp4"
-                />
-                Your browser does not support the video tag.
-              </video>
+                src={`${summaryApi.domain.url}/uploads/${post.media.video}`}
+                className="w-full max-h-[400px] rounded-lg"
+              />
             </div>
           ) : (
             videoFile && (
@@ -283,19 +283,14 @@ const EditPost = () => {
                 </button>
                 <video
                   controls
-                  className="w-full max-h-[400px] object-cover object-center rounded-lg mb-4"
-                >
-                  <source
-                    src={URL.createObjectURL(videoFile)}
-                    type="video/mp4"
-                  />
-                  Your browser does not support the video tag.
-                </video>
+                  src={URL.createObjectURL(videoFile)}
+                  className="max-w-full max-h-[400px] rounded-lg"
+                />
               </div>
             )
           )}
         </div>
-        <div className="mt-4">
+        <div>
           <label htmlFor="privacy" className="block text-gray-700">
             Privacy
           </label>
@@ -305,16 +300,15 @@ const EditPost = () => {
             value={privacy}
             onChange={(e) => setPrivacy(e.target.value)}
             className="w-full border rounded-lg p-2"
-            required
           >
             <option value="public">Public</option>
             <option value="private">Private</option>
-            <option value="Friends">Friends</option>
+            <option value="friends">Friends Only</option>
           </select>
         </div>
         <button
           type="submit"
-          className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+          className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition"
         >
           Update Post
         </button>

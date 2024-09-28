@@ -1,9 +1,6 @@
 const Post = require("../models/Post");
 const User = require("../models/User");
 const mongoose = require("mongoose");
-const User = require("../models/User");
-
-
 
 const createPost = async (req, res) => {
   let mediaType = {};
@@ -92,7 +89,8 @@ const getPostById = async (req, res) => {
 const updatePost = async (req, res) => {
   let mediaType = {};
   console.log("Uploaded files:", req.files); // Log all uploaded files for debugging
-
+  console.log("Body:", req.body);
+  console.log("Files:", req.files);
   if (req.files) {
     // Check if photo is uploaded
     if (req.files.photo && req.files.photo.length > 0) {
@@ -279,7 +277,11 @@ const replyComment = async (req, res) => {
   const postId = req.params.id;
   const commentId = req.params.commentId;
   const userId = req.user._id;
+  const username = req.user.name;
+  console.log(username);
   try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
     const post = await Post.findById(postId);
     if (!post) return res.status(404).json({ message: "Post not found" });
     const commentIndex = post.comments.findIndex(
@@ -289,7 +291,7 @@ const replyComment = async (req, res) => {
       return res.status(404).json({ message: "Comment not found" });
     const comment = post.comments[commentIndex];
     const reply = {
-      user: userId,
+      user: user,
       content: req.body.content,
       replies: comment.replies,
     };

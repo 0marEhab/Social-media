@@ -49,15 +49,17 @@ exports.Login = async (req, res, next) => {
 exports.Profile = async (req, res, next) => {
   try {
     const userId = req.user._id; // Get user ID from req.user
-console.log(userId);
+    console.log(userId);
     // Find the user by ID and populate friends and posts
     const user = await User.findById(userId)
-      .populate('friends',
-      '_id name email profilePic', // Select specific fields for friends
+      .populate(
+        "friends",
+        "_id name email profilePic" // Select specific fields for friends
       )
       .populate({
-        path: 'posts',
-        select: '_id title content createdAt likes comments media privacy postType user', // Select specific fields for posts
+        path: "posts",
+        select:
+          "_id title content createdAt likes comments media privacy postType user", // Select specific fields for posts
       });
 
     if (!user) {
@@ -72,7 +74,6 @@ console.log(userId);
     res.status(500).json({ message: "Server error" });
   }
 };
-
 
 exports.updateProfile = async (req, res, next) => {
   const { name, email, password, birthDate, country } = req.body;
@@ -136,20 +137,17 @@ exports.uploadProfilePicture = async (req, res, next) => {
   }
 };
 
-
-
-
 exports.getUserProfile = async (req, res, next) => {
-  const { id } = req.params; 
+  const { id } = req.params;
 
   try {
-    const user = await User.findById(id).populate('friends',
-    '_id name email profilePic', 
-    ).populate(
-    'posts',
-    '_id title content createdAt likes comments media privacy postType user ',
-  ); 
-  
+    const user = await User.findById(id)
+      .populate("friends", "_id name email profilePic")
+      .populate(
+        "posts",
+        "_id title content createdAt likes comments media privacy postType user "
+      );
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -157,5 +155,37 @@ exports.getUserProfile = async (req, res, next) => {
   } catch (error) {
     console.error("Error fetching user:", error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.searchUsers = async (req, res) => {
+  try {
+    const query = req.query.query;
+    const users = await User.find({ name: { $regex: query, $options: "i" } });
+    res.json({ users });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json({ users });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.deleteUserById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findByIdAndDelete(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
