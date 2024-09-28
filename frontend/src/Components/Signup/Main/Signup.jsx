@@ -180,21 +180,21 @@ export default function Signup() {
         setAlert({
           show: true,
           type: "danger",
-          strongMessage: "Bad Request!",
+          strongMessage: "Email Already Used!",
           message:
-            "There was an issue with the data you provided. Please check and try again.",
+            "Please Enter A New Email.",
         });
       }
     } catch (error) {
       if (error.response) {
-        // The server responded with a status code outside the range of 2xx
+
         if (error.response.status === 400) {
           setAlert({
             show: true,
             type: "danger",
-            strongMessage: "Bad Request!",
+            strongMessage: "Email Already Used!",
             message:
-              "There was an issue with the data you provided. Please check and try again.",
+              "Please Enter A New Email.",
           });
         } else if (error.response.status === 401) {
           setAlert({

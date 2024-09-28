@@ -29,7 +29,7 @@ export default function Profile() {
   const [state, dispatch] = useReducer(reducer, { activeTab: 'posts' });
   const [data, setData] = useState(null);
   const { id } = useParams(); 
-
+  const [activeUser,setActiveUser]=useState();
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -41,6 +41,7 @@ export default function Profile() {
         });
 
         setData(response.data.user);
+        setActiveUser(true);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -51,9 +52,14 @@ export default function Profile() {
       try {
         const response = await axios.get(`${summaryApi.user.url}/${userId}`);
         setData(response.data.user);
+          console.log(response.data.user,"Steven");
+
+        setActiveUser(false);
+
       } catch (error) {
         console.error("Error fetching user data:", error);
         fetchUserProfile();
+        setActiveUser(true);
         throw error;
 
       }
@@ -88,10 +94,9 @@ if(!id){
     posts,
     profilePic,
   } = data;
+
   const postsCount=posts.length;
  
-
-
 
   return (
     <>
@@ -115,13 +120,16 @@ if(!id){
               <div className="w-full lg:max-w-xs mx-auto lg:mx-0">
               
                 <Details  
+                  _id={_id}
                   name={name}
                   email={email}
                   birthDate={birthDate}
                   country={country}
                   friends={friends}
                   profilePic={profilePic}
-                  postsCount={postsCount} />
+                  postsCount={postsCount}
+                  activeUser={activeUser}
+                  friendRequests={friendRequests} />
               </div>
             </div>
 
@@ -160,7 +168,8 @@ if(!id){
               {state.activeTab === 'posts' && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-6 pb-6">
               {posts.map((post, index) => (
-                (post.privacy === "public" || ((post.privacy === "friends" ) && friends.find(_id))) && (
+                (post.privacy === "public" || ((post.privacy === "friends" )|| 
+                (activeUser==true && post.privacy==="private"))) && (
                   <Post 
                     key={index} 
                     post={post} 
@@ -177,7 +186,10 @@ if(!id){
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-6 pb-6">
                   {posts.map((post, index) => (
                     //friends privacy needs to be tried! NOTE!!!!
-                ((post.privacy === "public" || ((post.privacy === "friends" ) && friends.find(_id))) && (post.postType=="photo")) && (
+                ((post.privacy === "public" || 
+                  ((post.privacy === "friends" ) && friends.find(_id)) || 
+                  (activeUser==true && post.privacy==="private") ) && 
+                  ((post.media?Object.keys(post.media):["text"])=="photo")) && (
                   <Photos 
                     photo={post.media.photo} 
                     className="w-full h-full" 
@@ -189,7 +201,10 @@ if(!id){
               {state.activeTab === 'videos' && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-6 pb-6">
            {posts.map((post, index) => (
-                ((post.privacy === "public" || ((post.privacy === "friends" ) && friends.find(_id))) && (post.postType=="video")) && (
+                ((post.privacy === "public" || 
+                  ((post.privacy === "friends" ) && friends.find(_id)) || 
+                (activeUser==true && post.privacy==="private")) && 
+                ((post.media?Object.keys(post.media):["text"])=="video")) && (
                   <Videos 
                     video={post.media.video} 
                     className="w-full h-full" 
