@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
 import { MdHistory } from "react-icons/md";
 import { IoHelpBuoy } from "react-icons/io5";
@@ -15,10 +16,12 @@ export default function SettingSideBar() {
           <MdHistory className="size-8" />
           <p className="text-xl">Activity History</p>
         </button>
-        <button className=" flex gap-4 items-center hover:text-gray-400 duration-300">
-          <IoHelpBuoy className="size-8" />
-          <p className="text-xl">Help</p>
-        </button>
+        <Link to="/ticket">
+          <button className=" flex gap-4 items-center hover:text-gray-400 duration-300">
+            <IoHelpBuoy className="size-8" />
+            <p className="text-xl">Help</p>
+          </button>
+        </Link>
       </div>
     </div>
   );

@@ -66,9 +66,9 @@ export default function HomeSideBar() {
     <div className="bg-secondary rounded-l-3xl flex flex-col justify-between px-10 py-16 mt-4">
       <div className="w-full flex justify-end">
         <img
-          src={`https://via.placeholder.com/56`}
+          src={user ? summaryApi.domain.url + "/" + user.profilePic : ""}
           alt="user-img"
-          className="w-14 h-14 rounded-lg mt-4"
+          className="w-14 h-14 rounded-full mt-4"
         />
       </div>
       <h2 className="text-xl font-bold text-white">My Friends</h2>
@@ -80,7 +80,11 @@ export default function HomeSideBar() {
             key={index}
           >
             <img
-              src={friend.profilePic}
+              src={
+                friend.profilePic
+                  ? summaryApi.domain.url + "/" + friend.profilePic
+                  : ""
+              }
               alt="user-img"
               className="w-10 h-10 rounded-lg border border-black outline outline-cyan-800"
             />

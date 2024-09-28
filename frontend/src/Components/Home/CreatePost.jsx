@@ -109,7 +109,7 @@ export default function CreatePost() {
         <div className="flex items-center gap-4">
           {/* <Link to={`/profile/${user._id}`}> */}
           <img
-            src="https://via.placeholder.com/48"
+            src={user ? summaryApi.domain.url + "/" + user.profilePic : ""}
             alt="user-profile"
             className="w-12 h-12 rounded-lg"
           />

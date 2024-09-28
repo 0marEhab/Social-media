@@ -16,7 +16,9 @@ var userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    profilePic: String,
+    profilePic: { type: String ,
+      default:"public/images/default.png"
+    },
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     requestedFriends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],

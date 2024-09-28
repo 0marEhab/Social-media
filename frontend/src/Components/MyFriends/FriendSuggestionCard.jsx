@@ -1,6 +1,7 @@
 import React from "react";
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import summaryApi from "../../../common";
 
 const FriendSuggestionCard = ({ suggestion, handleFriendRequest }) => {
   return (
@@ -10,7 +11,7 @@ const FriendSuggestionCard = ({ suggestion, handleFriendRequest }) => {
     >
       <div className="flex space-x-2">
         <img
-          src={suggestion.profilePic}
+          src={summaryApi.domain.url + "/" + suggestion.profilePic}
           className="rounded-xl w-10 object-cover"
           alt={suggestion.name}
         />
