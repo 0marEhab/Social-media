@@ -1,3 +1,4 @@
+
 const urlDomain = "http://localhost:3000";
 const summaryApi = {
   domain: {
@@ -73,6 +74,15 @@ const summaryApi = {
   reportPost: {
     url: `${urlDomain}/api/posts/reportPost/:id`,
   },
+  deleteComment: {
+    url: `${urlDomain}/api/posts/:id/comment/:commentId`,
+  },
+  editComment: {
+    url: `${urlDomain}/api/posts/:id/comment/:commentId/edit`,
+  },
+  replyComment: {
+    url: `${urlDomain}/api/posts/:id/comment/:commentId/reply`,
+  }
 };
 
 export default summaryApi;

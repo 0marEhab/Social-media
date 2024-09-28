@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link, useNavigate,useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Logo from "./../../Assets/Images/logo.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -13,7 +13,7 @@ import {
 import UserContext from "../../Contexts/UserContext";
 
 export default function SideBar() {
-  const {setUser} = useContext(UserContext)
+  const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -22,8 +22,8 @@ export default function SideBar() {
   };
   const location = useLocation();
   const handleProfileLink = () => {
-    if (location.pathname === '/profile') {
-      window.location.reload(); 
+    if (location.pathname === "/profile") {
+      window.location.reload();
     }
   };
 

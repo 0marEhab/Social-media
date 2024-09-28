@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const upload = require("./../middleware/upload");
+const isAuth = require("../middleware/isAuth");
 const {
   createPost,
   getAllPosts,
@@ -27,42 +28,38 @@ const {
   reportPost,
   getReportedPost,
 } = require("../controllers/post.controller");
-const isAuth = require("../middleware/isAuth");
 
+// Post Routes
 router.post("/", isAuth, upload, createPost);
-
 router.get("/", isAuth, getAllPosts);
-
+router.get("/reportedPosts", isAuth, getReportedPosts);
+router.get("/reported/:id", isAuth, getReportedPost);
 router.get("/:id", isAuth, getPostById);
-
-router.get("/:id/comments", isAuth, getCommentsByPostId);
-
 router.put("/:id", isAuth, updatePost);
-
 router.delete("/:id", isAuth, deletePost);
-
 router.post("/like/:id", isAuth, likePost);
+router.post("/share/:id", isAuth, sharePost);
+router.post("/reportPost/:id", isAuth, reportPost);
 
+// Comment Routes
+router.get("/:id/comments", isAuth, getCommentsByPostId);
 router.post("/comment/:id", isAuth, addComment);
-
 router.delete("/:id/comment/:commentId", isAuth, deleteComment);
-
 router.post("/:id/comment/:commentId/like", isAuth, likeComment);
-
 router.put("/:id/comment/:commentId/edit", isAuth, editComment);
 
+// Reply Routes
 router.post("/:id/comment/:commentId/reply", isAuth, replyComment);
-
+router.get("/:id/comment/:commentId/replies", isAuth, getRepliesByCommentId);
 router.post(
-  "/:id/comment/:commentId/replay/:replyId/like",
+  "/:id/comment/:commentId/reply/:replyId/like",
   isAuth,
   likeReplyComment
 );
-
 router.put("/:id/comment/:commentId/replay/:replyId/edit", isAuth, editReply);
-
 router.delete("/:id/comment/:commentId/replay/:replyId", isAuth, deleteReply);
 
+// Nested Replies
 router.post(
   "/:id/comment/:commentId/reply/:replyId",
   isAuth,
@@ -94,4 +91,5 @@ router.get("/reported", isAuth, getReportedPost);
 
 router.post("/reportPost/:id", isAuth, reportPost);
 
+// Export the router
 module.exports = router;

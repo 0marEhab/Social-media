@@ -4,7 +4,7 @@ import { RiShareForwardFill } from "react-icons/ri";
 import { AiOutlineHeart } from "react-icons/ai";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios"; // Assuming Axios for API calls
-import { useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import moment from "moment";
 import summaryApi from "../../../common";
 import UserContext from "../../Contexts/UserContext";
@@ -106,7 +106,7 @@ export default function Post() {
         (like) =>
           `<p style="cursor: pointer; color: blue ; text-decoration: underline;" onclick="window.location.href='/profile/${like._id}'">${like.name}</p>`
       )
-      .join(""); 
+      .join("");
 
     Swal.fire({
       title: "Likes",
@@ -184,10 +184,21 @@ export default function Post() {
 
       <div className="flex flex-col justify-between items-start gap-3 lg:items-center lg:flex-row md:items-center md:flex-row w-full mb-10">
         <div className="flex items-center gap-3">
-          <img className="w-16 h-16 rounded-xl" alt="user-img" />
+          <Link to={`/profile/${post.user._id}`}>
+            {" "}
+            <img
+              src={post.user.profilePic}
+              alt={`${post.user.name}'s profile`}
+              className="w-12 h-12 rounded-full"
+            />
+          </Link>{" "}
           <div>
-            <p>{post.user.name}</p>
-            <p className="opacity-50">{relativeTime}</p>
+            <Link to={`/profile/${post.user._id}`}>
+              <h4 className="font-bold hover:underline">{post.user.name}</h4>
+            </Link>
+            <p className="opacity-50">
+              {relativeTime} • {post.privacy}
+            </p>
           </div>
         </div>
 

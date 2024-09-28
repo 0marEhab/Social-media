@@ -11,11 +11,12 @@ import UserContext from "../../Contexts/UserContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link, useNavigate } from "react-router-dom";
+
 export default function CreatePost() {
   const navigate = useNavigate();
-
   const { user } = useContext(UserContext);
   console.log(user);
+
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const [video, setVideo] = useState(null);
@@ -23,6 +24,25 @@ export default function CreatePost() {
   const [privacy, setPrivacy] = useState("public");
   const textareaRef = useRef(null);
   const fileInputRef = useRef(null);
+
+  // Fetch friends when component mounts
+  const fetchFriends = async () => {
+    try {
+      const response = await axios.get(summaryApi.myFriends.url, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const friends = response.data;
+      setTags(friends); // Set the friends as tags
+    } catch (error) {
+      console.error("Error fetching friends", error);
+      toast.error("Failed to load friends.");
+    }
+  };
+  useEffect(() => {
+    fetchFriends();
+  }, []);
 
   const createPost = async () => {
     try {
@@ -40,7 +60,16 @@ export default function CreatePost() {
         formData.append("video", video);
       }
 
-      formData.append("tags", JSON.stringify(tags));
+      // Add the current user to the tags array if not already included
+      const updatedTags = [...tags];
+      if (!tags.find((tag) => tag._id === user._id)) {
+        updatedTags.push(user);
+      }
+
+      formData.append(
+        "tags",
+        JSON.stringify(updatedTags.map((tag) => tag._id))
+      );
       formData.append("privacy", privacy);
 
       // Make the POST request
@@ -56,14 +85,14 @@ export default function CreatePost() {
         onClose: () => {
           navigate("/posts/" + response.data.post._id);
         },
-        autoClose: 3000, // Optionally, set a duration for the toast
+        autoClose: 3000,
       });
 
       // Reset form fields
       setContent("");
       setImage(null);
       setVideo(null);
-      setTags([]);
+      setTags([]); // Reset tags
       setPrivacy("public");
     } catch (error) {
       // Error toast notification
@@ -107,13 +136,11 @@ export default function CreatePost() {
     <div className="flex flex-col bg-white p-5 rounded-lg shadow-md w-full max-w-xl mx-auto">
       <form onSubmit={handleShare}>
         <div className="flex items-center gap-4">
-          {/* <Link to={`/profile/${user._id}`}> */}
           <img
             src={user ? summaryApi.domain.url + "/" + user.profilePic : ""}
             alt="user-profile"
             className="w-12 h-12 rounded-lg"
           />
-          {/* </Link> */}
           <textarea
             ref={textareaRef}
             value={content}
@@ -180,6 +207,15 @@ export default function CreatePost() {
             >
               <AiOutlineVideoCamera size={20} />
             </div>
+            <select
+              value={privacy}
+              onChange={(e) => setPrivacy(e.target.value)}
+              className="bg-gray-200 px-2 py-2 rounded-lg hover:text-blue-500 cursor-pointer"
+            >
+              <option value="public">Public</option>
+              <option value="private">Private</option>
+              <option value="friends">Friends</option>
+            </select>
           </div>
           <button
             type="submit"

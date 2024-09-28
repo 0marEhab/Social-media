@@ -63,13 +63,15 @@ export default function HomeSideBar() {
   };
 
   return (
-    <div className="bg-secondary rounded-l-3xl flex flex-col justify-between px-10 py-16 mt-4">
-      <div className="w-full flex justify-end">
+    <div className="bg-secondary  flex flex-col lg:w-[15%] w-1/4  gap-12 px-10 py-16 fixed top-0 right-0 overflow-hidden z-50 h-screen ">
+      <div className="w-max flex justify-end">
+        {/* <Link to={`/profile/${user._id}`}> */}
         <img
           src={user ? summaryApi.domain.url + "/" + user.profilePic : ""}
           alt="user-img"
           className="w-14 h-14 rounded-full mt-4"
         />
+        {/* </Link> */}
       </div>
       <h2 className="text-xl font-bold text-white">My Friends</h2>
       <div className="flex gap-4 mt-4">
@@ -97,23 +99,27 @@ export default function HomeSideBar() {
         </Link>
       )}
 
-      <h2 className="text-xl font-bold text-white mt-4">Friends Suggestions</h2>
       <div className="flex flex-col mt-4">
-        {loading ? (
-          <Loading color={"#fff"} />
-        ) : suggestions.length === 0 ? (
-          <p className="text-white text-sm">No suggestions available</p>
-        ) : (
-          suggestions
-            .slice(0, 2)
-            .map((suggestion) => (
-              <FriendSuggestionCard
-                key={suggestion._id}
-                suggestion={suggestion}
-                handleFriendRequest={handleFriendRequest}
-              />
-            ))
-        )}
+        <h2 className="text-xl font-bold text-white mt-4">
+          Friends Suggestions
+        </h2>
+        <div className="flex flex-col gap-4 mt-2">
+          {loading ? (
+            <Loading color={"#fff"} />
+          ) : suggestions.length === 0 ? (
+            <p className="text-white text-sm">No suggestions available</p>
+          ) : (
+            suggestions
+              .slice(0, 2)
+              .map((suggestion) => (
+                <FriendSuggestionCard
+                  key={suggestion._id}
+                  suggestion={suggestion}
+                  handleFriendRequest={handleFriendRequest}
+                />
+              ))
+          )}
+        </div>
       </div>
       {suggestions.length > 3 && (
         <Link to="/friends" className="text-gray-500  hover:underline">
