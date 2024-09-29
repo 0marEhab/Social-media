@@ -4,7 +4,7 @@ import Logo from "./../../Assets/Images/logo.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRightFromBracket,
-  faCalendar,
+  faUserFriends,
   faEnvelope,
   faGear,
   faHome,
@@ -40,10 +40,14 @@ export default function SideBar() {
         <FontAwesomeIcon icon={faHome} />
       </Link>
       <Link
+<<<<<<< HEAD
         to="/calendar"
+=======
+        to="/friend-requests"
+>>>>>>> Handled-Friends-in-Profile
         className="p-3 mb-3 rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
       >
-        <FontAwesomeIcon icon={faCalendar} />
+        <FontAwesomeIcon icon={faUserFriends} />
       </Link>
       <Link
         to="/chat"

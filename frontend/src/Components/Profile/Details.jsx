@@ -1,10 +1,14 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
+=======
+import React, { useContext, useEffect, useState } from "react";
+>>>>>>> Handled-Friends-in-Profile
 import { FaRegEnvelope, FaEllipsisV, FaFlag, FaCalendar } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import summaryApi from "../../../common/index";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { sendFriendRequest } from "../../Utils/friends";
+import { sendFriendRequest, handleAcceptRequest } from "../../Utils/friends";
 
 export default function Details({
   _id,
@@ -17,11 +21,17 @@ export default function Details({
   postsCount,
   activeUser,
   friendRequests,
+<<<<<<< HEAD
+=======
+  requestedFriends,
+  setReceivedRequests,
+>>>>>>> Handled-Friends-in-Profile
 }) {
   const [activeUserId, setActiveUserId] = useState("");
   const [friendStatus, SetFriendStatus] = useState("");
 
   const handleFriendStatus = () => {
+<<<<<<< HEAD
     if (friendRequests.length == 0) {
       SetFriendStatus("Add Friend");
     }
@@ -32,6 +42,27 @@ export default function Details({
         SetFriendStatus("Add Friend");
       }
     });
+=======
+    if (friendRequests.length == 0 && requestedFriends.length == 0) {
+      SetFriendStatus("Add Friend");
+    } else if (friendRequests.length != 0) {
+      friendRequests.map((requestID) => {
+        if (activeUserId === requestID) {
+          SetFriendStatus("Request Sent");
+        } else {
+          SetFriendStatus("Add Friend");
+        }
+      });
+    } else if (requestedFriends.length != 0) {
+      requestedFriends.map((requestID) => {
+        if (activeUserId === requestID) {
+          SetFriendStatus("Accept Request");
+        } else {
+          SetFriendStatus("Add Friend");
+        }
+      });
+    }
+>>>>>>> Handled-Friends-in-Profile
   };
 
   useEffect(() => {
@@ -44,6 +75,10 @@ export default function Details({
           },
         });
         setActiveUserId(response.data.user._id);
+<<<<<<< HEAD
+=======
+
+>>>>>>> Handled-Friends-in-Profile
         handleFriendStatus();
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -56,6 +91,10 @@ export default function Details({
   console.log(activeUserId, "Active UserID");
   console.log(_id, "Shown Profile ID");
   console.log(friendRequests);
+<<<<<<< HEAD
+=======
+  console.log(requestedFriends);
+>>>>>>> Handled-Friends-in-Profile
 
   const handleNavigation = (id) => {
     if (activeUserId == id) {
@@ -67,7 +106,12 @@ export default function Details({
     }
   };
   const friendsCount = friends.length;
+<<<<<<< HEAD
   const handleFriendRequest = async () => {
+=======
+
+  const handleFriend = async () => {
+>>>>>>> Handled-Friends-in-Profile
     if (friendStatus == "Add Friend") {
       try {
         await sendFriendRequest(_id);
@@ -76,6 +120,11 @@ export default function Details({
       } catch (error) {
         toast.error("Failed to send friend request.");
       }
+<<<<<<< HEAD
+=======
+    } else if (friendStatus == "Accept Request") {
+      handleAcceptRequest(_id, setReceivedRequests);
+>>>>>>> Handled-Friends-in-Profile
     }
   };
 
@@ -87,7 +136,11 @@ export default function Details({
           <img
             className="w-36 h-26 rounded-lg"
             //need to changed later after fixing uploading
+<<<<<<< HEAD
             src={summaryApi.domain.url + "/" + profilePic}
+=======
+            src={_id ? summaryApi.domain.url + "/" + profilePic : ""}
+>>>>>>> Handled-Friends-in-Profile
             alt={`${name}'s profile`}
           />
         </div>
@@ -106,16 +159,28 @@ export default function Details({
               <p>Posts</p>
             </div>
           </div>
+<<<<<<< HEAD
           <div className="text-center">
             <div className="flex items-center space-x-1 cursor-pointer">
               <span className="font-bold">{friendsCount}</span>
               <p>Friends</p>
             </div>
           </div>
+=======
+          <Link to="/friends">
+            <div className="text-center">
+              <div className="flex items-center space-x-1 cursor-pointer">
+                <span className="font-bold">{friendsCount}</span>
+                <p>Friends</p>
+              </div>
+            </div>
+          </Link>
+>>>>>>> Handled-Friends-in-Profile
         </div>
 
         {/* Buttons */}
         <div className="flex justify-center space-x-4 mt-6">
+<<<<<<< HEAD
           {!activeUser &&
             friends.some((friend) => friend._id === activeUserId) && (
               <button className="bg-green-500 font-serif text-white text-l px-4 py-2 rounded-lg flex items-center">
@@ -146,6 +211,43 @@ export default function Details({
               </button>
             )}
 
+=======
+          {/* Check if the logged-in user is viewing their own profile */}
+          {activeUserId !== _id && (
+            <>
+              {/* Show "Friends" button if they are already friends */}
+              {friends.some((friend) => friend._id === activeUserId) ? (
+                <button className="bg-green-500 font-serif text-white text-l px-4 py-2 rounded-lg flex items-center">
+                  <svg
+                    className="w-4 h-4 mr-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                  Friends
+                </button>
+              ) : (
+                // Show "Add Friend" or "Accept Request" based on the friend status
+                <button
+                  className="bg-green-500 font-serif text-white text-l px-4 py-2 rounded-lg flex items-center"
+                  onClick={handleFriend}
+                >
+                  {friendStatus}
+                </button>
+              )}
+            </>
+          )}
+
+          {/* Messaging and Settings buttons always appear */}
+>>>>>>> Handled-Friends-in-Profile
           <Link to="/chat">
             <button className="p-3">
               <FaRegEnvelope size={26} />
@@ -181,9 +283,17 @@ export default function Details({
 
         {/* Friends List */}
         <div className="px-10 py-4">
+<<<<<<< HEAD
           <h3 className="text-sm font-semibold text-gray-700 font-serif mb-4">
             Friends
           </h3>
+=======
+          <Link to="/friends">
+            <h3 className="text-sm font-semibold text-gray-700 font-serif mb-4">
+              Friends
+            </h3>
+          </Link>
+>>>>>>> Handled-Friends-in-Profile
           <div className="flex space-x-2">
             <div className="grid grid-cols-5 gap-4 ">
               {friends.map((friend, index) => (
@@ -191,7 +301,15 @@ export default function Details({
                   <img
                     key={index}
                     className="w-18 h-12 rounded-lg"
+<<<<<<< HEAD
                     src={friend.profilePic}
+=======
+                    src={
+                      friend._id
+                        ? summaryApi.domain.url + "/" + friend.profilePic
+                        : ""
+                    }
+>>>>>>> Handled-Friends-in-Profile
                     alt={friend.name}
                     title={friend.name}
                   />

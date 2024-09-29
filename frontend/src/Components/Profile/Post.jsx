@@ -12,10 +12,14 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 export default function Post({ post, profilePic, name, user }) {
+<<<<<<< HEAD
   const userProfilePic =
     "https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/9290037d-a5b2-4f50-aea3-9f3f2b53b441";
   const userProfileName = "Jane";
 
+=======
+  
+>>>>>>> Handled-Friends-in-Profile
   const examplePost = {
     id: post._id,
     content: post.content,
@@ -26,13 +30,19 @@ export default function Post({ post, profilePic, name, user }) {
     user: post.user,
     createdAt: post.createdAt,
   };
+<<<<<<< HEAD
   // Check if the current user has already liked the post
   const userHasLiked = post.likes.some((like) => like._id === user);
+=======
+
+  const userHasLiked = post.likes.some(like => like._id === user);
+>>>>>>> Handled-Friends-in-Profile
 
   const [liked, setLiked] = useState(userHasLiked);
   const [likeCount, setLikeCount] = useState(examplePost.likes);
   const [menuVisible, setMenuVisible] = useState(false);
   const [showFullContent, setShowFullContent] = useState(false);
+
 
   const handleLike = async () => {
     try {
@@ -45,11 +55,7 @@ export default function Post({ post, profilePic, name, user }) {
           },
         }
       );
-
-      // Toggle the liked state
       setLiked(!liked);
-
-      // Update the like count based on the response
       setLikeCount(response.data.likes.length);
     } catch (error) {
       console.error("Error liking the post:", error);
@@ -60,12 +66,17 @@ export default function Post({ post, profilePic, name, user }) {
     setShowFullContent(!showFullContent);
   };
 
+<<<<<<< HEAD
   function addNewlinesAfterEverySixWordsOrLongWords(
     text,
     maxWordLength = 10,
     longWordLimit = 53
   ) {
     const words = text.split(" ");
+=======
+  function addNewlinesAfterEverySixWordsOrLongWords(text, maxWordLength = 10, longWordLimit = 50) {
+    const words = text.split(' ');
+>>>>>>> Handled-Friends-in-Profile
     const result = [];
 
     for (let i = 0; i < words.length; i++) {
@@ -96,8 +107,8 @@ export default function Post({ post, profilePic, name, user }) {
 
   return (
     <div className="col-span-1">
-      <div className="bg-white rounded-3xl border-2 border-gray-200 p-14 flex flex-col justify-between">
-        <div className="flex items-center mb-4 ">
+      <div className="bg-white rounded-3xl border-2 border-gray-200 p-6 flex flex-col justify-between">
+        <div className="flex items-center mb-4">
           <div className="flex-1 flex items-center">
             <img
               src={summaryApi.domain.url + "/" + profilePic}
@@ -136,11 +147,11 @@ export default function Post({ post, profilePic, name, user }) {
           </div>
         </div>
 
-        {/* Conditionally render based on content type */}
+        {/* Conditionally render media */}
         <Link to={`/posts/${examplePost.id}`}>
           {examplePost.media[0] === "photo" && (
             <img
-              className="w-full h-auto rounded-lg object-cover mb-3 max-h-[300px]"
+              className="w-full h-48 object-cover rounded-lg mb-3"
               src={`${summaryApi.domain.url}/uploads/${post.media.photo}`}
               alt="Post content"
             />
@@ -148,6 +159,7 @@ export default function Post({ post, profilePic, name, user }) {
         </Link>
 
         <Link to={`/posts/${examplePost.id}`}>
+<<<<<<< HEAD
           {examplePost.media[0] === "video" && (
             <video
               className="w-full h-auto rounded-lg mb-3"
@@ -161,14 +173,27 @@ export default function Post({ post, profilePic, name, user }) {
                 src={`${summaryApi.domain.url}/uploads/${post.media.video}`}
                 type="video/mp4"
               />
+=======
+          {examplePost.media[0] === 'video' && (
+            <video className="w-full h-48 object-cover rounded-lg mb-3" controls>
+              <source src={`${summaryApi.domain.url}/uploads/${post.media.video}`} type="video/mp4" />
+>>>>>>> Handled-Friends-in-Profile
               Your browser does not support the video tag.
             </video>
           )}
         </Link>
+ 
+
 
         <Link to={`/posts/${examplePost.id}`}>
+<<<<<<< HEAD
           {examplePost.media[0] === "text" && (
             <p className="text-sm mb-4">
+=======
+          {examplePost.media[0] === 'text' && (
+            <div className="text-sm mb-3 h-48 overflow-hidden">
+              <p className="whitespace-pre-line">{displayedContent}</p>
+>>>>>>> Handled-Friends-in-Profile
               {shouldShowReadMore && (
                 <button
                   className="text-blue-500 ml-1"
@@ -177,10 +202,11 @@ export default function Post({ post, profilePic, name, user }) {
                   {showFullContent ? "Read Less" : "Read More"}
                 </button>
               )}
-            </p>
+            </div>
           )}
         </Link>
 
+<<<<<<< HEAD
         <Link to={`/posts/${examplePost.id}`}>
           <p className="text-sm mb-4">
             {displayedContent}
@@ -194,10 +220,13 @@ export default function Post({ post, profilePic, name, user }) {
             )}
           </p>
         </Link>
+=======
+     
+>>>>>>> Handled-Friends-in-Profile
 
-        {/* Like, comment, and share section */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
+<<<<<<< HEAD
             {/* Heart for likes */}
             <div
               className="flex items-center space-x-1 cursor-pointer"
@@ -222,6 +251,25 @@ export default function Post({ post, profilePic, name, user }) {
           <div className="flex items-center space-x-1 cursor-pointer">
             <p className="text-sm font-semibold">Share</p>
             <FaShare className="text-gray-600" />
+=======
+            <div className="flex items-center">
+              <button onClick={handleLike}>
+                {liked ? (
+                  <FaHeart className="text-red-500" />
+                ) : (
+                  <FaRegHeart className="text-gray-500" />
+                )}
+              </button>
+              <span className="text-sm ml-1">{likeCount}</span>
+            </div>
+            <div className="flex items-center">
+              <FaRegComment className="text-gray-500" />
+              <span className="text-sm ml-1">{examplePost.comments}</span>
+            </div>
+            <div className="flex items-center">
+              <FaShare className="text-gray-500" />
+            </div>
+>>>>>>> Handled-Friends-in-Profile
           </div>
         </div>
       </div>

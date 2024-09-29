@@ -17,6 +17,10 @@ export default function PostCard({ post }) {
   const { user, setSharedPosts } = useContext(UserContext);
   const relativeTime = moment(post.createdAt).fromNow();
   const [likes, setLikes] = useState(post.likes);
+<<<<<<< HEAD
+=======
+  const [showFullContent, setShowFullContent] = useState(false);
+>>>>>>> Handled-Friends-in-Profile
   const [isLiked, setIsLiked] = useState(
     user ? likes.some((like) => like._id === user._id) : false
   );
@@ -96,7 +100,9 @@ export default function PostCard({ post }) {
       }
     });
   };
-
+const handleContentToggle = () => {
+  setShowFullContent(!showFullContent);
+};
   const reportPost = async () => {
     try {
       await axios.post(
@@ -108,6 +114,10 @@ export default function PostCard({ post }) {
           },
         }
       );
+<<<<<<< HEAD
+=======
+
+>>>>>>> Handled-Friends-in-Profile
       Swal.fire("Reported!", "This post has been reported.", "success");
     } catch (error) {
       Swal.fire(
@@ -117,6 +127,38 @@ export default function PostCard({ post }) {
       );
     }
   };
+
+  function addNewlinesAfterEverySixWordsOrLongWords(
+    text,
+    maxWordLength = 10,
+    longWordLimit = 50
+  ) {
+    const words = text.split(" ");
+    const result = [];
+
+    for (let i = 0; i < words.length; i++) {
+      if (words[i].length > longWordLimit) {
+        for (let j = 0; j < words[i].length; j += longWordLimit) {
+          result.push(words[i].substring(j, j + longWordLimit));
+        }
+      } else {
+        result.push(words[i]);
+      }
+      if ((i + 1) % 6 === 0) {
+        result.push("\n");
+      }
+    }
+
+    return result.join(" ");
+  }
+
+  const formattedText = addNewlinesAfterEverySixWordsOrLongWords(post.content);
+  const maxLines = 3;
+  const lines = formattedText.split("\n");
+  const shouldShowReadMore = lines.length > maxLines;
+  const displayedContent = showFullContent
+    ? formattedText
+    : lines.slice(0, maxLines).join("\n") + (shouldShowReadMore ? "..." : "");
 
   const handleShare = async () => {
     try {
@@ -152,6 +194,7 @@ export default function PostCard({ post }) {
     }
   };
 
+<<<<<<< HEAD
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto my-6 transition hover:shadow-xl">
       {/* Post Header */}
@@ -180,8 +223,64 @@ export default function PostCard({ post }) {
                 Shared from: {post.sharedPost.user.name}
               </h6>
             )}
+=======
+  if (post.user) {
+    return (
+      <div className="bg-white p-5 rounded-lg shadow-md w-full max-w-xl mx-auto my-5">
+        {/* Post Header */}
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center gap-3">
+            <Link to={`/profile/${post?.user?._id}`}>
+              {" "}
+              <img
+                src={
+                  post
+                    ? summaryApi.domain.url + "/" + post?.user?.profilePic
+                    : ""
+                }
+                alt={`${post?.user?.name}'s profile`}
+                className="w-12 h-12 rounded-full"
+              />
+            </Link>
+
+            <div>
+              <Link to={`/profile/${post?.user?._id}`}>
+                <h4 className="font-bold hover:underline">
+                  {post?.user?.name}
+                </h4>
+              </Link>
+              <p className="text-gray-500 text-sm">
+                {relativeTime} • {post.privacy}
+              </p>
+
+              {post.sharedPost && (
+                <h6>Shared from: {post?.sharedPost?.user?.name}</h6>
+              )}
+            </div>
+>>>>>>> Handled-Friends-in-Profile
           </div>
+
+          <button className="relative">
+            <BsThreeDots
+              onClick={toggleOptions}
+              className="text-gray-500 cursor-pointer"
+            />
+            {showOptions && (
+              <PostOptions
+                post={post}
+                postId={post._id}
+                editPost={user && user._id === post.user._id ? editPost : null}
+                deletePost={
+                  user && user._id === post.user._id ? deletePost : null
+                }
+                reportPost={
+                  user && user._id !== post.user._id ? reportPost : null
+                }
+              />
+            )}
+          </button>
         </div>
+<<<<<<< HEAD
         <button className="relative">
           <BsThreeDots
             onClick={toggleOptions}
@@ -260,7 +359,67 @@ export default function PostCard({ post }) {
           <AiOutlineShareAlt size={22} />
           Share
         </button>
+=======
+
+        {/* Post Content */}
+        <div>
+          {post.media?.photo && (
+            <img
+              src={`${summaryApi.domain.url}/uploads/${post.media.photo}`}
+              alt="post content"
+              className="w-full max-h-[400px] object-cover object-center rounded-lg mb-4"
+            />
+          )}
+          {post.media?.video && (
+            <video
+              controls
+              className="w-full max-h-[400px] object-cover object-center rounded-lg mb-4"
+            >
+              <source
+                src={`${summaryApi.domain.url}/uploads/${post.media.video}`}
+                type="video/mp4"
+              />
+              Your browser does not support the video tag.
+            </video>
+          )}
+          <p className="text-gray-500 mt-2 mb-4">{post.content}</p>
+          <p className="text-blue-500 font-bold cursor-pointer">
+            <Link to={`/posts/${post._id}`}>READ MORE</Link>
+          </p>
+        </div>
+
+        {/* Post Footer (Likes, Comments, Share) */}
+        <div className="flex justify-between items-center mt-4">
+          <div className="flex gap-4 text-gray-500">
+            <button
+              className={`flex items-center gap-1 ${
+                isLiked ? "text-red-500" : ""
+              }`}
+              onClick={handleLike}
+            >
+              <AiOutlineHeart size={20} />
+              <span>{likes.length}</span>
+            </button>
+
+            <button
+              className="flex items-center gap-1"
+              onClick={() => navigate(`/posts/${post._id}`)}
+            >
+              <AiOutlineMessage size={20} />
+              <span>{post.comments.length}</span>
+            </button>
+          </div>
+
+          <button
+            className="flex items-center gap-1 text-gray-500"
+            onClick={handleShare}
+          >
+            <AiOutlineShareAlt size={20} />
+            Share
+          </button>
+        </div>
+>>>>>>> Handled-Friends-in-Profile
       </div>
-    </div>
-  );
+    );
+  }
 }
