@@ -3,6 +3,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import axios from "axios";
 import SettingSideBar from "../../UI/SettingSideBar/SettingSideBar";
 import UserContext from "../../Contexts/UserContext";
+import Swal from "sweetalert2";
 
 import summaryApi from "../../../common";
 
@@ -86,6 +87,60 @@ export default function Settings() {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "Do you really want to delete your account? This action cannot be undone.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#ff5757",
+        cancelButtonColor: "#53d769",
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "Cancel",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            const response = await axios.delete(summaryApi.deleteProfile.url, {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            });
+
+            Swal.fire({
+              icon: "success",
+              title: "Account Deleted",
+              text: "Your account has been successfully deleted. You will be redirected to the login page.",
+              confirmButtonColor: "#53d769",
+              confirmButtonText: "Login",
+            }).then(() => {
+              localStorage.removeItem("token"); // Remove token first
+              window.location.href = "/signing"; // Redirect to signing page
+            });
+          } catch (error) {
+            console.error("Error deleting account:", error);
+
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: "There was an error deleting your account. Please try again.",
+              confirmButtonColor: "#ff5757",
+            });
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Error deleting account:", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "There was an error deleting your account. Please try again.",
+        confirmButtonColor: "#ff5757",
+      });
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
@@ -99,13 +154,25 @@ export default function Settings() {
             },
           }
         );
-        console.log("Profile updated:", response.data.message);
+        // Show SweetAlert on success
+        Swal.fire({
+          icon: "success",
+          title: "Profile Updated",
+          text: "Your profile has been successfully updated!",
+          confirmButtonColor: "#53d769",
+        });
       } catch (error) {
         console.error("Error updating profile:", error);
+        // Show error alert
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "There was an error updating your profile. Please try again.",
+          confirmButtonColor: "#ff5757",
+        });
       }
     }
   };
-
   return (
     <div className="grid grid-cols-10 gap-10">
       <div className="col-span-10 lg:col-span-6 xl:col-span-7 p-5 md:p-10 bg-white shadow-lg rounded-lg">
@@ -140,10 +207,10 @@ export default function Settings() {
 
                 <button
                   className="flex items-center justify-center gap-2 text-lg w-full md:w-[200px] rounded-3xl h-12 md:h-14 border-2 text-[#ff5757]"
-                  onClick={() => setProfilePic(defaultPic)}
+                  onClick={handleDelete}
                 >
                   <RiDeleteBin6Line className="text-xl" />
-                  Delete
+                  Delete Account
                 </button>
               </div>
             </div>

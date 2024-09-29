@@ -1,27 +1,33 @@
-import React, { useState } from 'react';
-import { FaHeart, FaRegHeart, FaRegComment, FaShare, FaEllipsisV } from 'react-icons/fa';
-import { formatDistanceToNow } from 'date-fns';
+import React, { useState } from "react";
+import {
+  FaHeart,
+  FaRegHeart,
+  FaRegComment,
+  FaShare,
+  FaEllipsisV,
+} from "react-icons/fa";
+import { formatDistanceToNow } from "date-fns";
 import summaryApi from "../../../common/index";
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 export default function Post({ post, profilePic, name, user }) {
-  const userProfilePic = "https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/9290037d-a5b2-4f50-aea3-9f3f2b53b441";
+  const userProfilePic =
+    "https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/9290037d-a5b2-4f50-aea3-9f3f2b53b441";
   const userProfileName = "Jane";
-  
 
   const examplePost = {
     id: post._id,
     content: post.content,
     likes: post.likes.length,
     comments: post.comments.length,
-    media: post.media?Object.keys(post.media):["text"],
+    media: post.media ? Object.keys(post.media) : ["text"],
     privacy: post.privacy,
     user: post.user,
     createdAt: post.createdAt,
   };
   // Check if the current user has already liked the post
-  const userHasLiked = post.likes.some(like => like._id === user);
+  const userHasLiked = post.likes.some((like) => like._id === user);
 
   const [liked, setLiked] = useState(userHasLiked);
   const [likeCount, setLikeCount] = useState(examplePost.likes);
@@ -54,8 +60,12 @@ export default function Post({ post, profilePic, name, user }) {
     setShowFullContent(!showFullContent);
   };
 
-  function addNewlinesAfterEverySixWordsOrLongWords(text, maxWordLength = 10, longWordLimit = 53) {
-    const words = text.split(' ');
+  function addNewlinesAfterEverySixWordsOrLongWords(
+    text,
+    maxWordLength = 10,
+    longWordLimit = 53
+  ) {
+    const words = text.split(" ");
     const result = [];
 
     for (let i = 0; i < words.length; i++) {
@@ -67,20 +77,22 @@ export default function Post({ post, profilePic, name, user }) {
         result.push(words[i]);
       }
       if ((i + 1) % 6 === 0) {
-        result.push('\n');
+        result.push("\n");
       }
     }
 
-    return result.join(' ');
+    return result.join(" ");
   }
 
-  const formattedText = addNewlinesAfterEverySixWordsOrLongWords(examplePost.content);
+  const formattedText = addNewlinesAfterEverySixWordsOrLongWords(
+    examplePost.content
+  );
   const maxLines = 3;
-  const lines = formattedText.split('\n');
+  const lines = formattedText.split("\n");
   const shouldShowReadMore = lines.length > maxLines;
   const displayedContent = showFullContent
     ? formattedText
-    : lines.slice(0, maxLines).join('\n') + (shouldShowReadMore ? '...' : '');
+    : lines.slice(0, maxLines).join("\n") + (shouldShowReadMore ? "..." : "");
 
   return (
     <div className="col-span-1">
@@ -88,14 +100,16 @@ export default function Post({ post, profilePic, name, user }) {
         <div className="flex items-center mb-4 ">
           <div className="flex-1 flex items-center">
             <img
-              src={profilePic}
+              src={summaryApi.domain.url + "/" + profilePic}
               alt="User profile"
               className="w-12 h-12 rounded-lg object-cover"
             />
             <div className="ml-2">
               <h2 className="font-bold">{name}</h2>
               <p className="text-gray-500 text-xs font-light">
-                {formatDistanceToNow(new Date(examplePost.createdAt), { addSuffix: true })}
+                {formatDistanceToNow(new Date(examplePost.createdAt), {
+                  addSuffix: true,
+                })}
               </p>
             </div>
           </div>
@@ -124,34 +138,43 @@ export default function Post({ post, profilePic, name, user }) {
 
         {/* Conditionally render based on content type */}
         <Link to={`/posts/${examplePost.id}`}>
-          {examplePost.media[0] === 'photo' && (
+          {examplePost.media[0] === "photo" && (
             <img
               className="w-full h-auto rounded-lg object-cover mb-3 max-h-[300px]"
               src={`${summaryApi.domain.url}/uploads/${post.media.photo}`}
-              
               alt="Post content"
             />
           )}
         </Link>
 
         <Link to={`/posts/${examplePost.id}`}>
-          {examplePost.media[0] === 'video' && (
-            <video className="w-full h-auto rounded-lg mb-3" style={{
-              width: '480px', 
-              height: '300px',
-            }} controls>
-              <source src={`${summaryApi.domain.url}/uploads/${post.media.video}`} type="video/mp4" />
+          {examplePost.media[0] === "video" && (
+            <video
+              className="w-full h-auto rounded-lg mb-3"
+              style={{
+                width: "480px",
+                height: "300px",
+              }}
+              controls
+            >
+              <source
+                src={`${summaryApi.domain.url}/uploads/${post.media.video}`}
+                type="video/mp4"
+              />
               Your browser does not support the video tag.
             </video>
           )}
         </Link>
 
         <Link to={`/posts/${examplePost.id}`}>
-          {examplePost.media[0] === 'text' && (
+          {examplePost.media[0] === "text" && (
             <p className="text-sm mb-4">
               {shouldShowReadMore && (
-                <button className="text-blue-500 ml-1" onClick={handleContentToggle}>
-                  {showFullContent ? 'Read Less' : 'Read More'}
+                <button
+                  className="text-blue-500 ml-1"
+                  onClick={handleContentToggle}
+                >
+                  {showFullContent ? "Read Less" : "Read More"}
                 </button>
               )}
             </p>
@@ -162,8 +185,11 @@ export default function Post({ post, profilePic, name, user }) {
           <p className="text-sm mb-4">
             {displayedContent}
             {shouldShowReadMore && (
-              <button className="text-blue-500 ml-1" onClick={handleContentToggle}>
-                {showFullContent ? 'Read Less' : 'Read More'}
+              <button
+                className="text-blue-500 ml-1"
+                onClick={handleContentToggle}
+              >
+                {showFullContent ? "Read Less" : "Read More"}
               </button>
             )}
           </p>
@@ -173,19 +199,21 @@ export default function Post({ post, profilePic, name, user }) {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             {/* Heart for likes */}
-            <div className="flex items-center space-x-1 cursor-pointer" onClick={handleLike}>
-              {liked ? <FaHeart className="text-red-500" /> : 
-              <FaRegHeart 
-                className="text-gray-600" 
-              />}
+            <div
+              className="flex items-center space-x-1 cursor-pointer"
+              onClick={handleLike}
+            >
+              {liked ? (
+                <FaHeart className="text-red-500" />
+              ) : (
+                <FaRegHeart className="text-gray-600" />
+              )}
               <span className="text-sm">{likeCount}</span>
             </div>
             {/* Comment icon */}
             <Link to={`/posts/${examplePost.id}`}>
               <div className="flex items-center space-x-1">
-                <FaRegComment 
-                  className="text-gray-600" 
-                />
+                <FaRegComment className="text-gray-600" />
                 <span className="text-sm">{examplePost.comments}</span>
               </div>
             </Link>

@@ -1,4 +1,3 @@
-
 const urlDomain = "http://localhost:3000";
 const summaryApi = {
   domain: {
@@ -12,6 +11,9 @@ const summaryApi = {
   },
   editProfilePic: {
     url: `${urlDomain}/api/update-profile-pic`,
+  },
+  deleteProfile: {
+    url: `${urlDomain}/api/deleteProfile`,
   },
   signup: {
     url: `${urlDomain}/api/signup`,
@@ -91,7 +93,7 @@ const summaryApi = {
   },
   replyComment: {
     url: `${urlDomain}/api/posts/:id/comment/:commentId/reply`,
-  }
+  },
 };
 
 export default summaryApi;

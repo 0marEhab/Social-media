@@ -1,6 +1,7 @@
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import summaryApi from "../../../common";
 
 export default function FriendsSideBar() {
   const friends = [
@@ -78,7 +79,7 @@ export default function FriendsSideBar() {
         <div className="flex items-center justify-between gap-3 my-10">
           <div className="flex space-x-2">
             <img
-              src={friend.img}
+              src={summaryApi.domain.url + "/" + friend.img}
               className="rounded-xl w-10 object-cover"
               alt={friend.name}
             />

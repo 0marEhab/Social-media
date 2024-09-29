@@ -22,7 +22,7 @@ const EditPost = () => {
   const [imageFile, setImageFile] = useState(null);
   const [videoFile, setVideoFile] = useState(null);
   const fileInputRef = useRef(null);
-  const [post, setPost] = useState(null); // Initialize post as null
+  const [post, setPost] = useState(null); 
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -38,12 +38,12 @@ const EditPost = () => {
         console.log(response.data);
 
         if (response.data) {
-          setPost(response.data); // Set the whole post object
-          setContent(response.data.content || ""); // Set content from post
-          setPrivacy(response.data.privacy || "public"); // Set privacy from post
-          setTags(response.data.tags || []); // Set tags from post
+          setPost(response.data); 
+          setContent(response.data.content || ""); 
+          setPrivacy(response.data.privacy || "public"); 
+          setTags(response.data.tags || []); 
 
-          // Handle media files if they exist
+        
           if (response.data.media) {
             if (response.data.media.photo) {
               setImageFile(response.data.media.photo);
