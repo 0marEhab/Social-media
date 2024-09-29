@@ -13,6 +13,7 @@ const chatRouter = require("./routes/chatRouter");
 const searchRouter = require("./routes/searchRouter");
 const adminRouter = require("./routes/adminRouter");
 const bodyParser = require("body-parser");
+const eventRouter = require("./routes/eventRouter"); // Import event routes
 
 var app = express();
 
@@ -27,7 +28,7 @@ app.use(
   "/public/images",
   express.static(path.join(__dirname, "public/images"))
 );
-
+app.use("/api/events", eventRouter);
 app.use("/api", userRouter);
 app.use("/api", chatRouter);
 app.use("/api", searchRouter);

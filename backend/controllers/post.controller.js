@@ -88,26 +88,10 @@ const getPostById = async (req, res) => {
 
 const updatePost = async (req, res) => {
   let mediaType = {};
-  console.log("Uploaded files:", req.files); // Log all uploaded files for debugging
-  console.log("Body:", req.body);
-  console.log("Files:", req.files);
-  if (req.files) {
-    // Check if photo is uploaded
-    if (req.files.photo && req.files.photo.length > 0) {
-      const photo = req.files.photo[0].filename; // Get the filename of the uploaded photo
-      console.log("Photo filename:", photo);
-      mediaType.photo = photo; // Assign to mediaType
-    }
-    // Check if video is uploaded
-    if (req.files.video && req.files.video.length > 0) {
-      const video = req.files.video[0].filename; // Get the filename of the uploaded video
-      console.log("Video filename:", video);
-      mediaType.video = video; // Assign to mediaType
-    }
-  }
+  const { removeImage, removeVideo } = req.body;
+
   try {
     const post = await Post.findById(req.params.id);
-
     if (!post) return res.status(404).json({ message: "Post not found" });
 
     if (post.user.toString() !== req.user._id.toString()) {
@@ -116,11 +100,33 @@ const updatePost = async (req, res) => {
         .json({ message: "Unauthorized to edit this post" });
     }
 
+    // Handle media update or removal
+    if (req.files) {
+      if (req.files.photo && req.files.photo.length > 0) {
+        mediaType.photo = req.files.photo[0].filename;
+      } else if (removeImage === "true") {
+        mediaType.photo = null; // Set to null if the image is removed
+      } else {
+        mediaType.photo = post.media.photo; // Retain existing photo
+      }
+
+      if (req.files.video && req.files.video.length > 0) {
+        mediaType.video = req.files.video[0].filename;
+      } else if (removeVideo === "true") {
+        mediaType.video = null; // Set to null if the video is removed
+      } else {
+        mediaType.video = post.media.video; // Retain existing video
+      }
+    } else {
+      mediaType.photo = removeImage === "true" ? null : post.media.photo;
+      mediaType.video = removeVideo === "true" ? null : post.media.video;
+    }
+
     const updatedPost = await Post.findByIdAndUpdate(
       req.params.id,
       {
         content: req.body.content,
-        media: mediaType, // Use mediaType for the media fields
+        media: mediaType,
         tags: req.body.tags,
         privacy: req.body.privacy,
       },
@@ -668,6 +674,7 @@ const getReportedPosts = async (req, res) => {
         path: "reportedBy",
         select: "name email",
       })
+      .populate("user", "name email")
       .exec();
 
     res.status(200).json({ reportedPosts: reportedPosts });

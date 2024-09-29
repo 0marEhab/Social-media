@@ -94,6 +94,18 @@ const summaryApi = {
   replyComment: {
     url: `${urlDomain}/api/posts/:id/comment/:commentId/reply`,
   },
+  reportedPosts: {
+    url: `${urlDomain}/api/posts/reportedPosts`,
+  },
+  deleteUser: {
+    url: `${urlDomain}/api/deleteUser/:id`,
+  },
+  getEvents: {
+    url: `${urlDomain}/api/events`,
+  },
+  addEvent: {
+    url: `${urlDomain}/api/events`,
+  },
 };
 
 export default summaryApi;

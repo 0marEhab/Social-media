@@ -166,7 +166,7 @@ exports.getUserProfile = async (req, res, next) => {
       .populate("friends", "_id name email profilePic")
       .populate(
         "posts",
-        "_id title content createdAt likes comments media privacy postType user "
+        "_id title content createdAt likes comments media privacy user "
       );
 
     if (!user) {
@@ -223,6 +223,7 @@ exports.deleteUserById = async (req, res) => {
     }
     res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error); // Log the error for debugging
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
