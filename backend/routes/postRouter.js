@@ -35,7 +35,7 @@ router.get("/", isAuth, getAllPosts);
 router.get("/reportedPosts", isAuth, getReportedPosts);
 router.get("/reported/:id", isAuth, getReportedPost);
 router.get("/:id", isAuth, getPostById);
-router.put("/:id", isAuth, updatePost);
+router.put("/:id", isAuth, upload, updatePost);
 router.delete("/:id", isAuth, deletePost);
 router.post("/like/:id", isAuth, likePost);
 router.post("/share/:id", isAuth, sharePost);

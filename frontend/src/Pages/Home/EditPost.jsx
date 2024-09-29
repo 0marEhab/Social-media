@@ -23,7 +23,9 @@ const EditPost = () => {
   const [videoFile, setVideoFile] = useState(null);
   const fileInputRef = useRef(null);
   const [post, setPost] = useState(null); // Initialize post as null
-
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [removeImage, setRemoveImage] = useState(false); // New state for removing image
+  const [removeVideo, setRemoveVideo] = useState(false); // New state for removing video
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -36,21 +38,27 @@ const EditPost = () => {
           }
         );
         console.log(response.data);
-
         if (response.data) {
           setPost(response.data); // Set the whole post object
           setContent(response.data.content || ""); // Set content from post
           setPrivacy(response.data.privacy || "public"); // Set privacy from post
           setTags(response.data.tags || []); // Set tags from post
 
-          // Handle media files if they exist
+          // Only update image and video files if they exist in the response
           if (response.data.media) {
             if (response.data.media.photo) {
-              setImageFile(response.data.media.photo);
+              setImageFile(response.data.media.photo); // Set the photo if available
+              setPreviewUrl(
+                `${summaryApi.domain.url}/uploads/${response.data.media.photo}`
+              );
             }
             if (response.data.media.video) {
-              setVideoFile(response.data.media.video);
+              setVideoFile(response.data.media.video); // Set the video if available
             }
+          } else {
+            // Keep the existing media if it's not provided in the response (avoid clearing it)
+            setImageFile((prev) => prev || response.data.media?.photo);
+            setVideoFile((prev) => prev || response.data.media?.video);
           }
         } else {
           throw new Error("Post data is undefined");
@@ -79,8 +87,11 @@ const EditPost = () => {
     if (file) {
       if (file.type.startsWith("image/")) {
         setImageFile(file);
+        setPreviewUrl(URL.createObjectURL(file));
+        setRemoveImage(false); // Reset the removal flag when a new image is selected
       } else if (file.type.startsWith("video/")) {
         setVideoFile(file);
+        setRemoveVideo(false); // Reset the removal flag when a new video is selected
       }
     }
   };
@@ -93,16 +104,18 @@ const EditPost = () => {
     fileInputRef.current.click();
   };
 
+  const handleClosePhoto = (e) => {
+    e.preventDefault();
+    setImageFile(null);
+    setPreviewUrl(null);
+    setRemoveImage(true); // Set the flag to remove image
+  };
+
   const handleCloseVideo = (e) => {
     e.preventDefault();
     setVideoFile(null);
-    fileInputRef.current.value = "";
-  };
-
-  const handleClosePhoto = (e) => {
-    e.preventDefault();
-    fileInputRef.current.value = "";
-    setImageFile(null);
+    setPreviewUrl(null);
+    setRemoveVideo(true); // Set the flag to remove video
   };
 
   const handleTagsInput = (e) => {
@@ -130,11 +143,13 @@ const EditPost = () => {
     formData.append("content", content);
     formData.append("privacy", privacy);
     formData.append("tags", JSON.stringify(tags));
+    formData.append("removeImage", removeImage); // Send flag for removing image
+    formData.append("removeVideo", removeVideo); // Send flag for removing video
 
-    if (imageFile) {
+    if (imageFile && !removeImage) {
       formData.append("photo", imageFile);
     }
-    if (videoFile) {
+    if (videoFile && !removeVideo) {
       formData.append("video", videoFile);
     }
 
@@ -145,7 +160,6 @@ const EditPost = () => {
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
-            // No need to specify 'Content-Type', browser handles it
           },
         }
       );
@@ -226,70 +240,55 @@ const EditPost = () => {
               <AiOutlineVideoCamera size={20} />
             </div>
           </div>
-          {post?.media?.photo ? (
+          {previewUrl ? (
             <div className="mt-4 relative">
               <button
-                className="absolute top-2 right-5 z-50 text-white"
+                className="absolute top-2 right-5 z-50 text-black"
                 onClick={handleClosePhoto}
               >
-                <CgClose size={24} onClick={handleClosePhoto} />
+                <CgClose size={24} color="black" />
               </button>
               <img
-                src={`${summaryApi.domain.url}/uploads/${post.media.photo}`}
+                src={previewUrl}
                 alt="Preview"
-                className="w-full max-h-[400px] rounded-lg"
+                className="w-[400px] m-auto max-h-[400px] rounded-lg"
               />
             </div>
-          ) : (
-            imageFile && (
-              <div className="mt-4 relative">
-                <button
-                  className="absolute top-2 right-5 z-50 text-white"
-                  onClick={handleClosePhoto}
-                >
-                  <CgClose size={24} />
-                </button>
-                <img
-                  src={URL.createObjectURL(imageFile)}
-                  alt="Preview"
-                  className="max-w-full max-h-[400px] rounded-lg"
-                />
-              </div>
-            )
-          )}
+          ) : null}
 
           {post?.media?.video ? (
             <div className="mt-4 relative">
               <button
-                className="absolute top-2 right-5 z-50 text-white"
+                className="absolute top-2 right-5 z-50"
                 onClick={handleCloseVideo}
               >
-                <CgClose size={24} />
+                <CgClose size={24} color="black" />
               </button>
               <video
                 controls
                 src={`${summaryApi.domain.url}/uploads/${post.media.video}`}
-                className="w-full max-h-[400px] rounded-lg"
+                className="w-[400px] m-auto max-h-[400px] rounded-lg"
               />
             </div>
           ) : (
             videoFile && (
               <div className="mt-4 relative">
                 <button
-                  className="absolute top-2 right-5 z-50 text-white"
+                  className="absolute top-2 right-5 z-50"
                   onClick={handleCloseVideo}
                 >
-                  <CgClose size={24} />
+                  <CgClose size={24} onClick={handleCloseVideo} color="black" />
                 </button>
                 <video
                   controls
                   src={URL.createObjectURL(videoFile)}
-                  className="max-w-full max-h-[400px] rounded-lg"
+                  className="w-[400px] m-auto max-h-[400px] rounded-lg"
                 />
               </div>
             )
           )}
         </div>
+
         <div>
           <label htmlFor="privacy" className="block text-gray-700">
             Privacy
@@ -302,16 +301,18 @@ const EditPost = () => {
             className="w-full border rounded-lg p-2"
           >
             <option value="public">Public</option>
+            <option value="friends">Friends</option>
             <option value="private">Private</option>
-            <option value="friends">Friends Only</option>
           </select>
         </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition"
-        >
-          Update Post
-        </button>
+        <div>
+          <button
+            type="submit"
+            className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-all"
+          >
+            Update Post
+          </button>
+        </div>
       </form>
       <ToastContainer />
     </div>

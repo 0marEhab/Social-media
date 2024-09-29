@@ -63,15 +63,15 @@ export default function HomeSideBar() {
   };
 
   return (
-    <div className="bg-secondary  flex flex-col lg:w-[15%] w-1/4  gap-12 px-10 py-16 fixed top-0 right-0 overflow-hidden z-50 h-screen ">
+    <div className="bg-secondary  flex flex-col md:w-[50%] lg:w-[20%] w-[80%]  gap-12 px-10 py-16 fixed top-0 right-0 overflow-hidden z-50 h-screen ">
       <div className="w-max flex justify-end">
-        {/* <Link to={`/profile/${user._id}`}> */}
-        <img
-          src={user ? summaryApi.domain.url + "/" + user.profilePic : ""}
-          alt="user-img"
-          className="w-14 h-14 rounded-full mt-4"
-        />
-        {/* </Link> */}
+        <Link to={`/profile/${user?._id}`}>
+          <img
+            src={user ? summaryApi.domain.url + "/" + user.profilePic : ""}
+            alt="user-img"
+            className="w-14 h-14 rounded-full mt-4"
+          />
+        </Link>
       </div>
       <h2 className="text-xl font-bold text-white">My Friends</h2>
       <div className="flex gap-4 mt-4">

@@ -1,4 +1,3 @@
-
 const urlDomain = "http://localhost:3000";
 const summaryApi = {
   domain: {
@@ -59,6 +58,15 @@ const summaryApi = {
   user: {
     url: `${urlDomain}/api/getUser`,
   },
+  users: {
+    url: `${urlDomain}/api/getUsers`,
+  },
+  tickets: {
+    url: `${urlDomain}/api/tickets`,
+  },
+  stats: {
+    url: `${urlDomain}/api/admin/stats`,
+  },
   share: {
     url: `${urlDomain}/api/posts/share/:id`,
   },
@@ -82,7 +90,19 @@ const summaryApi = {
   },
   replyComment: {
     url: `${urlDomain}/api/posts/:id/comment/:commentId/reply`,
-  }
+  },
+  reportedPosts: {
+    url: `${urlDomain}/api/posts/reportedPosts`,
+  },
+  deleteUser: {
+    url: `${urlDomain}/api/deleteUser/:id`,
+  },
+  getEvents: {
+    url: `${urlDomain}/api/events`,
+  },
+  addEvent: {
+    url: `${urlDomain}/api/events`,
+  },
 };
 
 export default summaryApi;

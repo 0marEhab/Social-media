@@ -1,8 +1,9 @@
 const User = require("../models/User");
 const generateToken = require("../config/generateToken");
 exports.Signup = async (req, res, next) => {
-  const { name, email, password, confirmPassword, birthDate, country } = req.body;
-  
+  const { name, email, password, confirmPassword, birthDate, country } =
+    req.body;
+
   try {
     // Check if email is already in use
     const existingUser = await User.findOne({ email });
@@ -32,7 +33,6 @@ exports.Signup = async (req, res, next) => {
     return next(error);
   }
 };
-
 
 exports.Login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -67,8 +67,8 @@ exports.Profile = async (req, res, next) => {
         "_id name email profilePic" // Select specific fields for friends
       )
       .populate({
-        path: 'posts',
-        select: '_id title content createdAt likes comments media privacy user', // Select specific fields for posts
+        path: "posts",
+        select: "_id title content createdAt likes comments media privacy user", // Select specific fields for posts
       });
 
     if (!user) {
@@ -166,7 +166,7 @@ exports.getUserProfile = async (req, res, next) => {
       .populate("friends", "_id name email profilePic")
       .populate(
         "posts",
-        "_id title content createdAt likes comments media privacy postType user "
+        "_id title content createdAt likes comments media privacy user "
       );
 
     if (!user) {
@@ -225,6 +225,7 @@ exports.deleteUserById = async (req, res) => {
     }
     res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error); // Log the error for debugging
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };

@@ -40,7 +40,7 @@ export default function SideBar() {
         <FontAwesomeIcon icon={faHome} />
       </Link>
       <Link
-        to="/"
+        to="/calendar"
         className="p-3 mb-3 rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
       >
         <FontAwesomeIcon icon={faCalendar} />
