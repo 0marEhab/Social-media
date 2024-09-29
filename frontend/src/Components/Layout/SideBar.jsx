@@ -9,6 +9,7 @@ import {
   faGear,
   faHome,
   faUser,
+  faCalendar,
 } from "@fortawesome/free-solid-svg-icons";
 import UserContext from "../../Contexts/UserContext";
 
@@ -40,11 +41,13 @@ export default function SideBar() {
         <FontAwesomeIcon icon={faHome} />
       </Link>
       <Link
-<<<<<<< HEAD
         to="/calendar"
-=======
+        className="p-3 mb-3 rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
+      >
+        <FontAwesomeIcon icon={faCalendar} />
+      </Link>
+      <Link
         to="/friend-requests"
->>>>>>> Handled-Friends-in-Profile
         className="p-3 mb-3 rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
       >
         <FontAwesomeIcon icon={faUserFriends} />
