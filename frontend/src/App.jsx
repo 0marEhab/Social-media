@@ -6,6 +6,10 @@ import Layout from "./Components/Layout/Layout";
 import Signing from "./Pages/Signing/Signing";
 import Home from "./Pages/Home/Home";
 import EditPost from "./Pages/Home/EditPost";
+import DashBoard from "./Pages/DashBoard/DashBoard";
+import Posts from "./Pages/DashBoard/Posts";
+import Tickets from "./Pages/DashBoard/Tickets";
+import Users from "./Pages/DashBoard/Users";
 import { Toaster } from "react-hot-toast";
 import FriendRequestsPage from "./Pages/MyFriends/FriendRequestsPage";
 import Ticket from "./Pages/Ticket/Ticket";
@@ -66,8 +70,23 @@ export default function App() {
               path: "/Profile/:id",
               element: <Profile />,
 
-            }
-           
+            },
+            {
+              path: "/DashBoard",
+              element: <DashBoard />,
+            },
+            {
+              path: "/Posts",
+              element: <Posts />,
+            },
+            {
+              path: "/Tickets",
+              element: <Tickets />,
+            }, 
+            {
+              path: "/Users",
+              element: <Users />,
+            },    
           ],
         },
       ],

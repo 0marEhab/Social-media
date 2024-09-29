@@ -59,6 +59,15 @@ const summaryApi = {
   user: {
     url: `${urlDomain}/api/getUser`,
   },
+  users: {
+    url: `${urlDomain}/api/getUsers`,
+  },
+  tickets: {
+    url: `${urlDomain}/api/tickets`,
+  },
+  stats: {
+    url: `${urlDomain}/api/admin/stats`,
+  },
   share: {
     url: `${urlDomain}/api/posts/share/:id`,
   },
