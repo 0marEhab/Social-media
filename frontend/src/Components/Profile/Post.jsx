@@ -6,8 +6,6 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Post({ post, profilePic, name, user }) {
-  const userProfilePic = "https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/9290037d-a5b2-4f50-aea3-9f3f2b53b441";
-  const userProfileName = "Jane";
   
   const examplePost = {
     id: post._id,
@@ -26,6 +24,7 @@ export default function Post({ post, profilePic, name, user }) {
   const [likeCount, setLikeCount] = useState(examplePost.likes);
   const [menuVisible, setMenuVisible] = useState(false);
   const [showFullContent, setShowFullContent] = useState(false);
+
 
   const handleLike = async () => {
     try {

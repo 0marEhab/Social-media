@@ -13,11 +13,10 @@ import summaryApi from "../../../common";
 import Swal from "sweetalert2";
 import PostOptions from "./PostOptions"; // Import the refactored dropdown component
 export default function PostCard({ post }) {
-  console.log(post);
   const { user, setSharedPosts } = useContext(UserContext);
   const relativeTime = moment(post.createdAt).fromNow();
   const [likes, setLikes] = useState(post.likes);
-
+  const [showFullContent, setShowFullContent] = useState(false);
   const [isLiked, setIsLiked] = useState(
     user ? likes.some((like) => like._id === user._id) : false
   );
@@ -98,7 +97,9 @@ export default function PostCard({ post }) {
       }
     });
   };
-
+const handleContentToggle = () => {
+  setShowFullContent(!showFullContent);
+};
   const reportPost = async () => {
     try {
       const response = await axios.post(
@@ -114,7 +115,6 @@ export default function PostCard({ post }) {
         }
       );
 
-      console.log(response.data);
       Swal.fire("Reported!", "This post has been reported.", "success");
     } catch (error) {
       Swal.fire(
@@ -124,6 +124,38 @@ export default function PostCard({ post }) {
       );
     }
   };
+
+  function addNewlinesAfterEverySixWordsOrLongWords(
+    text,
+    maxWordLength = 10,
+    longWordLimit = 50
+  ) {
+    const words = text.split(" ");
+    const result = [];
+
+    for (let i = 0; i < words.length; i++) {
+      if (words[i].length > longWordLimit) {
+        for (let j = 0; j < words[i].length; j += longWordLimit) {
+          result.push(words[i].substring(j, j + longWordLimit));
+        }
+      } else {
+        result.push(words[i]);
+      }
+      if ((i + 1) % 6 === 0) {
+        result.push("\n");
+      }
+    }
+
+    return result.join(" ");
+  }
+
+  const formattedText = addNewlinesAfterEverySixWordsOrLongWords(post.content);
+  const maxLines = 3;
+  const lines = formattedText.split("\n");
+  const shouldShowReadMore = lines.length > maxLines;
+  const displayedContent = showFullContent
+    ? formattedText
+    : lines.slice(0, maxLines).join("\n") + (shouldShowReadMore ? "..." : "");
 
   const handleShare = async () => {
     try {
@@ -159,114 +191,120 @@ export default function PostCard({ post }) {
     }
   };
 
-  return (
-    <div className="bg-white p-5 rounded-lg shadow-md w-full max-w-xl mx-auto my-5">
-      {/* Post Header */}
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center gap-3">
-          <Link to={`/profile/${post.user._id}`}>
-            {" "}
-            <img
-              src={
-                post ? summaryApi.domain.url + "/" + post.user.profilePic : ""
-              }
-              alt={`${post.user.name}'s profile`}
-              className="w-12 h-12 rounded-full"
-            />
-          </Link>
-
-          <div>
-            <Link to={`/profile/${post.user._id}`}>
-              <h4 className="font-bold hover:underline">{post.user.name}</h4>
+  if (post.user) {
+    return (
+      <div className="bg-white p-5 rounded-lg shadow-md w-full max-w-xl mx-auto my-5">
+        {/* Post Header */}
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center gap-3">
+            <Link to={`/profile/${post?.user?._id}`}>
+              {" "}
+              <img
+                src={
+                  post
+                    ? summaryApi.domain.url + "/" + post?.user?.profilePic
+                    : ""
+                }
+                alt={`${post?.user?.name}'s profile`}
+                className="w-12 h-12 rounded-full"
+              />
             </Link>
-            <p className="text-gray-500 text-sm">
-              {relativeTime} • {post.privacy}
-            </p>
 
-            {post.sharedPost && (
-              <h6>Shared from: {post.sharedPost.user.name}</h6>
-            )}
+            <div>
+              <Link to={`/profile/${post?.user?._id}`}>
+                <h4 className="font-bold hover:underline">
+                  {post?.user?.name}
+                </h4>
+              </Link>
+              <p className="text-gray-500 text-sm">
+                {relativeTime} • {post.privacy}
+              </p>
+
+              {post.sharedPost && (
+                <h6>Shared from: {post?.sharedPost?.user?.name}</h6>
+              )}
+            </div>
           </div>
+
+          <button className="relative">
+            <BsThreeDots
+              onClick={toggleOptions}
+              className="text-gray-500 cursor-pointer"
+            />
+            {showOptions && (
+              <PostOptions
+                post={post}
+                postId={post._id}
+                editPost={user && user._id === post.user._id ? editPost : null}
+                deletePost={
+                  user && user._id === post.user._id ? deletePost : null
+                }
+                reportPost={
+                  user && user._id !== post.user._id ? reportPost : null
+                }
+              />
+            )}
+          </button>
         </div>
 
-        <button className="relative">
-          <BsThreeDots
-            onClick={toggleOptions}
-            className="text-gray-500 cursor-pointer"
-          />
-          {showOptions && (
-            <PostOptions
-              post={post}
-              postId={post._id}
-              editPost={user && user._id === post.user._id ? editPost : null}
-              deletePost={
-                user && user._id === post.user._id ? deletePost : null
-              }
-              reportPost={
-                user && user._id !== post.user._id ? reportPost : null
-              }
+        {/* Post Content */}
+        <div>
+          {post.media?.photo && (
+            <img
+              src={`${summaryApi.domain.url}/uploads/${post.media.photo}`}
+              alt="post content"
+              className="w-full max-h-[400px] object-cover object-center rounded-lg mb-4"
             />
           )}
-        </button>
-      </div>
-
-      {/* Post Content */}
-      <div>
-        {post.media?.photo && (
-          <img
-            src={`${summaryApi.domain.url}/uploads/${post.media.photo}`}
-            alt="post content"
-            className="w-full max-h-[400px] object-cover object-center rounded-lg mb-4"
-          />
-        )}
-        {post.media?.video && (
-          <video
-            controls
-            className="w-full max-h-[400px] object-cover object-center rounded-lg mb-4"
-          >
-            <source
-              src={`${summaryApi.domain.url}/uploads/${post.media.video}`}
-              type="video/mp4"
-            />
-            Your browser does not support the video tag.
-          </video>
-        )}
-        <p className="text-gray-500 mt-2 mb-4">{post.content}</p>
-        <p className="text-blue-500 font-bold cursor-pointer">
-          <Link to={`/posts/${post._id}`}>READ MORE</Link>
-        </p>
-      </div>
-
-      {/* Post Footer (Likes, Comments, Share) */}
-      <div className="flex justify-between items-center mt-4">
-        <div className="flex gap-4 text-gray-500">
-          <button
-            className={`flex items-center gap-1 ${
-              isLiked ? "text-red-500" : ""
-            }`}
-            onClick={handleLike}
-          >
-            <AiOutlineHeart size={20} />
-            <span>{likes.length}</span>
-          </button>
-
-          <button
-            className="flex items-center gap-1"
-            onClick={() => navigate(`/posts/${post._id}`)}
-          >
-            <AiOutlineMessage size={20} />
-            <span>{post.comments.length}</span>
-          </button>
+          {post.media?.video && (
+            <video
+              controls
+              className="w-full max-h-[400px] object-cover object-center rounded-lg mb-4"
+            >
+              <source
+                src={`${summaryApi.domain.url}/uploads/${post.media.video}`}
+                type="video/mp4"
+              />
+              Your browser does not support the video tag.
+            </video>
+          )}
+          <p className="text-gray-500 mt-2 mb-4">{post.content}</p>
+          <p className="text-blue-500 font-bold cursor-pointer">
+            <Link to={`/posts/${post._id}`}>READ MORE</Link>
+          </p>
         </div>
 
-        <button
-          className="flex items-center gap-1 text-gray-500"
-          onClick={handleShare}
-        >
-          <AiOutlineShareAlt size={20} />
-          Share
-        </button>
+        {/* Post Footer (Likes, Comments, Share) */}
+        <div className="flex justify-between items-center mt-4">
+          <div className="flex gap-4 text-gray-500">
+            <button
+              className={`flex items-center gap-1 ${
+                isLiked ? "text-red-500" : ""
+              }`}
+              onClick={handleLike}
+            >
+              <AiOutlineHeart size={20} />
+              <span>{likes.length}</span>
+            </button>
+
+            <button
+              className="flex items-center gap-1"
+              onClick={() => navigate(`/posts/${post._id}`)}
+            >
+              <AiOutlineMessage size={20} />
+              <span>{post.comments.length}</span>
+            </button>
+          </div>
+
+          <button
+            className="flex items-center gap-1 text-gray-500"
+            onClick={handleShare}
+          >
+            <AiOutlineShareAlt size={20} />
+            Share
+          </button>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }

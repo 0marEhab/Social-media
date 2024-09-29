@@ -49,7 +49,6 @@ export default function Profile() {
     };
 
     const fetchUserById = async (userId) => {
-      console.log(userId, "Hereeeeeeeeeebabe");
     
       try {
         const token = localStorage.getItem("token"); // Retrieve the token from localStorage
