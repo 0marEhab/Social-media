@@ -19,6 +19,7 @@ router.put("/editUser", isAuth, userController.updateProfile);
 router.get("/getUser/:id", isAuth, userController.getUserProfile);
 router.get("/getUsers", isAuth, userController.getUsers);
 
+router.delete("/deleteProfile", isAuth, userController.deleteAccount);
 router.delete("/deleteUser/:id", isAuth, userController.deleteUserById);
 
 module.exports = router;

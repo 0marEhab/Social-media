@@ -12,12 +12,11 @@ import UserContext from "../../Contexts/UserContext";
 import summaryApi from "../../../common";
 import Swal from "sweetalert2";
 import PostOptions from "./PostOptions"; // Import the refactored dropdown component
+
 export default function PostCard({ post }) {
-  console.log(post);
   const { user, setSharedPosts } = useContext(UserContext);
   const relativeTime = moment(post.createdAt).fromNow();
   const [likes, setLikes] = useState(post.likes);
-
   const [isLiked, setIsLiked] = useState(
     user ? likes.some((like) => like._id === user._id) : false
   );
@@ -53,7 +52,7 @@ export default function PostCard({ post }) {
         icon: "success",
         title: "Post is ready for editing!",
         showConfirmButton: false,
-        timer: 1500,
+        timer: 500,
       });
     } catch (error) {
       Swal.fire({
@@ -82,7 +81,6 @@ export default function PostCard({ post }) {
             },
           });
 
-          // Show success alert and reload the window after a delay
           Swal.fire("Deleted!", "Your post has been deleted.", "success").then(
             () => {
               navigate(0);
@@ -101,20 +99,15 @@ export default function PostCard({ post }) {
 
   const reportPost = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         summaryApi.reportPost.url.replace(":id", post._id),
-        {
-          userId: user._id,
-          reportedReason: "Inappropriate Content", // Placeholder reason, update based on your radio input handling
-        },
+        { userId: user._id, reportedReason: "Inappropriate Content" },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
-
-      console.log(response.data);
       Swal.fire("Reported!", "This post has been reported.", "success");
     } catch (error) {
       Swal.fire(
@@ -136,17 +129,17 @@ export default function PostCard({ post }) {
           },
         }
       );
-      var { sharedPost } = response.data;
+      const { sharedPost } = response.data;
 
       Swal.fire({
         icon: "success",
         title: "Post shared successfully!",
         showConfirmButton: false,
-        timer: 1500,
+        timer: 500,
       });
       setTimeout(() => {
         navigate(`/posts/${sharedPost._id}`);
-      }, 1000);
+      }, 500);
       if (setSharedPosts) {
         setSharedPosts((prevPosts) => [...prevPosts, sharedPost]);
       }
@@ -160,39 +153,39 @@ export default function PostCard({ post }) {
   };
 
   return (
-    <div className="bg-white p-5 rounded-lg shadow-md w-full max-w-xl mx-auto my-5">
+    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto my-6 transition hover:shadow-xl">
       {/* Post Header */}
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-3">
           <Link to={`/profile/${post.user._id}`}>
-            {" "}
             <img
               src={
                 post ? summaryApi.domain.url + "/" + post.user.profilePic : ""
               }
               alt={`${post.user.name}'s profile`}
-              className="w-12 h-12 rounded-full"
+              className="w-12 h-12 rounded-full border border-gray-300"
             />
           </Link>
-
           <div>
             <Link to={`/profile/${post.user._id}`}>
-              <h4 className="font-bold hover:underline">{post.user.name}</h4>
+              <h4 className="font-semibold hover:underline">
+                {post.user.name}
+              </h4>
             </Link>
             <p className="text-gray-500 text-sm">
               {relativeTime} • {post.privacy}
             </p>
-
             {post.sharedPost && (
-              <h6>Shared from: {post.sharedPost.user.name}</h6>
+              <h6 className="text-gray-500">
+                Shared from: {post.sharedPost.user.name}
+              </h6>
             )}
           </div>
         </div>
-
         <button className="relative">
           <BsThreeDots
             onClick={toggleOptions}
-            className="text-gray-500 cursor-pointer"
+            className="text-gray-500 cursor-pointer hover:text-gray-700"
           />
           {showOptions && (
             <PostOptions
@@ -216,13 +209,13 @@ export default function PostCard({ post }) {
           <img
             src={`${summaryApi.domain.url}/uploads/${post.media.photo}`}
             alt="post content"
-            className="w-full max-h-[400px] object-cover object-center rounded-lg mb-4"
+            className="w-full h-auto rounded-xl object-contain  mb-4 max-h-96"
           />
         )}
         {post.media?.video && (
           <video
             controls
-            className="w-full max-h-[400px] object-cover object-center rounded-lg mb-4"
+            className="w-full h-auto rounded-lg object-cover mb-4 max-h-96"
           >
             <source
               src={`${summaryApi.domain.url}/uploads/${post.media.video}`}
@@ -231,39 +224,40 @@ export default function PostCard({ post }) {
             Your browser does not support the video tag.
           </video>
         )}
-        <p className="text-gray-500 mt-2 mb-4">{post.content}</p>
-        <p className="text-blue-500 font-bold cursor-pointer">
-          <Link to={`/posts/${post._id}`}>READ MORE</Link>
-        </p>
+        <p className="text-gray-600 mb-4 leading-relaxed">{post.content}</p>
+        <Link
+          to={`/posts/${post._id}`}
+          className="text-blue-600 font-semibold hover:underline"
+        >
+          READ MORE
+        </Link>
       </div>
 
-      {/* Post Footer (Likes, Comments, Share) */}
-      <div className="flex justify-between items-center mt-4">
-        <div className="flex gap-4 text-gray-500">
+      {/* Post Footer */}
+      <div className="flex justify-between items-center mt-4 border-t pt-4">
+        <div className="flex gap-4 text-gray-600">
           <button
-            className={`flex items-center gap-1 ${
+            className={`flex items-center gap-1 hover:text-red-500 ${
               isLiked ? "text-red-500" : ""
             }`}
             onClick={handleLike}
           >
-            <AiOutlineHeart size={20} />
+            <AiOutlineHeart size={22} />
             <span>{likes.length}</span>
           </button>
-
           <button
-            className="flex items-center gap-1"
+            className="flex items-center gap-1 hover:text-blue-500"
             onClick={() => navigate(`/posts/${post._id}`)}
           >
-            <AiOutlineMessage size={20} />
+            <AiOutlineMessage size={22} />
             <span>{post.comments.length}</span>
           </button>
         </div>
-
         <button
-          className="flex items-center gap-1 text-gray-500"
+          className="flex items-center gap-1 text-gray-600 hover:text-blue-500"
           onClick={handleShare}
         >
-          <AiOutlineShareAlt size={20} />
+          <AiOutlineShareAlt size={22} />
           Share
         </button>
       </div>

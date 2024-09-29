@@ -1,8 +1,9 @@
 const User = require("../models/User");
 const generateToken = require("../config/generateToken");
 exports.Signup = async (req, res, next) => {
-  const { name, email, password, confirmPassword, birthDate, country } = req.body;
-  
+  const { name, email, password, confirmPassword, birthDate, country } =
+    req.body;
+
   try {
     // Check if email is already in use
     const existingUser = await User.findOne({ email });
@@ -32,7 +33,6 @@ exports.Signup = async (req, res, next) => {
     return next(error);
   }
 };
-
 
 exports.Login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -67,8 +67,8 @@ exports.Profile = async (req, res, next) => {
         "_id name email profilePic" // Select specific fields for friends
       )
       .populate({
-        path: 'posts',
-        select: '_id title content createdAt likes comments media privacy user', // Select specific fields for posts
+        path: "posts",
+        select: "_id title content createdAt likes comments media privacy user", // Select specific fields for posts
       });
 
     if (!user) {
@@ -86,11 +86,11 @@ exports.Profile = async (req, res, next) => {
 
 exports.updateProfile = async (req, res, next) => {
   console.log("here");
-  const { name, email, birthDate, country } = req.body;
+  const { name, email, birthDate, country, linkedProfile } = req.body;
   try {
     const user = await User.findByIdAndUpdate(
       req.user._id,
-      { name, email, birthDate, country },
+      { name, email, birthDate, country, linkedProfile },
       { new: true }
     );
     res.status(200).json({ user, message: "Profile updated successfully" });
@@ -186,8 +186,6 @@ exports.deleteAccount = async (req, res, next) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
-    // Optionally, handle file deletion (like profile pictures) from storage (e.g., Cloudinary, local storage)
 
     res.status(200).json({ message: "Account deleted successfully" });
   } catch (err) {

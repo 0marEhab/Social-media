@@ -187,7 +187,7 @@ export default function Post() {
           <Link to={`/profile/${post.user._id}`}>
             {" "}
             <img
-              src={post.user.profilePic}
+              src={summaryApi.domain.url + "/" + post.user.profilePic}
               alt={`${post.user.name}'s profile`}
               className="w-12 h-12 rounded-full"
             />
