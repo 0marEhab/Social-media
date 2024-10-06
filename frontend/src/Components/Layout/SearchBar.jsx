@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 
-export default function SearchBar({value=""}) {
+export default function SearchBar({ value = "" }) {
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -22,7 +22,7 @@ export default function SearchBar({value=""}) {
 
   return (
     <form onSubmit={formik.handleSubmit} className="my-5">
-      <div className=" bg-white text-gray-400 rounded-2xl px-3 py-4 flex space-x-4 items-center justify-between">
+      <div className=" bg-white text-gray-400 rounded-2xl px-2 py-2 w-[500px] flex space-x-4 items-center justify-between">
         <FontAwesomeIcon icon={faSearch} />
         <input
           className="w-full outline-none focus:outline-none"

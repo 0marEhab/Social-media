@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 const FriendSuggestionCard = ({ suggestion, handleFriendRequest }) => {
   return (
     <div
-      className="flex items-center justify-between gap-3 lg:gap-10 my-4"
+      className="flex items-center justify-between gap-3 lg:gap-10 my-4 "
       key={suggestion._id}
     >
       <Link to={`/profile/${suggestion?._id}`}>
@@ -17,18 +17,18 @@ const FriendSuggestionCard = ({ suggestion, handleFriendRequest }) => {
             className="rounded-xl w-10 object-cover"
             alt={suggestion.name}
           />
-          <div className="flex flex-col items-start justify-center gap-0.5">
-            <p className="text-[14px] font-bold text-white">
+          <div className="flex flex-col items-start justify-center  gap-0.5">
+            <p className="text-[14px] font-bold text-black">
               {suggestion.name}
             </p>
-            <p className="text-[12px] font-normal text-white">
+            <p className="text-[12px] font-normal text-black">
               {suggestion.email}
             </p>
           </div>
         </div>
       </Link>
       <button
-        className="rounded-lg p-3 flex items-center justify-center text-xs bg-primary text-white"
+        className="rounded-lg p-3 flex items-center justify-center text-xs bg-primary text-black"
         onClick={() => handleFriendRequest(suggestion._id)}
       >
         <FontAwesomeIcon icon={faUserPlus} />

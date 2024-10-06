@@ -189,7 +189,7 @@ export default function PostCard({ post }) {
 
   if (post.user) {
     return (
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto my-6 transition hover:shadow-xl">
+      <div className="bg-[#FBFCFE] p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto my-6 transition hover:shadow-xl">
         {/* Post Header */}
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-3">

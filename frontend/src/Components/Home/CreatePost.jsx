@@ -161,7 +161,7 @@ export default function CreatePost() {
   };
 
   return (
-    <div className="flex flex-col bg-white p-5 rounded-lg shadow-md w-full max-w-xl mx-auto">
+    <div className="flex flex-col bg-white p-5 rounded-lg shadow-md w-full max-w-2xl mx-auto">
       <form onSubmit={handleShare}>
         <div className="flex items-center gap-4">
           <img
