@@ -14,7 +14,7 @@ const FriendSuggestionCard = ({ suggestion, handleFriendRequest }) => {
         <div className="flex space-x-2">
           <img
             src={summaryApi.domain.url + "/" + suggestion.profilePic}
-            className="rounded-xl w-10 object-cover"
+            className="rounded-xl clickableImage w-10 object-cover"
             alt={suggestion.name}
           />
           <div className="flex flex-col items-start justify-center gap-0.5">

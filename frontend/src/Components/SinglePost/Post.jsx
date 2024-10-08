@@ -174,8 +174,27 @@ export default function Post() {
     }
   };
 
+  const popUpImage = () => {
+    Swal.fire({
+      imageUrl: summaryApi.domain.url + "/uploads/" + post.media.photo,
+      imageAlt: "Image Preview", // Adding alt text for accessibility
+      width: "80%", // Set the width of the popup to 80% of the viewport width
+      heightAuto: false, // Disable automatic height adjustment
+      background: "transparent", // Transparent background
+      padding: "0", // Remove padding around the image
+      customClass: {
+        popup: "custom-popup", // Custom class for the popup
+        image: "custom-image", // Custom class for the image
+      },
+      showCloseButton: true, // Show close button
+      closeButtonHtml:
+        '<span style="font-size: 30px; color: white;">&times;</span>', // Customize close button color
+      showConfirmButton: false, // Hide confirm button
+      backdrop: "rgba(0,0,0,0.8)", // Darker semi-transparent backdrop
+    });
+  };
   return (
-    <div className="flex text-secondary flex-col justify-start items-start">
+    <div className="flex text-secondary p-10 lg:w-[800px] md:w-[500px] flex-col justify-start items-start">
       <div className="opacity-65 bg-gray-200 w-24 h-14 rounded-xl bg-transparent flex justify-center items-center gap-3 mb-6 mt-6">
         <button className="text-xl flex gap-3" onClick={() => navigate(-1)}>
           <p>&lt;</p> Back
@@ -183,13 +202,13 @@ export default function Post() {
       </div>
 
       <div className="flex flex-col justify-between items-start gap-3 lg:items-center lg:flex-row md:items-center md:flex-row w-full mb-10">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 ">
           <Link to={`/profile/${post.user._id}`}>
             {" "}
             <img
               src={summaryApi.domain.url + "/" + post.user.profilePic}
               alt={`${post.user.name}'s profile`}
-              className="w-12 h-12 rounded-full"
+              className="w-12 h-12 rounded-full clickableImage"
             />
           </Link>{" "}
           <div>
@@ -204,7 +223,7 @@ export default function Post() {
 
         <div className="flex gap-5">
           <button
-            className={`flex items-center gap-1 ${
+            className={`flex clickableImage items-center gap-1 ${
               isLiked ? "text-red-500" : ""
             }`}
             onClick={handleLike}
@@ -213,15 +232,21 @@ export default function Post() {
             <span>{likes.length}</span>
           </button>
 
-          <button onClick={showLikesPopup} className="flex items-center gap-1">
+          <button
+            onClick={showLikesPopup}
+            className=" clickableImage flex items-center gap-1"
+          >
             Show Likes
           </button>
 
-          <button className="flex items-center gap-1" onClick={handleShare}>
+          <button
+            className="flex clickableImage items-center gap-1"
+            onClick={handleShare}
+          >
             <RiShareForwardFill className="cursor-pointer" /> <p>Share</p>
           </button>
 
-          <button className="relative">
+          <button className="clickableImage relative">
             <BsThreeDots
               onClick={toggleOptions}
               className="text-gray-500 cursor-pointer"
@@ -243,17 +268,18 @@ export default function Post() {
         </div>
       </div>
 
-      <div className="m-auto">
+      <div className="m-auto w-full">
         {post.media?.photo ? (
           <img
             src={`${summaryApi.domain.url}/uploads/${post.media.photo}`}
-            className="w-full max-h-96 rounded-2xl"
+            className="clickableImage w-full max-h-96 rounded-2xl"
             alt="post-img"
+            onClick={popUpImage}
           />
         ) : post.media?.video ? (
           <video
             controls
-            className="w-full max-h-96 rounded-2xl"
+            className="clickableImage w-full max-h-96 rounded-2xl"
             alt="post-video"
           >
             <source

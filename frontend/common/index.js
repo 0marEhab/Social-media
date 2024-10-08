@@ -52,6 +52,9 @@ const summaryApi = {
   delete: {
     url: `${urlDomain}/api/posts/:id`,
   },
+  deleteByAdmin: {
+    url: `${urlDomain}/api/posts/admin/:id`,
+  },
   update: {
     url: `${urlDomain}/api/posts/:id`,
   },

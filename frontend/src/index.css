@@ -1,3 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.clickableImage {
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.clickableImage:hover {
+  transform: scale(1.05);
+}
+.custom-popup {
+  border: none; /* Remove border */
+  border-radius: 10px; /* Optional: add rounded corners */
+  max-width: 90vw; /* Limit the maximum width to 90% of the viewport width */
+  max-height: 90vh; /* Limit the maximum height to 90% of the viewport height */
+  overflow: hidden; /* Hide overflow if image is too large */
+}
+
+.custom-image {
+  width: 100%; /* Ensure the image takes full width */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 10px; /* Optional: add rounded corners to the image */
+  object-fit: contain; /* Maintain aspect ratio */
+}

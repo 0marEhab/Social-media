@@ -18,13 +18,21 @@ export default function SinglePostSideBar({ initialComments = [] }) {
   console.log(comments);
 
   const [relativeTimes, setRelativeTimes] = useState([]);
+  const [relativeTimesReply, setRelativeTimesReply] = useState([]);
   const [showOptions, setShowOptions] = useState(null);
   const [visibleCommentsCount, setVisibleCommentsCount] = useState(5);
+  const [showEditPopup, setShowEditPopup] = useState(false);
   const [editCommentId, setEditCommentId] = useState(null);
   const [editCommentContent, setEditCommentContent] = useState("");
-  const [showEditPopup, setShowEditPopup] = useState(false);
+  const [showReplyPopup, setShowReplyPopup] = useState(false);
+  const [editReplyId, setEditReplyId] = useState(null);
+  const [editReplyContent, setEditReplyContent] = useState("");
   const [activeReplyComment, setActiveReplyComment] = useState(null);
   const [replyContent, setReplyContent] = useState("");
+  const [visibleRepliesCount, setVisibleRepliesCount] = useState(2);
+
+  console.log(comments);
+
   // const [comment, setComment] = useState(comments.map((comment) => comment));
   // const [likes, setLikes] = useState(comments.map((comment) => comment.likes));
   // const [isLiked, setIsLiked] = useState(
@@ -50,6 +58,13 @@ export default function SinglePostSideBar({ initialComments = [] }) {
     const updateRelativeTimes = () => {
       setRelativeTimes(
         comments.map((comment) => moment(comment.createdAt).fromNow())
+      );
+      setRelativeTimesReply(
+        comments.map((comment) =>
+          comment.replies
+            ? comment.replies.map((reply) => moment(reply.createdAt).fromNow())
+            : []
+        )
       );
     };
 
@@ -141,7 +156,11 @@ export default function SinglePostSideBar({ initialComments = [] }) {
     setEditCommentContent(content);
     setShowEditPopup(true);
   };
-
+  const openEditReplyPopup = (commentId, content) => {
+    setEditCommentId(commentId);
+    setEditCommentContent(content);
+    setShowEditPopup(true);
+  };
   const closeEditPopup = () => {
     setEditCommentId(null);
     setEditCommentContent("");
@@ -182,16 +201,14 @@ export default function SinglePostSideBar({ initialComments = [] }) {
     setActiveReplyComment(commentId); // Show reply input for the specific comment
     setReplyContent(""); // Clear the reply input
   };
-  const handleReplySubmit = async (commentId, index) => {
+  const handleReplySubmit = async (commentId) => {
     if (replyContent.trim()) {
       try {
         const response = await axios.post(
           summaryApi.replyComment.url
             .replace(":id", id)
             .replace(":commentId", commentId),
-          {
-            content: replyContent,
-          },
+          { content: replyContent },
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -199,9 +216,7 @@ export default function SinglePostSideBar({ initialComments = [] }) {
           }
         );
 
-        const replyData =
-          response.data.comments[index].replies[comments[index].replies.length];
-
+        const replyData = response.data.reply;
         setComments((prevComments) =>
           prevComments.map((comment) =>
             comment._id === commentId
@@ -221,151 +236,189 @@ export default function SinglePostSideBar({ initialComments = [] }) {
     }
   };
   return (
-    <div className="bg-secondary rounded-l-3xl  overflow-y-auto px-10 py-16">
+    <div className="bg-primary rounded-t-3xl m-auto lg:w-[800px] overflow-y-auto px-10 py-16">
       <div className="w-full flex justify-end">
-        <Link to={`/profile/${user.id}`}>
+        <Link to={`/profile/${user._id}`}>
           <img
-            src="https://via.placeholder.com/30x30"
-            alt="user-img"
-            className="w-14 h-14 rounded-lg mt-4"
+            src={summaryApi.domain.url + "/" + user.profilePic}
+            alt={`${user.name}'s profile`}
+            className="w-12 h-12 rounded-full clickableImage"
           />
         </Link>
       </div>
       <h2 className="text-xl font-bold text-white">
         Comments ({comments.length})
       </h2>
-      {comments.slice(0, visibleCommentsCount).map((comment, index) => (
-        <div
-          key={comment.id}
-          className="mb-4 mt-10 flex flex-col justify-between items-start"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-5 w-full">
-              <Link className="w-10 h-10" to={`/profile/${comment.user.id}`}>
-                <img
-                  src="http://via.placeholder.com/10x10"
-                  alt="user-img"
-                  className="w-10 h-10 rounded-full"
-                />
-              </Link>
-              <div>
-                <div className="flex items-center justify-center gap-32 lg:gap-[200px] md:gap-[525px] w-full">
-                  <div className="flex items-center gap-5 w-10">
-                    <Link to={`/profile/${comment.user.id}`}>
-                      <div className="text-white w-28 hover:underline hover:text-blue-300 font-semibold">
-                        {user.name}
-                      </div>
-                    </Link>
-                    <button className="relative">
-                      <BsThreeDots
-                        onClick={() => toggleOptions(index)}
-                        className="text-gray-500 cursor-pointer ml-5 lg:ml-[55px] md:ml-[200px] "
-                      />
-                      {showOptions === index && (
-                        <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                          <ul className="py-2">
-                            <li
-                              onClick={() =>
-                                openEditPopup(comment._id, comment.content)
-                              }
-                              className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700"
-                            >
-                              Edit Comment
-                            </li>
-                            <li
-                              onClick={() => deleteComment(comment._id)}
-                              className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600"
-                            >
-                              Delete Comment
-                            </li>
-                          </ul>
+
+      {/* Fixed height for comments section */}
+      <div className="max-h-[400px] overflow-y-auto">
+        {comments.slice(0, visibleCommentsCount).map((comment, index) => (
+          <div
+            key={comment.id}
+            className="mb-4 mt-10 flex flex-col justify-between items-start"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-5 w-full">
+                <Link to={`/profile/${comment.user._id}`}>
+                  <img
+                    src={summaryApi.domain.url + "/" + comment.user.profilePic}
+                    alt={`${comment.user.name}'s profile`}
+                    className="w-12 h-12 rounded-full clickableImage"
+                  />
+                </Link>
+                <div>
+                  <div className="flex items-center justify-center gap-32 md:gap-[525px] w-full">
+                    <div className="flex items-center gap-5 w-10">
+                      <Link to={`/profile/${comment.user.id}`}>
+                        <div className="text-white w-28 hover:underline hover:text-blue-300 font-semibold">
+                          {comment.user.name}
                         </div>
-                      )}
-                    </button>
+                      </Link>
+                      <button className="relative">
+                        <BsThreeDots
+                          onClick={() => toggleOptions(index)}
+                          className="text-secondary cursor-pointer ml-5 lg:ml-[150px] md:ml-[200px]"
+                        />
+                        {showOptions === index && (
+                          <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                            <ul className="py-2">
+                              <li
+                                onClick={() =>
+                                  openEditPopup(comment._id, comment.content)
+                                }
+                                className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700"
+                              >
+                                Edit Comment
+                              </li>
+                              <li
+                                onClick={() => deleteComment(comment._id)}
+                                className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600"
+                              >
+                                Delete Comment
+                              </li>
+                            </ul>
+                          </div>
+                        )}
+                      </button>
+                    </div>
+                    <p className="text-secondary text-sm">
+                      {relativeTimes[index]}
+                    </p>
                   </div>
-                  <p className="text-gray-400 text-sm">
-                    {relativeTimes[index]}
-                  </p>
+                  <p className="text-white">{comment.content}</p>
                 </div>
-                <p className="text-white">{comment.content}</p>
               </div>
             </div>
-          </div>
-          <div className="flex items-center gap-3 mt-2 ml-12">
-            <button>
-              <AiOutlineHeart className="text-gray-400" />
-            </button>
-            <button>
-              <BiComment
-                onClick={() => handleReply(comment._id)}
-                className="text-gray-400"
-              />
-            </button>
-          </div>
-          {activeReplyComment === comment._id && (
-            <div className="flex items-center gap-2 mt-2">
-              <input
-                type="text"
-                value={replyContent}
-                onChange={(e) => setReplyContent(e.target.value)}
-                placeholder="Write a reply..."
-                className="border p-2 w-full text-black"
-              />
-              <button
-                onClick={() => handleReplySubmit(comment._id, index)}
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-              >
-                <AiOutlineSend />
+
+            <div className="flex items-center gap-3 mt-2 ml-[55px]">
+              <button className="clickableImage">
+                <AiOutlineHeart className="text-gray-400" />
+              </button>
+              <button className="clickableImage">
+                <BiComment
+                  onClick={() => handleReply(comment._id)}
+                  className="text-gray-400"
+                />
               </button>
             </div>
-          )}
-          <div className="ml-10 mt-4">
-            {comment.replies?.map((reply) => (
-              <div
-                key={reply._id}
-                className="mb-2 flex gap-20 items-center  justify-between"
-              >
-                <div className="flex items-center  gap-3">
-                  <Link to={`/profile/${reply.user._id}`}>
-                    <img src="http://via.placeholder.com/15x15"></img>
-                  </Link>
-                  <p className="text-gray-300  overflow-hidden">
-                    {" "}
-                    {reply.content}
-                  </p>
-                  <button className="relative">
-                    <BsThreeDots
-                      onClick={() => toggleOptions(index)}
-                      className="text-gray-500 cursor-pointer ml-5 lg:ml-[55px] md:ml-[200px] "
-                    />
-                    {showOptions === index && (
-                      <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                        <ul className="py-2">
-                          <li
-                            onClick={() =>
-                              openEditPopup(comment._id, comment.content)
-                            }
-                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700"
-                          >
-                            Edit Comment
-                          </li>
-                          <li
-                            onClick={() => deleteComment(comment._id)}
-                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600"
-                          >
-                            Delete Comment
-                          </li>
-                        </ul>
-                      </div>
-                    )}
-                  </button>
-                </div>
-                <p className="text-gray-400">{relativeTimes[index]}</p>
+
+            {/* Reply input section */}
+            {activeReplyComment === comment._id && (
+              <div className="flex items-center gap-2 mt-2">
+                <input
+                  type="text"
+                  value={replyContent}
+                  onChange={(e) => setReplyContent(e.target.value)}
+                  placeholder="Write a reply..."
+                  className="border p-2 w-full text-black"
+                />
+                <button
+                  onClick={() => handleReplySubmit(comment._id, index)}
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                >
+                  <AiOutlineSend />
+                </button>
               </div>
-            ))}
+            )}
+
+            <div className="ml-10 mt-4">
+              {/* Limit to 2 replies initially */}
+              {comment.replies
+                ?.slice(0, visibleRepliesCount)
+                .map((reply, replyIndex) => (
+                  <div
+                    key={reply._id}
+                    className="mb-2 flex gap-20 items-center justify-between"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Link to={`/profile/${reply.user._id}`}>
+                        <img
+                          src={
+                            summaryApi.domain.url + "/" + reply.user.profilePic
+                          }
+                          alt={`${reply.user.name}'s profile`}
+                          className="w-12 h-12 rounded-full clickableImage"
+                        />
+                      </Link>
+                      <div>
+                        <Link to={`/profile/${reply.user._id}`}>
+                          <p className="text-white hover:underline hover:text-blue-300 font-bold">
+                            {reply.user.name}
+                          </p>
+                        </Link>
+                        <p className="text-gray-300 overflow-hidden">
+                          {reply.content}
+                        </p>
+                      </div>
+                      <button className="relative">
+                        <BsThreeDots
+                          onClick={() => toggleOptions(replyIndex)}
+                          className="text-gray-500 cursor-pointer ml-5 lg:ml-[55px] md:ml-[200px]"
+                        />
+                        {showOptions === replyIndex && (
+                          <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                            <ul className="py-2">
+                              <li
+                                onClick={() =>
+                                  openEditPopup(comment._id, comment.content)
+                                }
+                                className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700"
+                              >
+                                Edit Comment
+                              </li>
+                              <li
+                                onClick={() => deleteComment(comment._id)}
+                                className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600"
+                              >
+                                Delete Comment
+                              </li>
+                            </ul>
+                          </div>
+                        )}
+                      </button>
+                    </div>
+                    <p className="text-gray-400">
+                      {relativeTimesReply[index] &&
+                        relativeTimesReply[index][replyIndex]}
+                    </p>
+                  </div>
+                ))}
+
+              {/* Show More button for additional replies */}
+              {comment.replies?.length > visibleRepliesCount && (
+                <button
+                  onClick={() => {
+                    setVisibleRepliesCount((prevCount) => prevCount + 2);
+                  }}
+                  className="text-gray-400 hover:underline hover:text-blue-300"
+                >
+                  Show more replies
+                </button>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
 
       {visibleCommentsCount < comments.length && (
         <button onClick={handleShowMore} className="text-primary mt-4">

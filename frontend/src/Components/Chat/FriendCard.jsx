@@ -20,6 +20,7 @@ export default function FriendCard({ conversation, currentUser }) {
           }
         );
         setUser(res.data);
+        console.log(res.data);
       } catch (err) {
         console.log(err);
       }
@@ -31,7 +32,7 @@ export default function FriendCard({ conversation, currentUser }) {
     <div className="flex items-center justify-between p-2 bg-gray-100 hover:bg-gray-200 flex-wrap rounded-lg cursor-pointer">
       <div className="flex items-center space-x-2">
         <img
-          src={user ? user.profilePic : "https://via.placeholder.com/40"}
+          src={user ? user?.profilePic : "https://via.placeholder.com/40"}
           alt="Profile"
           className="w-10 h-10 rounded-2xl"
         />

@@ -69,7 +69,7 @@ export default function HomeSideBar() {
           <img
             src={user ? summaryApi.domain.url + "/" + user.profilePic : ""}
             alt="user-img"
-            className="w-14 h-14 rounded-full mt-4"
+            className="w-14 h-14 clickableImage rounded-full mt-4"
           />
         </Link>
       </div>
@@ -88,7 +88,7 @@ export default function HomeSideBar() {
                   : ""
               }
               alt="user-img"
-              className="w-10 h-10 rounded-lg border border-black outline outline-cyan-800"
+              className="w-10 h-10 clickableImage rounded-lg border border-black outline outline-cyan-800"
             />
           </Link>
         ))}
