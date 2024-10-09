@@ -64,7 +64,7 @@ exports.Profile = async (req, res, next) => {
     const user = await User.findById(userId)
       .populate(
         "friends",
-        "_id name email profilePic" // Select specific fields for friends
+        "_id name email profilePic linkedProfile" // Select specific fields for friends
       )
       .populate({
         path: "posts",
@@ -163,7 +163,7 @@ exports.getUserProfile = async (req, res, next) => {
 
   try {
     const user = await User.findById(id)
-      .populate("friends", "_id name email profilePic")
+      .populate("friends", "_id name email profilePic linkedProfile")
       .populate(
         "posts",
         "_id title content createdAt likes comments media privacy user "

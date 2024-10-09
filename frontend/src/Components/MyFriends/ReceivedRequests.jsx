@@ -1,6 +1,7 @@
 import { handleAcceptRequest, handleRejectRequest } from "../../Utils/friends";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 import summaryApi from "../../../common";
 export default function ReceivedRequests({
   receivedRequests,
@@ -22,10 +23,12 @@ export default function ReceivedRequests({
                 alt={request.name}
                 className="w-10 h-10 rounded-full mr-4"
               />
+              <Link to={`/profile/${request._id}`}>
               <div>
                 <span className="font-semibold">{request.name}</span>
                 <p className="text-sm text-gray-500">{request.email}</p>
               </div>
+              </Link>
             </div>
             <div>
               <button

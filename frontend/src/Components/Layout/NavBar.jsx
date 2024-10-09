@@ -20,6 +20,10 @@ export default function NavBar() {
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
   };
+  const handleNavigationAndReload = (e) => {
+    e.preventDefault(); 
+    window.location.href = "/profile"; 
+  };
 
   return (
     <nav className="bg-slate-800 border-b   z-10 border-gray-200 shadow-lg fixed w-full -top-1 md:top-0">
@@ -63,6 +67,7 @@ export default function NavBar() {
             </Link>
             <Link
               to="/profile"
+              onClick={handleNavigationAndReload}
               className="p-3 rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
             >
               <FontAwesomeIcon icon={faUser} />

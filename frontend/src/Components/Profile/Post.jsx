@@ -87,7 +87,7 @@ export default function Post({ post, profilePic, name, user }) {
     : lines.slice(0, maxLines).join("\n") + (shouldShowReadMore ? "..." : "");
 
   return (
-    <div className="col-span-1">
+    <div className="col-span-1 ">
       <div className="bg-white rounded-3xl border-2 border-gray-200 p-6 flex flex-col justify-between">
         <div className="flex items-center mb-4">
           <div className="flex-1 flex items-center">
@@ -114,12 +114,12 @@ export default function Post({ post, profilePic, name, user }) {
             {menuVisible && (
               <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
                 <Link to={`/posts/${examplePost.id}`}>
-                  <button className="block px-4 py-2 text-gray-700 hover:bg-gray-100 w-full text-left">
+                  <button className="hover:text-[#8588F0] rounded-lg hover:border border-[#8588F0] block px-4 py-2 text-gray-700 hover:bg-gray-100 w-full text-left">
                     Edit
                   </button>
                 </Link>
                 <Link to={`/posts/${examplePost.id}`}>
-                  <button className="block px-4 py-2 text-gray-700 hover:bg-gray-100 w-full text-left">
+                  <button className="hover:text-[#8588F0] rounded-lg hover:border border-[#8588F0] block px-4 py-2 text-gray-700 hover:bg-gray-100 w-full text-left">
                     Delete
                   </button>
                 </Link>
@@ -132,7 +132,7 @@ export default function Post({ post, profilePic, name, user }) {
         <Link to={`/posts/${examplePost.id}`}>
           {examplePost.media[0] === "photo" && (
             <img
-              className="w-full h-48 object-cover rounded-lg mb-3"
+              className="w-full h-48 object-contain rounded-lg mb-3 transform transition-transform duration-300 hover:scale-110"
               src={`${summaryApi.domain.url}/uploads/${post.media.photo}`}
               alt="Post content"
             />
@@ -142,7 +142,7 @@ export default function Post({ post, profilePic, name, user }) {
         <Link to={`/posts/${examplePost.id}`}>
           {examplePost.media[0] === "video" && (
             <video
-              className="w-full h-48 object-cover rounded-lg mb-3"
+              className="w-full h-48 object-cover rounded-lg mb-3 transform transition-transform duration-300 hover:scale-110"
               controls
             >
               <source
@@ -156,11 +156,11 @@ export default function Post({ post, profilePic, name, user }) {
 
         <Link to={`/posts/${examplePost.id}`}>
           {examplePost.media[0] === "text" && (
-            <div className="text-sm mb-3 h-48 overflow-hidden">
+            <div className="text-l mb-3 h-48  pt-8 overflow-hidden transform transition-transform duration-300 hover:scale-110">
               <p className="whitespace-pre-line">{displayedContent}</p>
               {shouldShowReadMore && (
                 <button
-                  className="text-blue-500 ml-1"
+                  className="text-[#8588F0] ml-1"
                   onClick={handleContentToggle}
                 >
                   {showFullContent ? "Read Less" : "Read More"}
@@ -177,7 +177,7 @@ export default function Post({ post, profilePic, name, user }) {
                 {liked ? (
                   <FaHeart className="text-red-500" />
                 ) : (
-                  <FaRegHeart className="text-gray-500" />
+                  <FaRegHeart className="text-gray-500 hover:text-red-500" />
                 )}
               </button>
               <span className="text-sm ml-1">{likeCount}</span>
