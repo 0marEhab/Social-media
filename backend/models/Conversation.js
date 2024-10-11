@@ -1,15 +1,19 @@
-const mongoose = require("mongoose"); // Erase if already required
+const mongoose = require("mongoose");
 
 // Declare the Schema of the Mongo model
 var conversationSchema = new mongoose.Schema(
   {
-    members: {
-        
-      type: Array,
+    senderId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // Assuming you have a User model
+    },
+    receiverId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // Assuming you have a User model
     },
   },
   { timestamps: true }
 );
 
-//Export the model
+// Export the model
 module.exports = mongoose.model("Conversation", conversationSchema);

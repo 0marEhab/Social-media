@@ -16,9 +16,7 @@ var userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    profilePic: { type: String ,
-      default:"public/images/default.png"
-    },
+    profilePic: { type: String, default: "public/images/default.png" },
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     requestedFriends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
@@ -27,6 +25,7 @@ var userSchema = new mongoose.Schema(
       { type: mongoose.Schema.Types.ObjectId, ref: "Notification" },
     ],
     country: { type: String, required: true },
+    linkedProfile: { type: String },
     birthDate: { type: Date, required: true },
     isAdmin: { type: Boolean, default: false },
   },

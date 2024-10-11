@@ -43,8 +43,8 @@ export default function FriendsSideBar() {
   };
 
   return (
-    <div className="col-span-10 lg:col-span-4 xl:col-span-3 bg-secondary min-h-screen rounded-t-3xl lg:rounded-l-3xl lg:rounded-tr-none px-10 py-16">
-      <h2 className="text-xl font-bold text-white">Friends Suggestions</h2>
+    <div className="col-span-10 lg:col-span-4 xl:col-span-3 bg-white shadow-xl shadow-slate-300 min-h-screen rounded-t-3xl lg:rounded-l-3xl lg:rounded-tr-none px-10 py-16">
+      <h2 className="text-xl font-bold text-black">Friends Suggestions</h2>
       {loading ? (
         <Loading color={"#fff"} />
       ) : suggestions.length === 0 ? (

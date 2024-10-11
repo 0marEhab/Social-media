@@ -3,7 +3,8 @@ const Message = require("../models/Message");
 
 exports.storeConversation = async (req, res) => {
   const newConversation = new Conversation({
-    members: [req.body.senderId, req.body.receiverId],
+    senderId: req.body.senderId,
+    receiverId: req.body.receiverId,
   });
 
   try {
@@ -13,11 +14,15 @@ exports.storeConversation = async (req, res) => {
     res.status(500).json(err);
   }
 };
+
 exports.getConversation = async (req, res) => {
   try {
     const conversation = await Conversation.find({
-      members: { $in: [req.params.userId] },
-    });
+      $or: [{ senderId: req.params.userId }, { receiverId: req.params.userId }],
+    })
+      .populate("senderId", "name profilePic") // Populate with name and profilePic of sender
+      .populate("receiverId", "name profilePic"); // Populate with name and profilePic of receiver
+
     res.status(200).json(conversation);
   } catch (err) {
     res.status(500).json(err);
@@ -25,7 +30,7 @@ exports.getConversation = async (req, res) => {
 };
 exports.sendMessages = async (req, res) => {
   const newMessage = new Message(req.body);
-  console.log(newMessage);
+
   try {
     const savedMessage = await newMessage.save();
     res.status(200).json(savedMessage);
@@ -33,8 +38,8 @@ exports.sendMessages = async (req, res) => {
     res.status(500).json(err);
   }
 };
+
 exports.getMessages = async (req, res) => {
-  console.log(req.params);
   try {
     const messages = await Message.find({
       conversationId: req.params.conversationId,

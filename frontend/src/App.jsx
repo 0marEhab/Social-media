@@ -6,7 +6,6 @@ import Layout from "./Components/Layout/Layout";
 import Signing from "./Pages/Signing/Signing";
 import Home from "./Pages/Home/Home";
 import EditPost from "./Pages/Home/EditPost";
-import DashBoard from "./Pages/DashBoard/DashBoard";
 import Posts from "./Pages/DashBoard/Posts";
 import Tickets from "./Pages/DashBoard/Tickets";
 import Users from "./Pages/DashBoard/Users";
@@ -19,7 +18,9 @@ import Chat from "./Components/Chat/Chat";
 import SearchResults from "./Pages/SearchResult/SearchResults";
 import { SharedPostsProvider } from "./Contexts/SharedPostsContext";
 import Profile from "./Pages/Profile/Profile";
-
+import DashboardComponent from "./Pages/DashBoard/DashboardComponent.jsx";
+import NotFoundPage from "./Components/Layout/NotFoundPage.jsx";
+import Calendar from "./Components/Home/Calendar.jsx";
 export default function App() {
   const router = createBrowserRouter([
     {
@@ -69,11 +70,10 @@ export default function App() {
             {
               path: "/Profile/:id",
               element: <Profile />,
-
             },
             {
               path: "/DashBoard",
-              element: <DashBoard />,
+              element: <DashboardComponent />,
             },
             {
               path: "/Posts",
@@ -82,11 +82,15 @@ export default function App() {
             {
               path: "/Tickets",
               element: <Tickets />,
-            }, 
+            },
             {
               path: "/Users",
               element: <Users />,
-            },    
+            },
+            {
+              path: "calendar",
+              element: <Calendar />,
+            },
           ],
         },
       ],
@@ -99,7 +103,10 @@ export default function App() {
       path: "/ticket",
       element: <Ticket />,
     },
-  
+    {
+      path: "*",
+      element: <NotFoundPage />,
+    },
   ]);
 
   return (

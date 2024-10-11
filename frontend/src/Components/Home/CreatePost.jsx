@@ -15,7 +15,6 @@ import { Link, useNavigate } from "react-router-dom";
 export default function CreatePost() {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
-  console.log(user);
 
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
@@ -24,6 +23,35 @@ export default function CreatePost() {
   const [privacy, setPrivacy] = useState("public");
   const textareaRef = useRef(null);
   const fileInputRef = useRef(null);
+  const [showFullContent, setShowFullContent] = useState(false);
+
+  function addNewlinesAfterEverySixWordsOrLongWords(
+    content,
+    maxWordLength = 10,
+    longWordLimit = 50
+  ) {
+    const words = content.split(" ");
+    const result = [];
+
+    for (let i = 0; i < words.length; i++) {
+      if (words[i].length > longWordLimit) {
+        for (let j = 0; j < words[i].length; j += longWordLimit) {
+          result.push(words[i].substring(j, j + longWordLimit));
+        }
+      } else {
+        result.push(words[i]);
+      }
+      if ((i + 1) % 6 === 0) {
+        result.push("\n");
+      }
+    }
+
+    return result.join(" ");
+  }
+
+  const formattedText = addNewlinesAfterEverySixWordsOrLongWords(content);
+  const maxLines = 3;
+  const lines = formattedText.split("\n");
 
   // Fetch friends when component mounts
   const fetchFriends = async () => {
@@ -47,7 +75,7 @@ export default function CreatePost() {
   const createPost = async () => {
     try {
       const formData = new FormData();
-      formData.append("content", content);
+      formData.append("content", formattedText);
       formData.append("user", user._id);
 
       // Append image if available
@@ -133,7 +161,7 @@ export default function CreatePost() {
   };
 
   return (
-    <div className="flex flex-col bg-white p-5 rounded-lg shadow-md w-full max-w-xl mx-auto">
+    <div className="flex flex-col bg-white p-5 rounded-lg shadow-md w-full max-w-2xl mx-auto">
       <form onSubmit={handleShare}>
         <div className="flex items-center gap-4">
           <img
@@ -143,7 +171,7 @@ export default function CreatePost() {
           />
           <textarea
             ref={textareaRef}
-            value={content}
+            value={formattedText}
             onInput={handleInput}
             placeholder="What are you thinking?"
             className="w-full p-3 rounded-lg h-auto focus:outline-none resize-none overflow-hidden"
