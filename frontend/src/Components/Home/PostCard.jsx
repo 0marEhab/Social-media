@@ -11,10 +11,15 @@ import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../../Contexts/UserContext";
 import summaryApi from "../../../common";
 import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content"; // for React components inside Swal
 import PostOptions from "./PostOptions"; // Import the refactored dropdown component
+import SinglePostSideBar from "../SinglePost/SinglePostSideBar";
+import Comments from "./Comments";
 
 export default function PostCard({ post }) {
-  const { user, setSharedPosts } = useContext(UserContext);
+  const [showComments, setShowComments] = useState(false);
+  const { user } = useContext(UserContext);
+  const setSharedPosts = useContext(UserContext);
   const relativeTime = moment(post.createdAt).fromNow();
   const [likes, setLikes] = useState(post.likes);
   const [showFullContent, setShowFullContent] = useState(false);
@@ -100,6 +105,7 @@ export default function PostCard({ post }) {
   const handleContentToggle = () => {
     setShowFullContent(!showFullContent);
   };
+
   const reportPost = async () => {
     try {
       await axios.post(
@@ -187,6 +193,53 @@ export default function PostCard({ post }) {
     }
   };
 
+  const popUpImage = () => {
+    Swal.fire({
+      imageUrl: summaryApi.domain.url + "/uploads/" + post.media.photo,
+      imageAlt: "Image Preview", // Adding alt text for accessibility
+      width: "80%", // Set the width of the popup to 80% of the viewport width
+      heightAuto: false, // Disable automatic height adjustment
+      background: "transparent", // Transparent background
+      padding: "0", // Remove padding around the image
+      customClass: {
+        popup: "custom-popup", // Custom class for the popup
+        image: "custom-image", // Custom class for the image
+      },
+      showCloseButton: true, // Show close button
+      closeButtonHtml:
+        '<span style="font-size: 30px; color: white;">&times;</span>', // Customize close button color
+      showConfirmButton: false, // Hide confirm button
+      backdrop: "rgba(0,0,0,0.8)", // Darker semi-transparent backdrop
+    });
+  };
+
+  const MySwal = withReactContent(Swal);
+
+  const handleComments = () => {
+    setShowComments(!showComments);
+    MySwal.fire({
+      html: (
+        <Comments
+          initialLikes={post.likes}
+          initialComments={post.comments}
+          userprofile={user}
+          id={post._id}
+        />
+      ),
+      showCloseButton: true,
+      showConfirmButton: false,
+      width: "100%", // Adjust the width as needed
+      customClass: {
+        popup: "custom-popup",
+      },
+      background: "#FBFCFE", // Darken the background
+      didClose: () => setShowComments(false), // Reset state on close
+    });
+  };
+
+  const closeModal = () => {
+    setShowComments(false);
+  };
   if (post.user) {
     return (
       <div className="bg-[#FBFCFE] p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto my-6 transition hover:shadow-xl">
@@ -199,7 +252,7 @@ export default function PostCard({ post }) {
                   post ? summaryApi.domain.url + "/" + post.user.profilePic : ""
                 }
                 alt={`${post.user.name}'s profile`}
-                className="w-12 h-12 rounded-full border border-gray-300"
+                className="w-12 h-12 rounded-full border border-gray-300 clickableImage"
               />
             </Link>
             <div>
@@ -212,8 +265,12 @@ export default function PostCard({ post }) {
                 {relativeTime} • {post.privacy}
               </p>
               {post.sharedPost && (
-                <h6 className="text-gray-500">
-                  Shared from: {post.sharedPost.user.name}
+                <h6 className="text-gray-500 cursor-pointer hover:underline hover:text-blue-300">
+                  Shared from:{" "}
+                  <Link to={`/profile/${post.sharedPost.user._id}`}>
+                    {" "}
+                    {post.sharedPost.user.name}
+                  </Link>
                 </h6>
               )}
             </div>
@@ -221,7 +278,7 @@ export default function PostCard({ post }) {
           <button className="relative">
             <BsThreeDots
               onClick={toggleOptions}
-              className="text-gray-500 cursor-pointer hover:text-gray-700"
+              className="text-gray-500 cursor-pointer clickableImage hover:text-gray-700"
             />
             {showOptions && (
               <PostOptions
@@ -245,13 +302,14 @@ export default function PostCard({ post }) {
             <img
               src={`${summaryApi.domain.url}/uploads/${post.media.photo}`}
               alt="post content"
-              className="w-full h-auto rounded-xl object-contain  mb-4 max-h-96"
+              className="w-full h-auto rounded-xl clickableImage object-contain  mb-4 max-h-96"
+              onClick={popUpImage}
             />
           )}
           {post.media?.video && (
             <video
               controls
-              className="w-full h-auto rounded-lg object-cover mb-4 max-h-96"
+              className="w-full h-auto rounded-lg clickableImage object-cover mb-4 max-h-96"
             >
               <source
                 src={`${summaryApi.domain.url}/uploads/${post.media.video}`}
@@ -273,7 +331,7 @@ export default function PostCard({ post }) {
         <div className="flex justify-between items-center mt-4 border-t pt-4">
           <div className="flex gap-4 text-gray-600">
             <button
-              className={`flex items-center gap-1 hover:text-red-500 ${
+              className={`flex clickableImage items-center gap-1 hover:text-red-500 ${
                 isLiked ? "text-red-500" : ""
               }`}
               onClick={handleLike}
@@ -282,21 +340,46 @@ export default function PostCard({ post }) {
               <span>{likes.length}</span>
             </button>
             <button
-              className="flex items-center gap-1 hover:text-blue-500"
-              onClick={() => navigate(`/posts/${post._id}`)}
+              className="flex clickableImage items-center gap-1 hover:text-blue-500"
+              onClick={handleComments}
             >
               <AiOutlineMessage size={22} />
               <span>{post.comments.length}</span>
             </button>
           </div>
           <button
-            className="flex items-center gap-1 text-gray-600 hover:text-blue-500"
+            className="flex clickableImage items-center gap-1 text-gray-600 hover:text-blue-500"
             onClick={handleShare}
           >
             <AiOutlineShareAlt size={22} />
             Share
           </button>
         </div>
+        {/* {showComments && (
+          <div
+            className="z-50 bg-transparent rounded-lg p-6 w-full max-w-3xl relative transform transition-transform duration-300 ease-out scale-95 animate-scaleIn"
+            style={{
+              top: `calc(50% + ${window.scrollY}px)`, // Centering with scroll offset
+              left: `calc(30% + ${window.scrollX}px)`,
+              transform: "translate(-50%, -50%)", // Center horizontally
+              width: "80%", // Adjust width if needed
+              maxWidth: "600px",
+            }}
+            onClick={(e) => e.stopPropagation()} // Prevent modal close when clicking inside
+          >
+            <button
+              onClick={closeModal}
+              className="absolute top-7 text-3xl right-[-120px] text-black  hover:text-gray-700"
+            >
+              &times;
+            </button>
+            <SinglePostSideBar
+              initialLikes={post.likes}
+              initialComments={post.comments}
+              id={post._id}
+            />
+          </div>
+        )} */}
       </div>
     );
   }

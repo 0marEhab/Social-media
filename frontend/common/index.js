@@ -52,6 +52,9 @@ const summaryApi = {
   delete: {
     url: `${urlDomain}/api/posts/:id`,
   },
+  deleteByAdmin: {
+    url: `${urlDomain}/api/posts/admin/:id`,
+  },
   update: {
     url: `${urlDomain}/api/posts/:id`,
   },
@@ -105,6 +108,12 @@ const summaryApi = {
   },
   addEvent: {
     url: `${urlDomain}/api/events`,
+  },
+  deleteReply: {
+    url: `${urlDomain}/api/posts/:id/comment/:commentId/reply/:replyId`,
+  },
+  editReply: {
+    url: `${urlDomain}/api/posts/:id/comment/:commentId/reply/:replyId/edit`,
   },
 };
 

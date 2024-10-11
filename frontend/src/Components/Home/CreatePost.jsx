@@ -113,7 +113,7 @@ export default function CreatePost() {
         onClose: () => {
           navigate("/posts/" + response.data.post._id);
         },
-        autoClose: 3000,
+        autoClose: 1000,
       });
 
       // Reset form fields
@@ -164,11 +164,13 @@ export default function CreatePost() {
     <div className="flex flex-col bg-white p-5 rounded-lg shadow-md w-full max-w-2xl mx-auto">
       <form onSubmit={handleShare}>
         <div className="flex items-center gap-4">
-          <img
-            src={user ? summaryApi.domain.url + "/" + user.profilePic : ""}
-            alt="user-profile"
-            className="w-12 h-12 rounded-lg"
-          />
+          <Link to={"/profile/" + user?._id}>
+            <img
+              src={user ? summaryApi.domain.url + "/" + user.profilePic : ""}
+              alt="user-profile"
+              className="w-12 h-12 rounded-lg clickableImage"
+            />
+          </Link>
           <textarea
             ref={textareaRef}
             value={formattedText}
