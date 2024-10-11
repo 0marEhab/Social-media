@@ -12,11 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import Loading from "../../Components/Layout/Loading";
-<<<<<<< HEAD
-import SideBar from "../../Components/DashBoard/SideBar";
-=======
 import SideBar from "../../Components/DashBoard/NavBarDashboard";
->>>>>>> feature/admin
 import summaryApi from "../../../common";
 
 function DashboardComponent() {

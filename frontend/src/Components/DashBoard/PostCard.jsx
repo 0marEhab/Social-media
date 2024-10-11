@@ -39,7 +39,6 @@ export default function PostCard({ post }) {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-<<<<<<< HEAD
           await axios.delete(summaryApi.delete.url.replace(":id", post._id), {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -47,17 +46,6 @@ export default function PostCard({ post }) {
           });
 
           Swal.fire("Deleted!", "Your post has been deleted.", "success").then(
-=======
-          await axios.delete(
-            summaryApi.deleteByAdmin.url.replace(":id", post._id),
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            }
-          );
-          Swal.fire("Deleted!", "The post has been deleted.", "success").then(
->>>>>>> d09f6cfc8d58d2d558198c77647cf2b234a42fb3
             () => {
               navigate(0);
             }
@@ -73,40 +61,33 @@ export default function PostCard({ post }) {
     });
   };
 
-<<<<<<< HEAD
-=======
   if (!post) {
     return <div>No post available</div>;
   }
-  
->>>>>>> feature/admin
+
   return (
     <div className="bg-white p-5 rounded-lg shadow-md w-full max-w-sm mx-auto">
-  <div className="flex justify-between items-center mb-4">
-    <div className="flex items-center gap-3">
-    <Link to={`/profile/${post.user._id}`}>
-      <img
-        src={
-          post ? summaryApi.domain.url + "/" + post.user.profilePic : ""
-        }
-        alt={`${post.user.name}'s profile`}
-        className="w-12 h-12 rounded-full border border-gray-300"
-      />
-    </Link>
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center gap-3">
+          <Link to={`/profile/${post.user._id}`}>
+            <img
+              src={
+                post ? summaryApi.domain.url + "/" + post.user.profilePic : ""
+              }
+              alt={`${post.user.name}'s profile`}
+              className="w-12 h-12 rounded-full border border-gray-300"
+            />
+          </Link>
 
-<<<<<<< HEAD
           <div>
             <Link to={`/profile/${post.user._id}`}>
               <h4 className="font-bold hover:underline">{post.user.name}</h4>
             </Link>
-            <Link to={`/profile/${post.reportedBy?._id}`}>
-              {post.reportedBy?.name && (
-                <p className="text-gray-500 text-sm hover:underline">
-                  reported by {post.reportedBy?.name}
-                </p>
-              )}
+            <Link to={`/posts/${post.reportedBy?._id}`}>
+              <p className="text-gray-500 text-sm hover:underline">
+                reported by {post.reportedBy?.name}
+              </p>
             </Link>
-
             <p className="text-gray-500 text-sm">
               {relativeTime} • {post.privacy}
             </p>
@@ -121,18 +102,21 @@ export default function PostCard({ post }) {
           <FontAwesomeIcon icon={faTrashCan} />
         </button>
       </div>
-      <div>
+
+      <div className="flex justify-center items-center">
+        {" "}
+        {/* Centered content */}
         {post.media?.photo && (
           <img
             src={`${summaryApi.domain.url}/uploads/${post.media.photo}`}
             alt="post content"
-            className="w-full max-h-[400px] object-cover object-center rounded-lg mb-4"
+            className="w-full max-w-[200px] max-h-[150px] object-contain object-center rounded-lg mb-4"
           />
         )}
         {post.media?.video && (
           <video
             controls
-            className="w-full max-h-[400px] object-cover object-center rounded-lg mb-4"
+            className="w-full max-w-[200px] max-h-[150px] object-contain object-center rounded-lg mb-4"
           >
             <source
               src={`${summaryApi.domain.url}/uploads/${post.media.video}`}
@@ -141,15 +125,16 @@ export default function PostCard({ post }) {
             Your browser does not support the video tag.
           </video>
         )}
-        <p ref={textRef} className="text-gray-500 mt-2 mb-4 line-clamp-2">
-          {post.content}
-        </p>
-        {isClamped && (
-          <p className="text-blue-500 font-semi-bold cursor-pointer">
-            <Link to={`/posts/${post._id}`}>Read More</Link>
-          </p>
-        )}
       </div>
+
+      <p ref={textRef} className="text-gray-500 mt-2 mb-4 line-clamp-2">
+        {post.content}
+      </p>
+      {isClamped && (
+        <p className="text-blue-500 font-semi-bold cursor-pointer">
+          <Link to={`/posts/${post._id}`}>Read More</Link>
+        </p>
+      )}
 
       <div className="flex justify-between items-center mt-4">
         <div className="flex gap-4 text-gray-500">
@@ -170,80 +155,7 @@ export default function PostCard({ post }) {
             <span>{post.comments.length}</span>
           </button>
         </div>
-=======
-      <div>
-        <Link to={`/profile/${post.user._id}`}>
-          <h4 className="font-bold hover:underline">{post.user.name}</h4>
-        </Link>
-        <Link to={`/posts/${post.reportedBy?._id}`}>
-          <p className="text-gray-500 text-sm hover:underline">
-            reported by {post.reportedBy?.name}
-          </p>
-        </Link>
-        <p className="text-gray-500 text-sm">
-          {relativeTime} • {post.privacy}
-        </p>
-
-        {post.sharedPost && <h6>Shared from: {post.sharedPost.user.name}</h6>}
->>>>>>> feature/admin
       </div>
     </div>
-
-    <button className="relative" onClick={deletePost}>
-      <FontAwesomeIcon icon={faTrashCan} />
-    </button>
-  </div>
-
-  <div className="flex justify-center items-center"> {/* Centered content */}
-    {post.media?.photo && (
-      <img
-        src={`${summaryApi.domain.url}/uploads/${post.media.photo}`}
-        alt="post content"
-        className="w-full max-w-[200px] max-h-[150px] object-contain object-center rounded-lg mb-4"
-      />
-    )}
-    {post.media?.video && (
-      <video
-        controls
-        className="w-full max-w-[200px] max-h-[150px] object-contain object-center rounded-lg mb-4"
-      >
-        <source
-          src={`${summaryApi.domain.url}/uploads/${post.media.video}`}
-          type="video/mp4"
-        />
-        Your browser does not support the video tag.
-      </video>
-    )}
-  </div>
-
-  <p ref={textRef} className="text-gray-500 mt-2 mb-4 line-clamp-2">
-    {post.content}
-  </p>
-  {isClamped && (
-    <p className="text-blue-500 font-semi-bold cursor-pointer">
-      <Link to={`/posts/${post._id}`}>Read More</Link>
-    </p>
-  )}
-
-  <div className="flex justify-between items-center mt-4">
-    <div className="flex gap-4 text-gray-500">
-      <button
-        className={`flex items-center gap-1 ${isLiked ? "text-red-500" : ""}`}
-      >
-        <AiOutlineHeart size={20} />
-        <span>{likes.length}</span>
-      </button>
-
-      <button
-        className="flex items-center gap-1"
-        onClick={() => navigate(`/posts/${post._id}`)}
-      >
-        <AiOutlineMessage size={20} />
-        <span>{post.comments.length}</span>
-      </button>
-    </div>
-  </div>
-</div>
-
   );
 }

@@ -6,6 +6,7 @@ import { useParams, Link } from "react-router-dom";
 import moment from "moment";
 import summaryApi from "../../../common";
 import UserContext from "../../Contexts/UserContext";
+import { motion, AnimatePresence } from "framer-motion";
 import { BsThreeDots } from "react-icons/bs";
 import Swal from "sweetalert2"; // Import SweetAlert2
 import { ToastContainer, toast } from "react-toastify";
@@ -252,194 +253,276 @@ export default function Comments({
   );
 
   return (
-    <div className="bg-white rounded-t-3xl m-auto lg:w-[80%] max-w-7xl overflow-y-auto px-8 py-12">
-      <div className="w-full flex justify-end">
-        <img
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="bg-white rounded-t-3xl m-auto lg:w-[80%] max-w-7xl overflow-y-auto px-8 py-12 shadow-lg"
+    >
+      <div className="w-full flex justify-end mb-6">
+        <motion.img
+          whileHover={{ scale: 1.1 }}
           src={summaryApi.domain.url + "/" + userprofile?.profilePic}
           alt={`${userprofile?.name}'s profile`}
           className="w-12 h-12 rounded-full clickableImage border-2 border-gray-200 shadow-md"
         />
       </div>
 
-      <h2 className="text-2xl font-bold text-black mb-6">
+      <h2 className="text-3xl font-bold text-gray-800 mb-8">
         Comments ({comments.length})
       </h2>
 
       {/* Comments section */}
-      <div className="max-h-[400px] overflow-y-auto space-y-6">
-        {comments?.map((comment, index) => (
-          <div
-            key={comment.id}
-            className="mb-4 flex flex-col justify-between items-start  p-4 rounded-lg shadow-lg"
-          >
-            <div className="flex items-center justify-between w-full">
-              <div className="flex items-center gap-5">
-                <img
-                  src={summaryApi.domain.url + "/" + comment?.user?.profilePic}
-                  alt={`${comment?.user?.name}'s profile`}
-                  className="w-10 h-10 rounded-full border-2 border-gray-300 shadow-sm"
-                />
-                <div>
-                  <div className="flex items-center justify-between w-full">
-                    <div className="text-black font-semibold">
-                      {comment?.user?.name}
+      <div className="max-h-[600px] overflow-y-auto space-y-6 pr-4">
+        <AnimatePresence>
+          {comments?.map((comment, index) => (
+            <motion.div
+              key={comment.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="mb-6 flex flex-col justify-between items-start p-6 rounded-lg shadow-lg bg-gray-50 hover:bg-gray-100 transition-all duration-300"
+            >
+              <div className="flex items-center justify-between w-full mb-4">
+                <div className="flex items-center gap-5">
+                  <motion.img
+                    whileHover={{ scale: 1.1 }}
+                    src={
+                      summaryApi.domain.url + "/" + comment?.user?.profilePic
+                    }
+                    alt={`${comment?.user?.name}'s profile`}
+                    className="w-12 h-12 rounded-full border-2 border-gray-300 shadow-sm"
+                  />
+                  <div>
+                    <div className="flex items-center justify-between w-full">
+                      <div className="text-gray-800 font-semibold text-lg">
+                        {comment?.user?.name}
+                      </div>
                     </div>
-                    <button className="relative">
-                      <BsThreeDots
-                        onClick={() => toggleOptions(index)}
-                        className="text-gray-500 cursor-pointer"
-                      />
-                      {showOptions === index && (
-                        <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                          <ul className="py-2">
-                            <li
-                              onClick={() =>
-                                openEditPopup(comment._id, comment.content)
-                              }
-                              className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700"
-                            >
-                              Edit Comment
-                            </li>
-                            <li
-                              onClick={() => deleteComment(comment._id)}
-                              className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600"
-                            >
-                              Delete Comment
-                            </li>
-                          </ul>
-                        </div>
-                      )}
-                    </button>
-                  </div>
-                  <p className="text-gray-300 text-sm">
-                    {relativeTimes[index]}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <p className="text-black mt-2">{comment.content}</p>
-
-            {/* Like and reply buttons */}
-            <div className="flex items-center gap-4 mt-3 ml-[55px]">
-              <button className="hover:text-red-400 transition duration-300">
-                <AiOutlineHeart className="text-gray-400" />
-              </button>
-              <button className="hover:text-blue-400 transition duration-300">
-                <BiComment onClick={() => handleReply(comment._id)} />
-              </button>
-            </div>
-
-            {/* Reply input section */}
-            {activeReplyComment === comment._id && (
-              <div className="flex items-center gap-3 mt-3">
-                <input
-                  type="text"
-                  value={replyContent}
-                  onChange={(e) => setReplyContent(e.target.value)}
-                  placeholder="Write a reply..."
-                  className="border p-2 w-full rounded-md shadow-sm"
-                />
-                <button
-                  onClick={() => handleReplySubmit(comment._id, index)}
-                  className="bg-blue-500 text-black px-4 py-2 rounded-md shadow-sm hover:bg-blue-600 transition"
-                >
-                  <AiOutlineSend />
-                </button>
-              </div>
-            )}
-
-            {/* Replies section */}
-            <div className="ml-10 mt-4 space-y-4">
-              {comment.replies
-                ?.slice(0, visibleRepliesCount)
-                .map((reply, replyIndex) => (
-                  <div key={reply?._id} className="flex gap-5 items-center">
-                    <img
-                      src={
-                        summaryApi.domain.url + "/" + reply?.user?.profilePic
-                      }
-                      alt={`${reply?.user?.name}'s profile`}
-                      className="w-10 h-10 rounded-full border-2 border-gray-300"
-                    />
-                    <div>
-                      <p className="text-black font-bold">
-                        {reply?.user?.name}
-                      </p>
-                      <p className="text-gray-300 text-sm">{reply?.content}</p>
-                    </div>
-                    <p className="text-gray-400 text-sm">
-                      {relativeTimesReply[index] &&
-                        relativeTimesReply[index][replyIndex]}
+                    <p className="text-gray-500 text-sm">
+                      {relativeTimes[index]}
                     </p>
                   </div>
-                ))}
-              {comment.replies?.length > visibleRepliesCount && (
-                <button
-                  onClick={() => setVisibleRepliesCount((prev) => prev + 2)}
-                  className="text-gray-400 hover:underline mt-2"
+                </div>
+                <motion.button whileHover={{ scale: 1.1 }} className="relative">
+                  <BsThreeDots
+                    onClick={() => toggleOptions(index)}
+                    className="text-gray-500 cursor-pointer text-xl"
+                  />
+                  <AnimatePresence>
+                    {showOptions === index && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10"
+                      >
+                        <ul className="py-2">
+                          <li
+                            onClick={() =>
+                              openEditPopup(comment._id, comment.content)
+                            }
+                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700 transition-colors duration-200"
+                          >
+                            Edit Comment
+                          </li>
+                          <li
+                            onClick={() => deleteComment(comment._id)}
+                            className="px-4 py-2 hover:bg-red-100 cursor-pointer text-red-600 transition-colors duration-200"
+                          >
+                            Delete Comment
+                          </li>
+                        </ul>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.button>
+              </div>
+              <p className="text-gray-700 mt-2 text-lg">{comment.content}</p>
+
+              {/* Like and reply buttons */}
+              <div className="flex items-center gap-6 mt-4 ml-[60px]">
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  className="flex items-center gap-2 text-gray-500 hover:text-red-500 transition duration-300"
                 >
-                  Show more replies
-                </button>
-              )}
-            </div>
-          </div>
-        ))}
+                  <AiOutlineHeart className="text-xl" />
+                  <span>Like</span>
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  className="flex items-center gap-2 text-gray-500 hover:text-blue-500 transition duration-300"
+                  onClick={() => handleReply(comment._id)}
+                >
+                  <BiComment className="text-xl" />
+                  <span>Reply</span>
+                </motion.button>
+              </div>
+
+              {/* Reply input section */}
+              <AnimatePresence>
+                {activeReplyComment === comment._id && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex items-center gap-3 mt-4 w-full"
+                  >
+                    <input
+                      type="text"
+                      value={replyContent}
+                      onChange={(e) => setReplyContent(e.target.value)}
+                      placeholder="Write a reply..."
+                      className="border p-2 w-full rounded-md shadow-sm focus:ring-2 focus:ring-blue-300 outline-none transition duration-200"
+                    />
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleReplySubmit(comment._id, index)}
+                      className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-600 transition duration-200"
+                    >
+                      <AiOutlineSend className="text-xl" />
+                    </motion.button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Replies section */}
+              <div className="ml-12 mt-4 space-y-4">
+                {comment.replies
+                  ?.slice(0, visibleRepliesCount)
+                  .map((reply, replyIndex) => (
+                    <motion.div
+                      key={reply?._id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="flex gap-5 items-start bg-white p-4 rounded-lg shadow-sm"
+                    >
+                      <motion.img
+                        whileHover={{ scale: 1.1 }}
+                        src={
+                          summaryApi.domain.url + "/" + reply?.user?.profilePic
+                        }
+                        alt={`${reply?.user?.name}'s profile`}
+                        className="w-10 h-10 rounded-full border-2 border-gray-300"
+                      />
+                      <div className="flex-grow">
+                        <p className="text-gray-800 font-semibold">
+                          {reply?.user?.name}
+                        </p>
+                        <p className="text-gray-600 mt-1">{reply?.content}</p>
+                        <p className="text-gray-400 text-sm mt-2">
+                          {relativeTimesReply[index] &&
+                            relativeTimesReply[index][replyIndex]}
+                        </p>
+                      </div>
+                    </motion.div>
+                  ))}
+                {comment.replies?.length > visibleRepliesCount && (
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    onClick={() => setVisibleRepliesCount((prev) => prev + 2)}
+                    className="text-blue-500 hover:text-blue-600 hover:underline mt-2 transition duration-200"
+                  >
+                    Show more replies
+                  </motion.button>
+                )}
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
 
       {/* "Show More" Button for comments */}
       {visibleCommentsCount < comments.length && (
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={handleShowMore}
-          className="text-primary mt-4 bg-white px-4 py-2 rounded-md shadow-sm hover:bg-gray-100"
+          className="text-blue-500 mt-6 bg-white px-6 py-2 rounded-full shadow-md hover:bg-blue-50 transition duration-200 font-semibold"
         >
-          Show More
-        </button>
+          Show More Comments
+        </motion.button>
       )}
 
       {/* Comment Input */}
-      <div className="flex justify-between w-full gap-4 mt-6 relative">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="flex justify-between w-full gap-4 mt-8 relative"
+      >
         <input
           type="text"
           placeholder="Write a comment..."
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
-          className="bg-gray-200 w-full h-10 rounded-md p-3 outline-none text-black"
+          className="bg-gray-100 w-full h-12 rounded-full p-4 outline-none text-gray-800 focus:ring-2 focus:ring-blue-300 transition duration-200"
         />
-        <button onClick={handleCommentSubmit}>
-          <AiOutlineSend className="absolute right-8 top-3 text-primary" />
-        </button>
-      </div>
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={handleCommentSubmit}
+          className="absolute right-4 top-2 bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition duration-200"
+        >
+          <AiOutlineSend className="text-xl" />
+        </motion.button>
+      </motion.div>
 
       {/* Edit Comment Popup */}
-      {editCommentId && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
-            <h2 className="text-xl font-bold mb-4">Edit Comment</h2>
-            <textarea
-              className="w-full p-2 border border-gray-300 rounded-md mb-4"
-              value={editCommentContent}
-              onChange={(e) => setEditCommentContent(e.target.value)}
-              rows="4"
-            />
-            <div className="flex justify-end gap-4">
-              <button
-                onClick={handleEditSubmit}
-                className="bg-blue-500 text-black px-4 py-2 rounded-md"
-              >
-                Save
-              </button>
-              <button
-                onClick={closeEditPopup}
-                className="bg-gray-300 text-black px-4 py-2 rounded-md"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {editCommentId && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white p-8 rounded-lg shadow-xl w-full max-w-lg"
+            >
+              <h2 className="text-2xl font-bold mb-6 text-gray-800">
+                Edit Comment
+              </h2>
+              <textarea
+                className="w-full p-3 border border-gray-300 rounded-lg mb-6 focus:ring-2 focus:ring-blue-300 outline-none transition duration-200"
+                value={editCommentContent}
+                onChange={(e) => setEditCommentContent(e.target.value)}
+                rows="4"
+              />
+              <div className="flex justify-end gap-4">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleEditSubmit}
+                  className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-200"
+                >
+                  Save
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={closeEditPopup}
+                  className="bg-gray-300 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-400 transition duration-200"
+                >
+                  Cancel
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <ToastContainer />
-    </div>
+      <ToastContainer position="bottom-right" />
+    </motion.div>
   );
 }
