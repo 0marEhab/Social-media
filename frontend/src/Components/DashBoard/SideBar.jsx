@@ -31,7 +31,7 @@ export default function SideBar() {
   };
 
   return (
-    <div className="fixed top-0 left-0 h-screen w-1/4 lg:w-1/12 pt-16 lg:pt-10 py-10 bg-primary flex flex-col justify-around items-center overflow-hidden z-50">
+    <div className="fixed top-0 left-0 h-screen w-1/4 lg:w-1/12 pt-16 lg:pt-10 py-10 bg-indigo-950 flex flex-col justify-around items-center overflow-hidden z-50">
       <Link to="/DashBoard">
         <img src={Logo} alt="Logo" className="mb-16" />
       </Link>

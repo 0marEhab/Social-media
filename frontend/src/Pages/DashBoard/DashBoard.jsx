@@ -114,11 +114,11 @@ function DashBoard() {
         <DashBoardCard title="Tickets" number={tickets.length} icon={faTicket}/>
         <DashBoardCard title="Posts" number={posts} icon={faPager}/>
       </div>
-       <div className='flex flex-col gap-80 mt-10 md:flex-row '>
-          <div className='w-1/2 '>
+       <div className='flex flex-col gap-52 mt-10 md:flex-row '>
+          <div className='w-7/12 '>
           <RecentUsers users={users}/> 
           </div>
-          <div className='flex flex-col gap-10 w-1/3 '>
+          <div className='flex flex-col gap-20 w-1/3 '>
               <DashBoardCard title="Likes" number={likes} icon={faHeart}/>
               <DashBoardCard title="Comments" number={comments} icon={faComment}/>
           </div>
