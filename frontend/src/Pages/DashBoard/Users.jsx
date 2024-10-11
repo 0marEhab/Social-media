@@ -4,8 +4,14 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import Loading from "../../Components/Layout/Loading";
 import axios from "axios";
 import summaryApi from "../../../common";
+<<<<<<< HEAD
 import SideBar from "../../Components/DashBoard/SideBar";
 import UserCard from "../../Components/DashBoard/UserCard";
+=======
+import SideBar from "../../Components/DashBoard/NavBarDashboard";
+import UserCard from "../../Components/DashBoard/UserCard";
+import NavBarDashboard from "../../Components/DashBoard/NavBarDashboard";
+>>>>>>> feature/admin
 
 function Users() {
   const [users, setUsers] = useState([]);
@@ -36,6 +42,7 @@ function Users() {
     return <Loading color={"#666AEC"} />;
   }
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-gray-100 p-10">
       <SideBar />
       <h1 className="text-xl font-semibold mb-2">DashBoard</h1>
@@ -43,6 +50,18 @@ function Users() {
         <FontAwesomeIcon icon={faUser} /> / users
       </p>
       <div className="grid grid-cols-3 gap-6 ">{content}</div>
+=======
+    <div className="min-h-screen bg-gray-100 ">
+      <NavBarDashboard />
+      <div className='m-10'>
+        <h1 className="text-xl font-semibold mb-2">DashBoard</h1>
+        <p className="text-l mb-10 mt-10">
+          <FontAwesomeIcon icon={faUser} /> / users
+        </p>
+        <div className="grid grid-cols-3 gap-6 ">{content}</div>
+      </div>
+      
+>>>>>>> feature/admin
     </div>
   );
 }

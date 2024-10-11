@@ -18,7 +18,11 @@ import Chat from "./Components/Chat/Chat";
 import SearchResults from "./Pages/SearchResult/SearchResults";
 import { SharedPostsProvider } from "./Contexts/SharedPostsContext";
 import Profile from "./Pages/Profile/Profile";
+<<<<<<< HEAD
 import DashboardComponent from "./Pages/DashBoard/DashboardComponent.jsx";
+=======
+import DashBoard from "./Pages/DashBoard/DashBoard.jsx";
+>>>>>>> feature/admin
 import NotFoundPage from "./Components/Layout/NotFoundPage.jsx";
 import Calendar from "./Components/Home/Calendar.jsx";
 export default function App() {
@@ -71,7 +75,9 @@ export default function App() {
               path: "/Profile/:id",
               element: <Profile />,
             },
+            
             {
+<<<<<<< HEAD
               path: "/DashBoard",
               element: <DashboardComponent />,
             },
@@ -91,6 +97,11 @@ export default function App() {
               path: "calendar",
               element: <Calendar />,
             },
+=======
+              path: "calendar",
+              element: <Calendar />,
+            },
+>>>>>>> feature/admin
           ],
         },
       ],
@@ -98,6 +109,22 @@ export default function App() {
     {
       path: "/Signing",
       element: <Signing />,
+    },
+    {
+      path: "/DashBoard",
+      element: <DashBoard />,
+    },
+    {
+      path: "/Posts",
+      element: <Posts />,
+    },
+    {
+      path: "/Tickets",
+      element: <Tickets />,
+    },
+    {
+      path: "/Users",
+      element: <Users />,
     },
     {
       path: "/ticket",

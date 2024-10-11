@@ -1,4 +1,9 @@
 import React from "react";
+<<<<<<< HEAD
+=======
+import { Link } from "react-router-dom";
+import summaryApi from "../../../common";
+>>>>>>> feature/admin
 
 function RecentUsers({ users }) {
   const recentUsers = () => {
@@ -7,6 +12,7 @@ function RecentUsers({ users }) {
       <div >
         {users.slice(0, 6).map((user, index) => (
           <div key={index} className="flex items-center gap-3">
+<<<<<<< HEAD
             <img
               src={user.posts.profilePic}
               alt={`${user.name}'s profile`}
@@ -19,6 +25,20 @@ function RecentUsers({ users }) {
           <div key={id}>
             <p className="mb-2">• {user.name}</p>
 >>>>>>> 6fe324bd18f90d565bff6ae50d881fcb1cd85d30
+=======
+            <Link to={`/profile/${user._id}`}>
+              <img
+                src={
+                  user ? summaryApi.domain.url + "/" + user.profilePic : ""
+                }
+                alt={`${user.name}'s profile`}
+                className="w-12 h-12 rounded-full border border-gray-300"
+              />
+            </Link>
+            <Link to={`/profile/${user._id}`}>
+              <h4 className="font-semi-bold hover:underline">{user.name}</h4>
+            </Link>
+>>>>>>> feature/admin
           </div>
         ))}
       </div>

@@ -235,10 +235,18 @@ const getSuggestions = async (req, res) => {
 const deleteFriend = async (req, res) => {
   try {
     const friendId = req.params.friendId;
+<<<<<<< HEAD
     const userId = req.user.id;
     console.log(userId);
     console.log(friendId);
 
+=======
+    const userId = req.user.id;  
+    console.log(userId);
+    console.log(friendId);
+
+
+>>>>>>> feature/admin
     const user = await User.findById(userId);
     const friend = await User.findById(friendId);
 
@@ -261,6 +269,10 @@ const deleteFriend = async (req, res) => {
     res.status(500).json({ message: "Internal server error", error });
   }
 };
+<<<<<<< HEAD
+=======
+
+>>>>>>> feature/admin
 
 module.exports = {
   sendFriendRequest,
