@@ -39,6 +39,7 @@ export default function PostCard({ post }) {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
+<<<<<<< HEAD
           await axios.delete(summaryApi.delete.url.replace(":id", post._id), {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -46,6 +47,17 @@ export default function PostCard({ post }) {
           });
 
           Swal.fire("Deleted!", "Your post has been deleted.", "success").then(
+=======
+          await axios.delete(
+            summaryApi.deleteByAdmin.url.replace(":id", post._id),
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+          Swal.fire("Deleted!", "The post has been deleted.", "success").then(
+>>>>>>> d09f6cfc8d58d2d558198c77647cf2b234a42fb3
             () => {
               navigate(0);
             }
@@ -87,11 +99,14 @@ export default function PostCard({ post }) {
             <Link to={`/profile/${post.user._id}`}>
               <h4 className="font-bold hover:underline">{post.user.name}</h4>
             </Link>
-            <Link to={`/posts/${post.reportedBy?._id}`}>
-              <p className="text-gray-500 text-sm hover:underline">
-                reported by {post.reportedBy?.name}
-              </p>
+            <Link to={`/profile/${post.reportedBy?._id}`}>
+              {post.reportedBy?.name && (
+                <p className="text-gray-500 text-sm hover:underline">
+                  reported by {post.reportedBy?.name}
+                </p>
+              )}
             </Link>
+
             <p className="text-gray-500 text-sm">
               {relativeTime} • {post.privacy}
             </p>

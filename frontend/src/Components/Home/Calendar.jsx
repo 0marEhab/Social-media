@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
-import axios from "axios"; // Adjust the base URL according to your backend API
+import axios from "axios";
+import { toast, Toaster } from "react-hot-toast";
 import summaryApi from "../../../common";
+
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(moment());
-  const [events, setEvents] = useState([]); // Store events here
-  const [eventInput, setEventInput] = useState(""); // Input for new event
-  const [selectedDate, setSelectedDate] = useState(null); // Date for new event
+  const [events, setEvents] = useState([]);
+  const [eventInput, setEventInput] = useState("");
+  const [selectedDate, setSelectedDate] = useState(null);
 
   useEffect(() => {
-    // Fetch events when the component mounts or currentMonth changes
     const fetchEvents = async () => {
       try {
         const res = await axios.get(summaryApi.getEvents.url, {
@@ -19,6 +20,7 @@ const Calendar = () => {
         console.log(res.data);
       } catch (error) {
         console.error("Error fetching events:", error);
+        toast.error("Failed to fetch events");
       }
     };
     fetchEvents();
@@ -56,76 +58,94 @@ const Calendar = () => {
         await axios.post(summaryApi.addEvent.url, newEvent, {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
-        setEvents([...events, newEvent]); // Update local events
+        setEvents([...events, newEvent]);
         setEventInput("");
         setSelectedDate(null);
+        toast.success("Event added successfully");
       } catch (error) {
         console.error("Error adding event:", error);
+        toast.error("Failed to add event");
       }
+    } else {
+      toast.error("Please select a date and enter an event name");
     }
   };
 
   return (
-    <div className="max-w-md mx-auto my-10">
-      <div className="flex justify-between items-center mb-4">
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-          onClick={handlePreviousMonth}
-        >
-          Previous
-        </button>
-        <h2 className="text-xl font-bold">
-          {currentMonth.format("MMMM YYYY")}
-        </h2>
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-          onClick={handleNextMonth}
-        >
-          Next
-        </button>
-      </div>
-      <div className="grid grid-cols-7 gap-2 text-center">
-        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-          <div key={day} className="font-bold">
-            {day}
+    <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 p-4 lg:p-8">
+      <Toaster position="top-right" />
+      {/* Calendar and Events Section */}
+      <div className="col-span-1 lg:col-span-2">
+        <div className="bg-white shadow-md rounded-lg p-6">
+          <div className="flex justify-between items-center mb-4">
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+              onClick={handlePreviousMonth}
+            >
+              Previous
+            </button>
+            <h2 className="text-xl font-bold">
+              {currentMonth.format("MMMM YYYY")}
+            </h2>
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+              onClick={handleNextMonth}
+            >
+              Next
+            </button>
           </div>
-        ))}
-        {generateCalendar().map((date) => (
-          <div
-            key={date.format("YYYY-MM-DD")}
-            className={`border p-2 ${
-              selectedDate && selectedDate.isSame(date, "day")
-                ? "bg-blue-200"
-                : ""
-            }`}
-            onClick={() => handleDateClick(date)}
-          >
-            {date.format("D")}
-            {events
-              .filter((event) => event.date === date.format("YYYY-MM-DD"))
-              .map((event, index) => (
-                <div key={index} className="text-sm text-gray-600">
-                  {event.name}
+
+          <div className="grid grid-cols-7 gap-2 text-center">
+            {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+              <div key={day} className="font-bold">
+                {day}
+              </div>
+            ))}
+            {generateCalendar().map((date) => (
+              <div
+                key={date.format("YYYY-MM-DD")}
+                className={`border p-2 rounded-lg cursor-pointer hover:bg-blue-100 transition relative h-24 overflow-hidden ${
+                  selectedDate && selectedDate.isSame(date, "day")
+                    ? "bg-blue-200"
+                    : ""
+                }`}
+                onClick={() => handleDateClick(date)}
+              >
+                <div>{date.format("D")}</div>
+                <div className="overflow-y-auto max-h-16">
+                  {events
+                    .filter((event) => event.date === date.format("YYYY-MM-DD"))
+                    .map((event, index) => (
+                      <div
+                        key={index}
+                        className="text-sm text-gray-600 truncate max-h-6 overflow-hidden whitespace-nowrap"
+                      >
+                        {event.name}
+                      </div>
+                    ))}
                 </div>
-              ))}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <div className="mt-4">
-        <h3 className="font-semibold">Add Event</h3>
-        <input
-          type="text"
-          value={eventInput}
-          onChange={(e) => setEventInput(e.target.value)}
-          className="border p-2 w-full mt-2"
-          placeholder="Event Name"
-        />
-        <button
-          className="bg-green-500 text-white px-4 py-2 mt-2 rounded"
-          onClick={handleAddEvent}
-        >
-          Add Event
-        </button>
+        </div>
+
+        {/* Add Event Section */}
+        <div className="mt-6 bg-white shadow-md rounded-lg p-6">
+          <h3 className="font-semibold mb-4">Add Event</h3>
+          <input
+            type="text"
+            value={eventInput}
+            onChange={(e) => setEventInput(e.target.value)}
+            className="border p-2 w-full mt-2 rounded"
+            placeholder="Event Name"
+          />
+          <button
+            className="bg-green-500 text-white px-4 py-2 mt-2 rounded w-full"
+            onClick={handleAddEvent}
+          >
+            Add Event
+          </button>
+        </div>
       </div>
     </div>
   );

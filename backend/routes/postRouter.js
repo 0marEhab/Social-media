@@ -27,6 +27,7 @@ const {
   getReportedPosts,
   reportPost,
   getReportedPost,
+  deletePostByAdmin,
 } = require("../controllers/post.controller");
 
 // Post Routes
@@ -37,6 +38,7 @@ router.get("/reported/:id", isAuth, getReportedPost);
 router.get("/:id", isAuth, getPostById);
 router.put("/:id", isAuth, upload, updatePost);
 router.delete("/:id", isAuth, deletePost);
+router.delete("/admin/:id", isAuth, deletePostByAdmin);
 router.post("/like/:id", isAuth, likePost);
 router.post("/share/:id", isAuth, sharePost);
 router.post("/reportPost/:id", isAuth, reportPost);
@@ -56,8 +58,8 @@ router.post(
   isAuth,
   likeReplyComment
 );
-router.put("/:id/comment/:commentId/replay/:replyId/edit", isAuth, editReply);
-router.delete("/:id/comment/:commentId/replay/:replyId", isAuth, deleteReply);
+router.put("/:id/comment/:commentId/reply/:replyId/edit", isAuth, editReply);
+router.delete("/:id/comment/:commentId/reply/:replyId", isAuth, deleteReply);
 
 // Nested Replies
 router.post(
