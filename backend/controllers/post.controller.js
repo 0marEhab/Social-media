@@ -47,18 +47,21 @@ const createPost = async (req, res) => {
 const getAllPosts = async (req, res) => {
   try {
     console.log("Fetching posts...");
+
+    const loggedInUser = req.user._id;
     const userFriends = req.user.friends;
 
     const posts = await Post.find({
       $or: [
         { privacy: "public" },
         { privacy: "friends", user: { $in: userFriends } },
+        { user: loggedInUser },
       ],
       privacy: { $ne: "private" },
     })
       .populate("user", "name profilePic")
       .populate("likes", "name")
-      .populate("comments.user", "name")
+      .populate("comments.user", "name profilePic")
       .populate({
         path: "sharedPost",
         populate: { path: "user", select: "name profilePic" },
@@ -77,7 +80,8 @@ const getPostById = async (req, res) => {
     const post = await Post.findById(req.params.id)
       .populate("user", "name profilePic")
       .populate("likes", "name")
-      .populate("comments.user", "name");
+      .populate("comments.user", "name profilePic")
+      .populate("comments.replies.user", "name profilePic");
 
     if (!post) return res.status(404).json({ message: "Post not found" });
     res.status(200).json(post);
@@ -380,14 +384,26 @@ const getRepliesByCommentId = async (req, res) => {
   const postId = req.params.id;
   const commentId = req.params.commentId;
   try {
-    const post = await Post.findById(postId);
+    const post = await Post.findById(postId)
+      .populate({
+        path: "comments.replies.user",
+        select: "name profilePic",
+      })
+      .populate({
+        path: "comments.user",
+        select: "name profilePic",
+      });
+
     if (!post) return res.status(404).json({ message: "Post not found" });
+
     const commentIndex = post.comments.findIndex(
       (comment) => comment._id.toString() === commentId
     );
     if (commentIndex === -1)
       return res.status(404).json({ message: "Comment not found" });
+
     const comment = post.comments[commentIndex];
+
     res.status(200).json(comment.replies);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -698,6 +714,20 @@ const getReportedPost = async (req, res) => {
   }
 };
 
+const deletePostByAdmin = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    await Post.findByIdAndDelete(postId);
+    res.status(200).json({ message: "Post deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createPost,
   getAllPosts,
@@ -723,4 +753,5 @@ module.exports = {
   getReportedPosts,
   reportPost,
   getReportedPost,
+  deletePostByAdmin,
 };
