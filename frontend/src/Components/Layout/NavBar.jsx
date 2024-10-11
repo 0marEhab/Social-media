@@ -21,8 +21,8 @@ export default function NavBar() {
     setIsOpen(!isOpen);
   };
   const handleNavigationAndReload = (e) => {
-    e.preventDefault(); 
-    window.location.href = "/profile"; 
+    e.preventDefault();
+    window.location.href = "/profile";
   };
 
   return (
@@ -30,10 +30,11 @@ export default function NavBar() {
       <div className=" mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Left Icon (Logo) */}
-          <div className="flex-shrink-0">
-            <img className="h-10 w-10" src={Logo} alt="Logo" />
-          </div>
-
+          <Link to={"/"}>
+            <div className="flex-shrink-0">
+              <img className="h-10 w-10 " src={Logo} alt="Logo" />
+            </div>
+          </Link>
           {/* Middle (Search Bar) */}
           <div className="hidden md:flex w-full max-w-md mx-4">
             <SearchBar />
@@ -42,45 +43,16 @@ export default function NavBar() {
           {/* Right Icons */}
           <div className="hidden md:flex  items-center space-x-4">
             <Link
-              to="/"
-              className="p-3 rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
-            >
-              <FontAwesomeIcon icon={faHome} />
-            </Link>
-            <Link
-              to="/calendar"
-              className="p-3 rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
-            >
-              <FontAwesomeIcon icon={faCalendar} />
-            </Link>
-            <Link
-              to="/friend-requests"
-              className="p-3 rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
-            >
-              <FontAwesomeIcon icon={faUserFriends} />
-            </Link>
-            <Link
-              to="/chat"
-              className="p-3 rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
-            >
-              <FontAwesomeIcon icon={faEnvelope} />
-            </Link>
-            <Link
-              to="/profile"
-              onClick={handleNavigationAndReload}
-              className="p-3 rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
-            >
-              <FontAwesomeIcon icon={faUser} />
-            </Link>
-            <Link
               to="/settings"
-              className="p-3 rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
+              className="p-3 rounded-2xl  text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
             >
-              <FontAwesomeIcon icon={faGear} />
+              <FontAwesomeIcon
+                className="hover:rotate-180  duration-500"
+                icon={faGear}
+              />
             </Link>
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
             <button
               onClick={toggleNavbar}
@@ -114,36 +86,6 @@ export default function NavBar() {
 
         {/* Mobile Icons */}
         <div className="flex justify-around items-center">
-          <Link
-            to="/"
-            className="p-3  rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
-          >
-            <FontAwesomeIcon icon={faHome} />
-          </Link>
-          <Link
-            to="/calendar"
-            className="p-3  rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
-          >
-            <FontAwesomeIcon icon={faCalendar} />
-          </Link>
-          <Link
-            to="/friend-requests"
-            className="p-3  rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
-          >
-            <FontAwesomeIcon icon={faUserFriends} />
-          </Link>
-          <Link
-            to="/chat"
-            className="p-3  rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
-          >
-            <FontAwesomeIcon icon={faEnvelope} />
-          </Link>
-          <Link
-            to="/profile"
-            className="p-3  rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
-          >
-            <FontAwesomeIcon icon={faUser} />
-          </Link>
           <Link
             to="/settings"
             className="p-3  rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"

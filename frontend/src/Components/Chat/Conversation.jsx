@@ -19,7 +19,7 @@ export default function Conversation({
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const messagesEndRef = useRef(null);
-  console.log(selectedConversation);
+
   useEffect(() => {
     socket.current.on("getMessage", (data) => {
       setArrivalMessage({
@@ -32,7 +32,9 @@ export default function Conversation({
 
   useEffect(() => {
     arrivalMessage &&
-      selectedConversation?.members.includes(arrivalMessage.sender) &&
+      [selectedConversation.senderId, selectedConversation.receiverId].includes(
+        arrivalMessage.sender
+      ) &&
       setMessages((prev) => [...prev, arrivalMessage]);
   }, [arrivalMessage, selectedConversation]);
 
@@ -69,9 +71,10 @@ export default function Conversation({
       createdAt: Date.now(), // Add createdAt for consistency
     };
 
-    const receiverId = selectedConversation.members.find(
-      (member) => member !== user._id
-    );
+    const receiverId =
+      selectedConversation.senderId === user._id
+        ? selectedConversation.receiverId
+        : selectedConversation.senderId;
 
     socket.current.emit("sendMessage", {
       senderId: user._id,
@@ -97,19 +100,24 @@ export default function Conversation({
       console.log(err);
     }
   };
-  console.log(summaryApi.domain.url + "/" + selectedConversation.avatar);
+
   return (
-    <div className="h-full flex flex-col pt-6 md:p-0">
+    <div className="h-full flex flex-col   pt-6 md:p-0">
       {/* Profile Header */}
-      <div className="flex items-center p-4 border-b">
+      <div className="flex items-center md:mt-8 bg-white shadow-xl shadow-slate-300 p-4 border-b">
         <img
-          src={summaryApi.domain.url + "/" + selectedConversation.avatar}
+          src={
+            summaryApi.domain.url +
+            "/" +
+            selectedConversation.receiverId.profilePic
+          }
           alt={selectedConversation.name}
           className="w-12 h-12 rounded-full"
         />
         <div className="ml-3">
-          <h2 className="font-semibold">{selectedConversation.name}</h2>
-          <p className="text-sm text-green-500">Online</p>
+          <h2 className="font-semibold">
+            {selectedConversation.receiverId.name}
+          </h2>
         </div>
         <div>
           <button

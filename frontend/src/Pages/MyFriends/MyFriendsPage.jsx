@@ -33,15 +33,16 @@ export default function MyFriendsPage() {
     fetchFriends();
   }, []);
 
-
   const handleRemoveFriend = (friendId) => {
-    setFriends((prevFriends) => prevFriends.filter(friend => friend._id !== friendId));
-    setSelectedFriendId(null); 
+    setFriends((prevFriends) =>
+      prevFriends.filter((friend) => friend._id !== friendId)
+    );
+    setSelectedFriendId(null);
   };
 
   const toggleDeleteOption = (friendId) => {
     setSelectedFriendId((prevId) => (prevId === friendId ? null : friendId));
-  }
+  };
 
   if (loading) {
     return <Loading color={"#666AEC"} />;
@@ -55,13 +56,13 @@ export default function MyFriendsPage() {
     <div className="grid grid-cols-10 gap-10">
       <div className="col-span-10 lg:col-span-6 xl:col-span-7 p-5 md:p-10">
         <SearchBar />
-        <h1 className="text-4xl font-semibold text-center my-5">My Friends</h1>
+        <h1 className="text-4xl font-semibold text-center my-10">My Friends</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
           {friends.map((friend) => (
-            <FriendCard 
-              friend={friend} 
-              key={friend._id} 
-              onRemoveFriend={handleRemoveFriend} 
+            <FriendCard
+              friend={friend}
+              key={friend._id}
+              onRemoveFriend={handleRemoveFriend}
               isDeleteOptionVisible={selectedFriendId === friend._id}
               onToggleDeleteOption={() => toggleDeleteOption(friend._id)}
             />

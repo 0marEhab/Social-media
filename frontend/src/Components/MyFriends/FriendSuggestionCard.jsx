@@ -28,7 +28,7 @@ const FriendSuggestionCard = ({ suggestion, handleFriendRequest }) => {
         </div>
       </Link>
       <button
-        className="rounded-lg p-3 flex items-center justify-center text-xs bg-primary text-black"
+        className="rounded-lg p-3 flex items-center justify-center text-xs bg-primary text-white"
         onClick={() => handleFriendRequest(suggestion._id)}
       >
         <FontAwesomeIcon icon={faUserPlus} />

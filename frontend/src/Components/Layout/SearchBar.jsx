@@ -22,7 +22,7 @@ export default function SearchBar({ value = "" }) {
 
   return (
     <form onSubmit={formik.handleSubmit} className="my-5">
-      <div className=" bg-white text-gray-400 rounded-2xl px-2 py-2 w-[500px] flex space-x-4 items-center justify-between">
+      <div className=" bg-white text-gray-400 rounded-2xl px-10 py-2 w-full flex space-x-4 items-center justify-between">
         <FontAwesomeIcon icon={faSearch} />
         <input
           className="w-full outline-none focus:outline-none"

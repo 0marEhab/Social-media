@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Loading from "../Layout/Loading";
 import summaryApi from "../../../common";
+import { sendFriendRequest } from "../../Utils/friends";
 import axios from "axios";
 import FriendSuggestionCard from "../../Components/MyFriends/FriendSuggestionCard";
+import toast from "react-hot-toast";
 
 export default function RightSideBar() {
   const [loading, setLoading] = useState(true);
@@ -19,7 +21,7 @@ export default function RightSideBar() {
           },
         });
         setSuggestions(response.data);
-        console.log(response.data);
+        
       } catch (error) {
         console.error("Error fetching suggestions:", error);
       } finally {
@@ -29,6 +31,19 @@ export default function RightSideBar() {
 
     fetchSuggestions();
   }, []);
+
+  const handleFriendRequest = async (userId) => {
+
+    try {
+      await sendFriendRequest(userId);
+      setSuggestions((prevSuggestions) =>
+        prevSuggestions.filter((suggestion) => suggestion._id !== userId)
+      );
+      toast.success("Friend request sent!");
+    } catch (error) {
+      toast.error("Failed to send friend request.");
+    }
+  };
 
   return (
     <aside
@@ -53,6 +68,7 @@ w-64 sm:w-72 lg:w-80 p-6 z-40 md:z-0 md:pt-32`}
                 <FriendSuggestionCard
                   key={suggestion._id}
                   suggestion={suggestion}
+                  handleFriendRequest={handleFriendRequest}
                 />
               ))
           )}

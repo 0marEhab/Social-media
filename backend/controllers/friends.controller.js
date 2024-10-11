@@ -49,33 +49,42 @@ const acceptFriendRequest = async (req, res) => {
     const { requesterId } = req.body;
     const userId = req.user.id;
 
+    // Fetch both the user and the requester
     const user = await User.findById(userId);
     const requester = await User.findById(requesterId);
 
+    // Check if both users exist
     if (!user || !requester) {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // Check if the friend request exists
     if (!user.friendRequests.includes(requesterId)) {
       return res.status(400).json({ message: "Friend request does not exist" });
     }
 
+    // Create a new conversation with senderId and receiverId
     const newConversation = new Conversation({
-      members: [userId, requesterId],
+      senderId: userId,
+      receiverId: requesterId,
     });
 
+    // Update the friend requests and friends list
     user.friendRequests.pull(requesterId);
     user.friends.push(requesterId);
 
     requester.requestedFriends.pull(userId);
     requester.friends.push(userId);
 
+    // Save both users and the new conversation
     await user.save();
     await requester.save();
     await newConversation.save();
 
+    // Respond with success
     res.status(200).json({ message: "Friend request accepted" });
   } catch (error) {
+    // Handle any errors
     res.status(500).json({ message: "Internal server error", error });
   }
 };
@@ -226,10 +235,9 @@ const getSuggestions = async (req, res) => {
 const deleteFriend = async (req, res) => {
   try {
     const friendId = req.params.friendId;
-    const userId = req.user.id;  
+    const userId = req.user.id;
     console.log(userId);
     console.log(friendId);
-
 
     const user = await User.findById(userId);
     const friend = await User.findById(friendId);
@@ -253,7 +261,6 @@ const deleteFriend = async (req, res) => {
     res.status(500).json({ message: "Internal server error", error });
   }
 };
-
 
 module.exports = {
   sendFriendRequest,

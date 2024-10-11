@@ -176,7 +176,7 @@ export default function Settings() {
   return (
     <div className="grid grid-cols-10 gap-10">
       <div className="col-span-10 lg:col-span-6 xl:col-span-7 p-5 md:p-10 bg-white shadow-lg rounded-lg">
-        <p className="text-xl md:text-3xl font-semibold mb-8 text-center md:text-start text-gray-800">
+        <p className=" mt-10  text-xl md:text-3xl font-semibold mb-8 text-center md:text-start text-gray-800">
           Account Information
         </p>
         <div className="flex flex-col my-10">
