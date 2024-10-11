@@ -12,8 +12,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import Loading from "../../Components/Layout/Loading";
-import SideBar from '../../Components/DashBoard/SideBar';
 import summaryApi from '../../../common';
+import NavBarDashboard from '../../Components/DashBoard/NavBarDashboard';
 
 function DashBoard() {
   const [posts, setPosts] = useState(0);
@@ -102,29 +102,32 @@ function DashBoard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-10">
-      <SideBar/>
-      <h1 className="text-xl font-semibold mb-2">Dashboard</h1>
-      <p className='text-l mb-6'>
-        <FontAwesomeIcon icon={faHome}/> / Dashboard
-      </p>
-      <div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 mb-20">
-        <DashBoardCard title="Users" number={users.length} icon={faUser}/>
-        <DashBoardCard title="Tickets" number={tickets.length} icon={faTicket}/>
-        <DashBoardCard title="Posts" number={posts} icon={faPager}/>
-      </div>
-       <div className='flex flex-col gap-52 mt-10 md:flex-row '>
-          <div className='w-7/12 '>
-          <RecentUsers users={users}/> 
+      <div className=" min-h-screen bg-gray-100 ">
+        <NavBarDashboard/>
+      <div className='m-10'>
+        <h1 className="text-xl font-semibold m-2">Dashboard</h1>
+        <p className='text-l mt-10 mb-10'>
+          <FontAwesomeIcon icon={faHome}/> / Dashboard
+        </p>
+        <div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 mb-20">
+            <DashBoardCard title="Users" number={users.length} icon={faUser}/>
+            <DashBoardCard title="Tickets" number={tickets.length} icon={faTicket}/>
+            <DashBoardCard title="Posts" number={posts} icon={faPager}/>
           </div>
-          <div className='flex flex-col gap-20 w-1/3 '>
+          <div className='flex flex-col gap-52 mt-10 md:flex-row '>
+            <div className='w-7/12 '>
+            <RecentUsers users={users}/> 
+            </div>
+            <div className='flex flex-col gap-20 w-1/3 '>
               <DashBoardCard title="Likes" number={likes} icon={faHeart}/>
               <DashBoardCard title="Comments" number={comments} icon={faComment}/>
-          </div>
-      </div> 
+            </div>
+          </div> 
+        </div>
       </div>
     </div>
+    
   )
 }
 

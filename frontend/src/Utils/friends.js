@@ -98,3 +98,18 @@ export const handleRejectRequest = async (userId, setReceivedRequests) => {
     toast.error("Failed to reject friend request.");
   }
 };
+export const handleDeleteFriend = async (friendId) => {
+  try {
+    await axios.delete(
+      `http://localhost:3000/api/friends/deleteFriend/${friendId}`,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
+
+    toast.success("Friend Deleted Successfully!");
+  } catch (error) {
+    toast.error("Failed to Delete friend.");
+  }
+};
+

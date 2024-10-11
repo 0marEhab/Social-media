@@ -7,11 +7,11 @@ const upload = require("../middleware/upload");
 const profilePicMulter = require("../middleware/profilePicMulter");
 router.post("/signup", userController.Signup);
 router.post("/login", userController.Login);
-router.post(
-  "/uploadProfilePicture",
-  isAuth, // Ensure user is authenticated
-  upload, // Handle file upload using multer
-  userController.uploadProfilePicture
+router.put(
+  "/update-profile-pic",
+  isAuth,
+  profilePicMulter("profilePic"),
+  userController.updateProfilePic
 );
 router.get("/getUser", isAuth, userController.Profile);
 router.get("/getUserById", isAuth, userController.getUserById);
@@ -19,6 +19,7 @@ router.put("/editUser", isAuth, userController.updateProfile);
 router.get("/getUser/:id", isAuth, userController.getUserProfile);
 router.get("/getUsers", isAuth, userController.getUsers);
 
+router.delete("/deleteProfile", isAuth, userController.deleteAccount);
 router.delete("/deleteUser/:id", isAuth, userController.deleteUserById);
 
 module.exports = router;

@@ -9,6 +9,7 @@ export default function MyFriendsPage() {
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedFriendId, setSelectedFriendId] = useState(null);
 
   useEffect(() => {
     const fetchFriends = async () => {
@@ -32,6 +33,16 @@ export default function MyFriendsPage() {
     fetchFriends();
   }, []);
 
+
+  const handleRemoveFriend = (friendId) => {
+    setFriends((prevFriends) => prevFriends.filter(friend => friend._id !== friendId));
+    setSelectedFriendId(null); 
+  };
+
+  const toggleDeleteOption = (friendId) => {
+    setSelectedFriendId((prevId) => (prevId === friendId ? null : friendId));
+  }
+
   if (loading) {
     return <Loading color={"#666AEC"} />;
   }
@@ -47,7 +58,13 @@ export default function MyFriendsPage() {
         <h1 className="text-4xl font-semibold text-center my-5">My Friends</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
           {friends.map((friend) => (
-            <FriendCard friend={friend} key={friend._id} />
+            <FriendCard 
+              friend={friend} 
+              key={friend._id} 
+              onRemoveFriend={handleRemoveFriend} 
+              isDeleteOptionVisible={selectedFriendId === friend._id}
+              onToggleDeleteOption={() => toggleDeleteOption(friend._id)}
+            />
           ))}
         </div>
       </div>

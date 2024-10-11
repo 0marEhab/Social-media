@@ -11,5 +11,7 @@ router.get('/get', authMiddleware, friendController.getFriends);
 router.get('/myrequests', authMiddleware, friendController.getSentRequests);
 router.delete('/request', authMiddleware, friendController.deleteSentRequest);
 router.get('/suggestions', authMiddleware, friendController.getSuggestions);
+router.delete('/deleteFriend/:friendId', authMiddleware, friendController.deleteFriend);
+
 
 module.exports = router;

@@ -223,6 +223,37 @@ const getSuggestions = async (req, res) => {
     res.status(500).json({ message: "Internal server error", error });
   }
 };
+const deleteFriend = async (req, res) => {
+  try {
+    const friendId = req.params.friendId;
+    const userId = req.user.id;  
+    console.log(userId);
+    console.log(friendId);
+
+
+    const user = await User.findById(userId);
+    const friend = await User.findById(friendId);
+
+    if (!user || !friend) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!user.friends.includes(friendId)) {
+      return res.status(400).json({ message: "Not friends" });
+    }
+
+    user.friends.pull(friendId);
+    friend.friends.pull(userId);
+
+    await user.save();
+    await friend.save();
+
+    res.status(200).json({ message: "Friend removed successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error", error });
+  }
+};
+
 
 module.exports = {
   sendFriendRequest,
@@ -233,4 +264,5 @@ module.exports = {
   getSentRequests,
   deleteSentRequest,
   getSuggestions,
+  deleteFriend,
 };

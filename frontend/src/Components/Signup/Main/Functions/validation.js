@@ -53,5 +53,8 @@ export function validateCountry(country) {
 export function validateName(name) {
   if (!name) return "Name Required";
   if (name.length < 3) return "Name must be at least 3 characters";
+  if (/^\d+$/.test(name)) return "Name cannot be all numbers";
+  if (/^\d/.test(name)) return "Name cannot start with a number";
+
   return "";
 }

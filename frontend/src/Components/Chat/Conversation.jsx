@@ -19,7 +19,7 @@ export default function Conversation({
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const messagesEndRef = useRef(null);
-
+  console.log(selectedConversation);
   useEffect(() => {
     socket.current.on("getMessage", (data) => {
       setArrivalMessage({
@@ -97,13 +97,13 @@ export default function Conversation({
       console.log(err);
     }
   };
-
+  console.log(summaryApi.domain.url + "/" + selectedConversation.avatar);
   return (
     <div className="h-full flex flex-col pt-6 md:p-0">
       {/* Profile Header */}
       <div className="flex items-center p-4 border-b">
         <img
-          src={selectedConversation.avatar}
+          src={summaryApi.domain.url + "/" + selectedConversation.avatar}
           alt={selectedConversation.name}
           className="w-12 h-12 rounded-full"
         />
