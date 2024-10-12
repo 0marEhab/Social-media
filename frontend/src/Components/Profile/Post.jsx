@@ -29,7 +29,7 @@ export default function Post({ post, profilePic, name, user }) {
   const [likeCount, setLikeCount] = useState(examplePost.likes);
   const [menuVisible, setMenuVisible] = useState(false);
   const [showFullContent, setShowFullContent] = useState(false);
-
+  const MAX_WORDS = 10;
   const handleLike = async () => {
     try {
       const response = await axios.post(
@@ -82,9 +82,17 @@ export default function Post({ post, profilePic, name, user }) {
   const maxLines = 3;
   const lines = formattedText.split("\n");
   const shouldShowReadMore = lines.length > maxLines;
+
+  const truncateText = (text) => {
+    const words = text.split(" ");
+    return words.length > MAX_WORDS
+      ? words.slice(0, MAX_WORDS).join(" ") + "..."
+      : text;
+  };
+
   const displayedContent = showFullContent
-    ? formattedText
-    : lines.slice(0, maxLines).join("\n") + (shouldShowReadMore ? "..." : "");
+    ? examplePost.content // Full content if "Read More" is clicked
+    : truncateText(examplePost.content); // Truncated content
 
   return (
     <div className="col-span-1 ">
@@ -155,10 +163,10 @@ export default function Post({ post, profilePic, name, user }) {
         </Link>
 
         <Link to={`/posts/${examplePost.id}`}>
-          {examplePost.media[0] === "text" && (
-            <div className="text-l mb-3 h-48  pt-8 overflow-hidden transform transition-transform duration-300 hover:scale-110">
+          {examplePost.media && (
+            <div className="text-l mb-3 h-28 pt-8 overflow-hidden transform transition-transform duration-300 hover:scale-110">
               <p className="whitespace-pre-line">{displayedContent}</p>
-              {shouldShowReadMore && (
+              {examplePost.content.split(" ").length > MAX_WORDS && (
                 <button
                   className="text-[#8588F0] ml-1"
                   onClick={handleContentToggle}

@@ -18,12 +18,9 @@ export default function Comments({
   userprofile,
 }) {
   // const user = useContext(UserContext);
-  // console.log(user);
-  console.log(userprofile);
 
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState(initialComments);
-  console.log(comments);
 
   const [relativeTimes, setRelativeTimes] = useState([]);
   const [relativeTimesReply, setRelativeTimesReply] = useState([]);
@@ -44,8 +41,6 @@ export default function Comments({
   // const [isLiked, setIsLiked] = useState(
   //   user ? likes?.some((like) => like._id === user._id) : false
   // );
-
-  // console.log(comment.map((comment) => comment));
 
   // useEffect(() => {
   //   if (comment.map((com) => com) && user) {
@@ -228,7 +223,7 @@ export default function Comments({
         );
 
         const replyData = response.data.comments[replyIndex].replies;
-        console.log(response.data.comments[replyIndex].replies);
+
         setComments((prevComments) =>
           prevComments.map((comment) =>
             comment._id === commentId
@@ -248,9 +243,6 @@ export default function Comments({
       toast.error("Reply cannot be empty.");
     }
   };
-  console.log(
-    comments.map((comment) => comment?.replies?.map((reply) => reply?.user))
-  );
 
   return (
     <motion.div

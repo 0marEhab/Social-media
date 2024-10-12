@@ -38,7 +38,7 @@ export default function Profile() {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log(response.data.user, "Steven");
+        
 
         setData(response.data.user);
         setActiveUser(true);
@@ -58,7 +58,7 @@ export default function Profile() {
           },
         });
 
-        console.log(response.data.user, "Steven");
+      
         setData(response.data.user);
         setActiveUser(false);
       } catch (error) {

@@ -41,7 +41,7 @@ const Home = () => {
     };
 
     fetchPosts();
-    console.log("scrolled");
+
 
     window.addEventListener("scroll", handleScroll);
 

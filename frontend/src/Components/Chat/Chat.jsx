@@ -21,7 +21,7 @@ export default function Chat() {
     if (user) {
       socket.current.emit("addUser", user._id);
       socket.current.on("getUsers", (users) => {
-        console.log(users);
+    
       });
     }
   }, [user]);
@@ -41,7 +41,7 @@ export default function Chat() {
       }
     };
     getConversations();
-  }, [user]); // This effect runs whenever `user` changes
+  }, [user]); 
 
   const handleSelectConversation = (conversation) => {
     setSelectedConversation(conversation);

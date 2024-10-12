@@ -17,7 +17,7 @@ const Calendar = () => {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
         setEvents(res.data);
-        console.log(res.data);
+       
       } catch (error) {
         console.error("Error fetching events:", error);
         toast.error("Failed to fetch events");

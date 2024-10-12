@@ -181,10 +181,8 @@ export default function PostCard({ post }) {
       setTimeout(() => {
         navigate(`/posts/${sharedPost._id}`);
       }, 500);
-      if (setSharedPosts) {
-        setSharedPosts((prevPosts) => [...prevPosts, sharedPost]);
-      }
     } catch (error) {
+     
       Swal.fire({
         icon: "error",
         title: "Oops...",

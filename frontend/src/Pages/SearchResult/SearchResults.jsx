@@ -24,7 +24,7 @@ export default function SearchResults() {
         .then((response) => {
           setUsers(response.data.users);
           setPosts(response.data.posts);
-          console.log(response.data);
+      
         })
         .catch((error) =>
           console.error("Error fetching search results:", error)

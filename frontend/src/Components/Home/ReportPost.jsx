@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 const ReportPost = ({ postId, onClose }) => {
   const { user } = useContext(UserContext);
   const [reportReason, setReportReason] = useState("");
-  console.log(postId);
+  
   const navigate = useNavigate();
   const handleReportSubmit = async (e) => {
     e.preventDefault();

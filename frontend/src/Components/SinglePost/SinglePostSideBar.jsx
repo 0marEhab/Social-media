@@ -15,11 +15,11 @@ export default function SinglePostSideBar({
   initialLikes = [],
 }) {
   const { user } = useContext(UserContext);
-  console.log(user);
+ 
 
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState(initialComments);
-  console.log(comments);
+
   const { id } = useParams();
   const [relativeTimes, setRelativeTimes] = useState([]);
   const [relativeTimesReply, setRelativeTimesReply] = useState([]);
@@ -44,7 +44,7 @@ export default function SinglePostSideBar({
     content: "",
   });
 
-  console.log(comments);
+
   const toggleOptions = (commentId) => {
     setShowOptions(showOptions === commentId ? null : commentId);
     setShowReplyOptions({ commentId: null, replyId: null });
@@ -100,7 +100,7 @@ export default function SinglePostSideBar({
             },
           }
         );
-        console.log(response.data.post.comments);
+    
 
         const newCommentData =
           response.data.comment ||
@@ -321,7 +321,7 @@ export default function SinglePostSideBar({
     setShowOptions(null);
     closeEditReplyPopup();
     setShowReplyPopup(false);
-    console.log(`Editing reply ${replyId} in comment ${commentId}`);
+    
 
     try {
       // Send the update request to the server

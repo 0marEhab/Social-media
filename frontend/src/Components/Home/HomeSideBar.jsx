@@ -45,7 +45,7 @@ export default function HomeSideBar() {
               <Link to={"/profile"}>
                 <button className="text-lg text-gray-800 font-bold hover:bg-gray-200 hover:scale-105 transition-all duration-300 p-2 rounded-xl w-full text-left">
                   <FontAwesomeIcon className="mx-3" icon={faUser} />
-                  my Profile
+                  My Profile
                 </button>
               </Link>
               <Link to={"/friends"}>
