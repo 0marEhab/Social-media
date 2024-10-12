@@ -1,10 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { FaRegEnvelope, FaEllipsisV, FaFlag, FaCalendar,FaLinkedin } from "react-icons/fa";
+import {
+  FaRegEnvelope,
+  FaEllipsisV,
+  FaFlag,
+  FaCalendar,
+  FaLinkedin,
+} from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import summaryApi from "../../../common/index";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { sendFriendRequest, handleAcceptRequest, handleDeleteFriend, handleUnsendRequest } from "../../Utils/friends";
+import {
+  sendFriendRequest,
+  handleAcceptRequest,
+  handleDeleteFriend,
+  handleUnsendRequest,
+} from "../../Utils/friends";
 
 export default function Details({
   _id,
@@ -72,50 +83,46 @@ export default function Details({
     if (activeUser.requestedFriends.some((requestID) => requestID === _id)) {
       setFriendStatus("Request Sent");
       setShowCancelOption(true);
-    } 
-    else if (activeUser.friendRequests.some((requestID) => requestID === _id)) {
+    } else if (
+      activeUser.friendRequests.some((requestID) => requestID === _id)
+    ) {
       setFriendStatus("Accept Request");
-    } 
-    else if (friends.some((friend) => friend._id === activeUserId)) {
+    } else if (friends.some((friend) => friend._id === activeUserId)) {
       setFriendStatus("Friends");
       setShowDeleteOption(false);
-    } 
-    else {
+    } else {
       setFriendStatus("Add Friend");
       setShowCancelOption(false);
     }
   };
 
   const handleFriend = async () => {
-      if (friendStatus === "Add Friend") {
-        await sendFriendRequest(_id);
-        setFriendStatus("Request Sent");
-        setSentRequests((prev) => [...prev, { _id }]);
-        toast.success("Friend request sent!");
-      } else if (friendStatus === "Accept Request") {
-        await handleAcceptRequest(_id, setRecivedRequests);
-        setFriendStatus("Friends");
-      } else if (friendStatus === "Request Sent") {
-        await handleUnsendRequest(_id, setSentRequests);
-        setFriendStatus("Add Friend");
-        setShowCancelOption(false);
-        toast.success("Friend request canceled!");
-      }
-  
-  };
-
-  const handleDelete = async () => {
-      await handleDeleteFriend(_id);
-      setFriendStatus("Add Friend");
-      setShowDeleteOption(false);
-   
-  };
-
-  const handleCancelRequest = async () => {
+    if (friendStatus === "Add Friend") {
+      await sendFriendRequest(_id);
+      setFriendStatus("Request Sent");
+      setSentRequests((prev) => [...prev, { _id }]);
+      toast.success("Friend request sent!");
+    } else if (friendStatus === "Accept Request") {
+      await handleAcceptRequest(_id, setRecivedRequests);
+      setFriendStatus("Friends");
+    } else if (friendStatus === "Request Sent") {
       await handleUnsendRequest(_id, setSentRequests);
       setFriendStatus("Add Friend");
       setShowCancelOption(false);
-   
+      toast.success("Friend request canceled!");
+    }
+  };
+
+  const handleDelete = async () => {
+    await handleDeleteFriend(_id);
+    setFriendStatus("Add Friend");
+    setShowDeleteOption(false);
+  };
+
+  const handleCancelRequest = async () => {
+    await handleUnsendRequest(_id, setSentRequests);
+    setFriendStatus("Add Friend");
+    setShowCancelOption(false);
   };
 
   const toggleDeleteOption = () => {
@@ -129,7 +136,7 @@ export default function Details({
   const friendsCount = friends.length;
 
   return (
-    <div className="w-96 bg-white rounded-3xl overflow-hidden border-y-4 border-[#8588F0] shadow-xl shadow-[#8588F0]">
+    <div className="w-96 bg-white rounded-3xl overflow-hidden   shadow-lg shadow-slate-400 ">
       {/* Profile Image */}
       <div className="flex justify-center pt-6">
         <img
@@ -221,65 +228,70 @@ export default function Details({
 
       {/* About Section */}
       <div className="text-left px-10 py-12">
-            <h3 className="text-sm font-semibold text-[#8588F0] font-serif">ABOUT</h3>
-            <div className="flex items-center">
-                <FaFlag size={18} className="mr-3 mt-2" />
-                <p className="text-sm text-gray-600 mt-2 font-semibold">{country}</p>
-            </div>
-            <div className="flex items-center">
-                <FaCalendar size={18} className="mr-3 mt-2" />
-                <p className="text-sm text-gray-600 mt-2 font-semibold">
-                {birthDate.split("T")[0]}
-                </p>
-            </div>
-            {linkedProfile && (
-                <a
-                    href={linkedProfile.startsWith('http') ? linkedProfile : `https://${linkedProfile}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-black mt-2 font-semibold hover:text-blue-500"
-                >
-                    <div className="flex items-center">
-                    <FaLinkedin size={18} className="mr-3 mt-2" />
-                    <p className="text-sm text-gray-600 mt-2 font-semibold">
-                        {linkedProfile}
-                    </p>
-                    </div>
-                </a>
-            )}
-
+        <h3 className="text-sm font-semibold text-[#8588F0] font-serif">
+          ABOUT
+        </h3>
+        <div className="flex items-center">
+          <FaFlag size={18} className="mr-3 mt-2" />
+          <p className="text-sm text-gray-600 mt-2 font-semibold">{country}</p>
         </div>
-
+        <div className="flex items-center">
+          <FaCalendar size={18} className="mr-3 mt-2" />
+          <p className="text-sm text-gray-600 mt-2 font-semibold">
+            {birthDate.split("T")[0]}
+          </p>
+        </div>
+        {linkedProfile && (
+          <a
+            href={
+              linkedProfile.startsWith("http")
+                ? linkedProfile
+                : `https://${linkedProfile}`
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-black mt-2 font-semibold hover:text-blue-500"
+          >
+            <div className="flex items-center">
+              <FaLinkedin size={18} className="mr-3 mt-2" />
+              <p className="text-sm text-gray-600 mt-2 font-semibold">
+                {linkedProfile}
+              </p>
+            </div>
+          </a>
+        )}
+      </div>
 
       {/* Friends List */}
       <div className="px-10 py-4">
-  <Link to="/friends">
-    <h3 className="text-sm font-semibold text-[#8588F0] font-serif mb-4">Friends</h3>
-  </Link>
-  <div className="max-h-[300px] overflow-y-hidden hover:overflow-y-auto  rounded-lg transition-all duration-300"> {/* Scrollbar appears on hover */}
-    {friends.length > 0 ? ( 
-      friends.slice(0, 5).map((friend) => ( 
-        <div 
-          key={friend._id} 
-          className="flex items-center rounded-full p-4 w-full mt-2 cursor-pointer bg-black hover:bg-[#8588F0] hover:text-white" 
-          onClick={() => handleNavigation(friend._id)}
-        >
-          <img
-            className="w-10 h-10 rounded-full object-cover mr-4"
-            src={`${summaryApi.domain.url}/${friend.profilePic}`}
-            alt={`${friend.name}'s profile`}
-          />
-          <p className="text-white">{friend.name}</p>
+        <Link to="/friends">
+          <h3 className="text-sm font-semibold text-[#8588F0] font-serif mb-4">
+            Friends
+          </h3>
+        </Link>
+        <div className="max-h-[300px] overflow-y-hidden hover:overflow-y-auto  rounded-lg transition-all duration-300">
+          {" "}
+          {/* Scrollbar appears on hover */}
+          {friends.length > 0 ? (
+            friends.slice(0, 5).map((friend) => (
+              <div
+                key={friend._id}
+                className="flex items-center rounded-full p-4 w-full mt-2 cursor-pointer bg-black hover:bg-[#8588F0] hover:text-white"
+                onClick={() => handleNavigation(friend._id)}
+              >
+                <img
+                  className="w-10 h-10 rounded-full object-cover mr-4"
+                  src={`${summaryApi.domain.url}/${friend.profilePic}`}
+                  alt={`${friend.name}'s profile`}
+                />
+                <p className="text-white">{friend.name}</p>
+              </div>
+            ))
+          ) : (
+            <p className="text-white mt-2">No friends available</p>
+          )}
         </div>
-      ))
-    ) : (
-      <p className="text-white mt-2">No friends available</p> 
-    )}
-    
-  </div>
-</div>
-
-
+      </div>
     </div>
   );
 }

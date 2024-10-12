@@ -6,7 +6,6 @@ export default function ChatSideBar({
   onSelectConversation,
   user,
 }) {
-  console.log(conversation);
   return (
     <aside className="w-full lg:w-1/4 bg-white border-r border-gray-200 h-full">
       <div className="px-10 py-2">

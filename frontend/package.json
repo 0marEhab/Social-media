@@ -28,6 +28,7 @@
     "react-toastify": "^10.0.5",
     "socket.io-client": "^4.8.0",
     "sweetalert2": "^11.6.13",
+    "sweetalert2-react-content": "^5.0.7",
     "timeago.js": "^4.0.0-beta.3",
     "yup": "^1.4.0"
   },

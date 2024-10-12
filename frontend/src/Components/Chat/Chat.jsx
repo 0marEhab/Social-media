@@ -43,8 +43,6 @@ export default function Chat() {
     getConversations();
   }, [user]); // This effect runs whenever `user` changes
 
-
-  
   const handleSelectConversation = (conversation) => {
     setSelectedConversation(conversation);
     setIsSidebarVisible(false);

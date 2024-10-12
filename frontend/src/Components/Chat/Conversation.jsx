@@ -19,6 +19,29 @@ export default function Conversation({
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const messagesEndRef = useRef(null);
+  const [friend, setFriend] = useState(null);
+
+  useEffect(() => {
+    const friendId = selectedConversation.members.find((m) => m !== user._id);
+
+    const getUser = async () => {
+      try {
+        const res = await axios(
+          summaryApi.getUserById.url + "/?userId=" + friendId,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        setFriend(res.data);
+        console.log(user);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getUser();
+  }, []);
 
   useEffect(() => {
     socket.current.on("getMessage", (data) => {
@@ -32,9 +55,7 @@ export default function Conversation({
 
   useEffect(() => {
     arrivalMessage &&
-      [selectedConversation.senderId, selectedConversation.receiverId].includes(
-        arrivalMessage.sender
-      ) &&
+      selectedConversation?.members.includes(arrivalMessage.sender) &&
       setMessages((prev) => [...prev, arrivalMessage]);
   }, [arrivalMessage, selectedConversation]);
 
@@ -71,10 +92,9 @@ export default function Conversation({
       createdAt: Date.now(), // Add createdAt for consistency
     };
 
-    const receiverId =
-      selectedConversation.senderId === user._id
-        ? selectedConversation.receiverId
-        : selectedConversation.senderId;
+    const receiverId = selectedConversation.members.find(
+      (member) => member !== user._id
+    );
 
     socket.current.emit("sendMessage", {
       senderId: user._id,
@@ -100,24 +120,18 @@ export default function Conversation({
       console.log(err);
     }
   };
-
+  console.log(selectedConversation);
   return (
-    <div className="h-full flex flex-col   pt-6 md:p-0">
+    <div className="h-full flex flex-col pt-6 mt-8 md:p-0 ">
       {/* Profile Header */}
-      <div className="flex items-center md:mt-8 bg-white shadow-xl shadow-slate-300 p-4 border-b">
+      <div className="flex items-center p-4 border-b">
         <img
-          src={
-            summaryApi.domain.url +
-            "/" +
-            selectedConversation.receiverId.profilePic
-          }
-          alt={selectedConversation.name}
+          src={friend && summaryApi.domain.url + "/" + friend.profilePic}
+          alt={friend && friend.name}
           className="w-12 h-12 rounded-full"
         />
         <div className="ml-3">
-          <h2 className="font-semibold">
-            {selectedConversation.receiverId.name}
-          </h2>
+          <h2 className="font-semibold">{friend && friend.name}</h2>
         </div>
         <div>
           <button
@@ -126,12 +140,6 @@ export default function Conversation({
           >
             ← Back
           </button>
-        </div>
-        <div className="ml-auto flex space-x-3">
-          <IoAdd className="text-xl text-gray-500" />
-          <IoCall className="text-xl text-gray-500" />
-          <IoVideocam className="text-xl text-gray-500" />
-          <IoEllipsisHorizontal className="text-xl text-gray-500" />
         </div>
       </div>
 

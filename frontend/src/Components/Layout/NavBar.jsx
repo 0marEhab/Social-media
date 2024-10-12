@@ -11,12 +11,12 @@ import {
   faUser,
   faCalendar,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SearchBar from "./SearchBar";
 
 export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
-
+  const navigate = useNavigate();
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
   };
@@ -24,7 +24,10 @@ export default function NavBar() {
     e.preventDefault();
     window.location.href = "/profile";
   };
-
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/signing");
+  };
   return (
     <nav className="bg-slate-800 border-b   z-10 border-gray-200 shadow-lg fixed w-full -top-1 md:top-0">
       <div className=" mx-auto px-4 sm:px-6 lg:px-8">
@@ -51,12 +54,12 @@ export default function NavBar() {
                 icon={faGear}
               />
             </Link>
-            <Link
-              to="/settings"
+            <button
+              onClick={handleLogout}
               className="p-3 rounded-2xl  text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
             >
               <FontAwesomeIcon icon={faArrowRightFromBracket} />
-            </Link>
+            </button>
           </div>
 
           <div className="md:hidden flex items-center">
@@ -91,13 +94,19 @@ export default function NavBar() {
         </div>
 
         {/* Mobile Icons */}
-        <div className="flex justify-around items-center">
+        <div className="flex justify-center gap-10 items-center">
           <Link
             to="/settings"
             className="p-3  rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
           >
             <FontAwesomeIcon icon={faGear} />
           </Link>
+          <button
+            onClick={handleLogout}
+            className="p-3 rounded-2xl  text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0]"
+          >
+            <FontAwesomeIcon icon={faArrowRightFromBracket} />
+          </button>
         </div>
       </div>
     </nav>

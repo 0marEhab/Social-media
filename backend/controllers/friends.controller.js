@@ -65,8 +65,7 @@ const acceptFriendRequest = async (req, res) => {
 
     // Create a new conversation with senderId and receiverId
     const newConversation = new Conversation({
-      senderId: userId,
-      receiverId: requesterId,
+      members: [userId, requesterId],
     });
 
     // Update the friend requests and friends list
