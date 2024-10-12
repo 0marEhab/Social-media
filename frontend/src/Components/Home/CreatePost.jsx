@@ -49,10 +49,6 @@ export default function CreatePost() {
     return result.join(" ");
   }
 
-  const formattedText = addNewlinesAfterEverySixWordsOrLongWords(content);
-  const maxLines = 3;
-  const lines = formattedText.split("\n");
-
   // Fetch friends when component mounts
   const fetchFriends = async () => {
     try {
@@ -75,7 +71,7 @@ export default function CreatePost() {
   const createPost = async () => {
     try {
       const formData = new FormData();
-      formData.append("content", formattedText);
+      formData.append("content", content);
       formData.append("user", user._id);
 
       // Append image if available
@@ -168,15 +164,15 @@ export default function CreatePost() {
             <img
               src={user ? summaryApi.domain.url + "/" + user.profilePic : ""}
               alt="user-profile"
-              className="w-12 h-12 rounded-lg clickableImage"
+              className="w-12 h-12 object-cover rounded-full border border-gray-300 clickableImage"
             />
           </Link>
           <textarea
             ref={textareaRef}
-            value={formattedText}
+            value={content}
             onInput={handleInput}
             placeholder="What are you thinking?"
-            className="w-full p-3 rounded-lg h-auto focus:outline-none resize-none overflow-hidden"
+            className=" w-[230px] p-3 rounded-lg h-auto focus:outline-none resize-none overflow-hidden"
             rows={1}
           />
         </div>

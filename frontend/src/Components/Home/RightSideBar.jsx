@@ -61,7 +61,7 @@ w-64 sm:w-72 lg:w-80 p-6 z-40 md:z-0 md:pt-32`}
             <p className="text-black text-sm">No suggestions available</p>
           ) : (
             suggestions
-              .slice(0, 3)
+              .slice(0, 7)
               .map((suggestion) => (
                 <FriendSuggestionCard
                   key={suggestion._id}
@@ -71,7 +71,7 @@ w-64 sm:w-72 lg:w-80 p-6 z-40 md:z-0 md:pt-32`}
               ))
           )}
         </div>
-        {suggestions.length > 3 && (
+        {suggestions.length > 7 && (
           <Link
             to="/friends"
             className="text-gray-500 flex justify-center  hover:underline"

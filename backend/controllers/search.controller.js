@@ -9,7 +9,7 @@ exports.searchUsersAndPosts = async (req, res) => {
     }
     const users = await User.find({
       name: { $regex: searchTerm, $options: "i" },
-    }).select("name email profilePicture");
+    }).select("name email profilePic");
 
     const userFriends = req.user.friends;
 

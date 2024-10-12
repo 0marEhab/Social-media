@@ -179,14 +179,14 @@ export default function Settings() {
         <p className="text-xl md:text-3xl font-semibold mb-8 text-center md:text-start text-gray-800">
           Account Information
         </p>
-        <div className="flex flex-col my-10">
-          <div className="flex flex-col md:flex-row gap-6 md:gap-14 items-center md:items-start">
+        <div className="flex  flex-col my-10">
+          <div className="flex  flex-col md:flex-row gap-6 md:gap-14 items-center md:items-start">
             <div
-              className="w-40 md:w-[160px] cursor-pointer"
+              className="w-48 md:w-48 h-48 cursor-pointer"
               onClick={() => fileInputRef.current.click()}
             >
               <img
-                className="w-full h-auto rounded-full shadow-md"
+                className="w-48 h-48 rounded-full shadow-md overflow-hidden object-cover"
                 src={summaryApi.domain.url + "/" + profilePic}
                 alt="Profile"
               />
@@ -195,7 +195,7 @@ export default function Settings() {
               <p className="text-lg md:text-xl font-semibold text-gray-500">
                 Profile Picture
               </p>
-              <div className="flex flex-col md:flex-row gap-4 md:gap-8">
+              <div className=" flex flex-col md:flex-row gap-4 md:gap-8">
                 <input
                   type="file"
                   accept="image/*"

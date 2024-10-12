@@ -7,14 +7,14 @@ import { Link } from "react-router-dom";
 const FriendSuggestionCard = ({ suggestion, handleFriendRequest }) => {
   return (
     <div
-      className="flex items-center justify-between gap-3 lg:gap-10 my-4 "
+      className="flex hover:bg-slate-200 duration-150 px-4 py-2 rounded-md items-center justify-between gap-3 lg:gap-10 my-2 "
       key={suggestion._id}
     >
       <Link to={`/profile/${suggestion?._id}`}>
         <div className="flex space-x-2">
           <img
             src={summaryApi.domain.url + "/" + suggestion.profilePic}
-            className="rounded-xl w-10 object-cover"
+            className="rounded-xl w-10 h-10 object-cover"
             alt={suggestion.name}
           />
           <div className="flex flex-col items-start justify-center  gap-0.5">

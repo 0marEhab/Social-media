@@ -96,7 +96,7 @@ const Home = () => {
         >
           <h3 className="text-lg font-semibold text-gray-600">Friends</h3>
           <div className="flex w-[200px] flex-col gap-3">
-            {friends.map((friend) => (
+            {friends.slice(0, 7).map((friend) => (
               <Link to={`/profile/${friend._id}`}>
                 <button
                   key={friend._id}
@@ -111,6 +111,14 @@ const Home = () => {
                 </button>
               </Link>
             ))}
+            {friends.length > 7 && (
+          <Link
+            to="/friends"
+            className="text-gray-500 flex justify-center  hover:underline"
+          >
+            Show More
+          </Link>
+        )}
           </div>
         </div>
       </div>

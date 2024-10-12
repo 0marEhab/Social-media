@@ -275,7 +275,7 @@ export default function Post() {
         {post.media?.photo ? (
           <img
             src={`${summaryApi.domain.url}/uploads/${post.media.photo}`}
-            className="clickableImage w-full max-h-96 rounded-2xl"
+            className="clickableImage w-full max-h-96 object-cover rounded-2xl"
             alt="post-img"
             onClick={popUpImage}
           />

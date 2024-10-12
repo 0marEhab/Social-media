@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import SearchBar from "../../Components/Layout/SearchBar";
 import PostCard from "../../Components/Home/PostCard";
+import summaryApi from "../../../common";
 
 export default function SearchResults() {
   const location = useLocation();
@@ -63,7 +64,7 @@ export default function SearchResults() {
             users.map((user) => (
               <div className="flex items-center border-b p-5" key={user._id}>
                 <img
-                  src={user.profilePic}
+                  src={summaryApi.domain.url + "/" + user.profilePic}
                   alt={user.name}
                   className="w-10 h-10 rounded-full mr-4"
                 />
