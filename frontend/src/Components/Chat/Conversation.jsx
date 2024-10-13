@@ -131,7 +131,9 @@ export default function Conversation({
           className="w-12 h-12 rounded-full"
         />
         <div className="ml-3">
-          <h2 className="font-semibold">{friend && friend.name}</h2>
+          <h2 className="font-semibold dark:text-white">
+            {friend && friend.name}
+          </h2>
         </div>
         <div>
           <button
@@ -170,14 +172,14 @@ export default function Conversation({
       </div>
 
       {/* Typing and Input Section */}
-      <div className="sticky bottom-0 bg-white p-4 border-t w-full">
+      <div className="sticky bottom-0 bg-white dark:bg-darkBg p-4 border-t w-full">
         <div className="flex items-center">
           <button className="text-blue-500">+</button>
           <form onSubmit={handleMessage} className="w-full mx-4">
             <input
               type="text"
               placeholder="Start typing..."
-              className="flex-1 w-full px-4 py-2 border rounded-full"
+              className="flex-1 w-full px-4 py-2 border dark:bg-darkBg dark:text-white rounded-full"
               onChange={(e) => setNewMessage(e.target.value)}
               value={newMessage}
             />

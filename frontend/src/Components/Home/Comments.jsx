@@ -249,7 +249,7 @@ export default function Comments({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-white rounded-t-3xl m-auto lg:w-[80%] max-w-7xl overflow-y-auto px-8 py-12 shadow-lg"
+      className="bg-white rounded-t-3xl dark:bg-[#1D1D1D] m-auto lg:w-[80%] max-w-7xl overflow-y-auto px-8 py-12 shadow-lg"
     >
       <div className="w-full flex justify-end mb-6">
         <motion.img
@@ -260,7 +260,7 @@ export default function Comments({
         />
       </div>
 
-      <h2 className="text-3xl font-bold text-gray-800 mb-8">
+      <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-8">
         Comments ({comments.length})
       </h2>
 
@@ -274,9 +274,9 @@ export default function Comments({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="mb-6 flex flex-col justify-between items-start p-6 rounded-lg shadow-lg bg-gray-50 hover:bg-gray-100 transition-all duration-300"
+              className="mb-6 flex flex-col justify-between dark:bg-darkBg items-start p-6 rounded-lg shadow-lg bg-gray-50 hover:bg-gray-100 transition-all duration-300"
             >
-              <div className="flex items-center justify-between w-full mb-4">
+              <div className="flex items-center  justify-between w-full mb-4">
                 <div className="flex items-center gap-5">
                   <motion.img
                     whileHover={{ scale: 1.1 }}
@@ -288,7 +288,7 @@ export default function Comments({
                   />
                   <div>
                     <div className="flex items-center justify-between w-full">
-                      <div className="text-gray-800 font-semibold text-lg">
+                      <div className="text-gray-800 dark:text-white font-semibold text-lg">
                         {comment?.user?.name}
                       </div>
                     </div>
@@ -332,24 +332,26 @@ export default function Comments({
                   </AnimatePresence>
                 </motion.button>
               </div>
-              <p className="text-gray-700 mt-2 text-lg">{comment.content}</p>
+              <p className="text-gray-700 dark:text-white mt-2 text-lg">
+                {comment.content}
+              </p>
 
               {/* Like and reply buttons */}
-              <div className="flex items-center gap-6 mt-4 ml-[60px]">
+              <div className="flex items-center gap-2 lg:gap-6 mt-4 ml-[60px]">
                 <motion.button
                   whileHover={{ scale: 1.1 }}
-                  className="flex items-center gap-2 text-gray-500 hover:text-red-500 transition duration-300"
+                  className="flex items-center gap-1 lg:gap-2 text-gray-500 hover:text-red-500 transition duration-300"
                 >
                   <AiOutlineHeart className="text-xl" />
-                  <span>Like</span>
+                  <span className=" w-9">Like</span>
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.1 }}
-                  className="flex items-center gap-2 text-gray-500 hover:text-blue-500 transition duration-300"
+                  className="flex items-center gap-1 lg:gap-2 text-gray-500 hover:text-blue-500 transition duration-300"
                   onClick={() => handleReply(comment._id)}
                 >
                   <BiComment className="text-xl" />
-                  <span>Reply</span>
+                  <span className=" w-12">Reply</span>
                 </motion.button>
               </div>
 
@@ -368,7 +370,7 @@ export default function Comments({
                       value={replyContent}
                       onChange={(e) => setReplyContent(e.target.value)}
                       placeholder="Write a reply..."
-                      className="border p-2 w-full rounded-md shadow-sm focus:ring-2 focus:ring-blue-300 outline-none transition duration-200"
+                      className="border p-2 w-full dark:bg-darkBg dark:text-white rounded-md shadow-sm focus:ring-2 focus:ring-blue-300 outline-none transition duration-200"
                     />
                     <motion.button
                       whileHover={{ scale: 1.05 }}
@@ -392,7 +394,7 @@ export default function Comments({
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3 }}
-                      className="flex gap-5 items-start bg-white p-4 rounded-lg shadow-sm"
+                      className="flex gap-5 items-start dark:bg-[#1d1d1d] bg-white p-4 rounded-lg shadow-sm"
                     >
                       <motion.img
                         whileHover={{ scale: 1.1 }}
@@ -403,10 +405,12 @@ export default function Comments({
                         className="w-10 h-10 rounded-full border-2 border-gray-300"
                       />
                       <div className="flex-grow">
-                        <p className="text-gray-800 font-semibold">
+                        <p className="text-gray-800 dark:text-white font-semibold">
                           {reply?.user?.name}
                         </p>
-                        <p className="text-gray-600 mt-1">{reply?.content}</p>
+                        <p className="text-gray-600 dark:text-white mt-1">
+                          {reply?.content}
+                        </p>
                         <p className="text-gray-400 text-sm mt-2">
                           {relativeTimesReply[index] &&
                             relativeTimesReply[index][replyIndex]}
@@ -446,14 +450,14 @@ export default function Comments({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="flex justify-between w-full gap-4 mt-8 relative"
+        className="flex justify-between w-full gap-4 mt-auto relative"
       >
         <input
           type="text"
           placeholder="Write a comment..."
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
-          className="bg-gray-100 w-full h-12 rounded-full p-4 outline-none text-gray-800 focus:ring-2 focus:ring-blue-300 transition duration-200"
+          className="bg-gray-100 dark:bg-darkBg dark:text-white w-full h-12 rounded-full p-4 outline-none text-gray-800 focus:ring-2 focus:ring-blue-300 transition duration-200"
         />
         <motion.button
           whileHover={{ scale: 1.1 }}
@@ -464,7 +468,6 @@ export default function Comments({
           <AiOutlineSend className="text-xl" />
         </motion.button>
       </motion.div>
-
       {/* Edit Comment Popup */}
       <AnimatePresence>
         {editCommentId && (
@@ -480,13 +483,13 @@ export default function Comments({
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               transition={{ duration: 0.3 }}
-              className="bg-white p-8 rounded-lg shadow-xl w-full max-w-lg"
+              className="bg-white dark:bg-[#1d1d1d] p-8 rounded-lg shadow-xl w-full max-w-lg"
             >
               <h2 className="text-2xl font-bold mb-6 text-gray-800">
                 Edit Comment
               </h2>
               <textarea
-                className="w-full p-3 border border-gray-300 rounded-lg mb-6 focus:ring-2 focus:ring-blue-300 outline-none transition duration-200"
+                className="w-full p-3 border dark:bg-[#1d1d1d] dark:text-white border-gray-300 rounded-lg mb-6 focus:ring-2 focus:ring-blue-300 outline-none transition duration-200"
                 value={editCommentContent}
                 onChange={(e) => setEditCommentContent(e.target.value)}
                 rows="4"

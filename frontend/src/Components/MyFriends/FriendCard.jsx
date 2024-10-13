@@ -1,24 +1,33 @@
 import React from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck,faRemove } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faRemove } from "@fortawesome/free-solid-svg-icons";
 import summaryApi from "../../../common/index";
-import { handleDeleteFriend } from '../../Utils/friends';
+import { handleDeleteFriend } from "../../Utils/friends";
 
-export default function FriendCard({ friend, onRemoveFriend, isDeleteOptionVisible, onToggleDeleteOption }) {
+export default function FriendCard({
+  friend,
+  onRemoveFriend,
+  isDeleteOptionVisible,
+  onToggleDeleteOption,
+}) {
   const handleDelete = async () => {
     await handleDeleteFriend(friend._id);
     onRemoveFriend(friend._id);
   };
 
   return (
-    <div className="bg-white rounded-3xl p-5 flex flex-col justify-center items-center">
+    <div className="bg-white dark:bg-darkBg dark:shadow-sm dark:shadow-slate-300 rounded-3xl p-5 flex flex-col justify-center items-center">
       <img
         src={friend._id ? `${summaryApi.domain.url}/${friend.profilePic}` : ""}
         alt={friend.name}
         className="w-16 h-16 rounded-2xl object-cover"
       />
-      <h6 className="mt-3 font-bold text-gray-900">{friend.name}</h6>
-      <p className="text-sm font-normal text-gray-500">{friend.email}</p>
+      <h6 className="mt-3 font-bold text-gray-900 dark:text-bg">
+        {friend.name}
+      </h6>
+      <p className="text-sm font-normal text-gray-500 dark:text-[#AFAFAF]">
+        {friend.email}
+      </p>
 
       {!isDeleteOptionVisible ? (
         <button

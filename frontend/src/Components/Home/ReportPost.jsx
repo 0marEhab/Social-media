@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 const ReportPost = ({ postId, onClose }) => {
   const { user } = useContext(UserContext);
   const [reportReason, setReportReason] = useState("");
-  
+
   const navigate = useNavigate();
   const handleReportSubmit = async (e) => {
     e.preventDefault();
@@ -54,7 +54,7 @@ const ReportPost = ({ postId, onClose }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+      <div className="bg-white dark:bg-darkBg p-6 rounded-lg shadow-lg w-80">
         <h3 className="text-lg font-bold mb-4">Report Post</h3>
         <form
           onSubmit={handleReportSubmit}

@@ -136,7 +136,7 @@ export default function Details({
   const friendsCount = friends.length;
 
   return (
-    <div className="w-96 bg-white rounded-3xl overflow-hidden   shadow-lg shadow-slate-400 ">
+    <div className="w-96 bg-white rounded-3xl dark:bg-darkBg dark:text-bg   overflow-hidden   shadow-lg shadow-slate-400 ">
       {/* Profile Image */}
       <div className="flex justify-center pt-6">
         <img

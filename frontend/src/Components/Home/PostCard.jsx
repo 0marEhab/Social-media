@@ -182,7 +182,6 @@ export default function PostCard({ post }) {
         navigate(`/posts/${sharedPost._id}`);
       }, 500);
     } catch (error) {
-     
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -194,20 +193,20 @@ export default function PostCard({ post }) {
   const popUpImage = () => {
     Swal.fire({
       imageUrl: summaryApi.domain.url + "/uploads/" + post.media.photo,
-      imageAlt: "Image Preview", // Adding alt text for accessibility
-      width: "80%", // Set the width of the popup to 80% of the viewport width
-      heightAuto: false, // Disable automatic height adjustment
-      background: "transparent", // Transparent background
-      padding: "0", // Remove padding around the image
+      imageAlt: "Image Preview",
+      width: "80%",
+      heightAuto: false,
+      background: "transparent",
+      padding: "0",
       customClass: {
-        popup: "custom-popup", // Custom class for the popup
-        image: "custom-image", // Custom class for the image
+        popup: "custom-popup",
+        image: "custom-image",
       },
-      showCloseButton: true, // Show close button
+      showCloseButton: true,
       closeButtonHtml:
-        '<span style="font-size: 30px; color: white;">&times;</span>', // Customize close button color
-      showConfirmButton: false, // Hide confirm button
-      backdrop: "rgba(0,0,0,0.8)", // Darker semi-transparent backdrop
+        '<span style="font-size: 30px; color: white;">&times;</span>',
+      showConfirmButton: false,
+      backdrop: "rgba(0,0,0,0.8)",
     });
   };
 
@@ -215,6 +214,10 @@ export default function PostCard({ post }) {
 
   const handleComments = () => {
     setShowComments(!showComments);
+
+    // Check if the dark mode class is applied to the root element (e.g., <html>)
+    const isDarkMode = document.documentElement.classList.contains("dark");
+
     MySwal.fire({
       html: (
         <Comments
@@ -230,7 +233,7 @@ export default function PostCard({ post }) {
       customClass: {
         popup: "custom-popup",
       },
-      background: "#FBFCFE", // Darken the background
+      background: isDarkMode ? "#1A1A1A" : "#FFFFFF", // Conditional background based on mode
       didClose: () => setShowComments(false), // Reset state on close
     });
   };
@@ -240,7 +243,7 @@ export default function PostCard({ post }) {
   };
   if (post.user) {
     return (
-      <div className="bg-[#FBFCFE] p-6 rounded-lg shadow-lg w-full max-w-2xl mx-auto my-6 transition hover:shadow-xl">
+      <div className="bg-[#FBFCFE] dark:bg-[#1D1D1D] duration-300 dark:text-white p-6 rounded-lg shadow-sm   w-full max-w-2xl mx-auto my-6 transition dark:shadow-slate-300">
         {/* Post Header */}
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-3">
@@ -316,10 +319,12 @@ export default function PostCard({ post }) {
               Your browser does not support the video tag.
             </video>
           )}
-          <p className="text-gray-600 mb-4 leading-relaxed">{post.content}</p>
+          <p className="text-gray-600 mb-4 leading-relaxed dark:text-bg">
+            {post.content}
+          </p>
           <Link
             to={`/posts/${post._id}`}
-            className="text-blue-600 font-semibold hover:underline"
+            className="text-blue-600 dark:text-primary font-semibold hover:underline"
           >
             READ MORE
           </Link>
@@ -353,31 +358,6 @@ export default function PostCard({ post }) {
             Share
           </button>
         </div>
-        {/* {showComments && (
-          <div
-            className="z-50 bg-transparent rounded-lg p-6 w-full max-w-3xl relative transform transition-transform duration-300 ease-out scale-95 animate-scaleIn"
-            style={{
-              top: `calc(50% + ${window.scrollY}px)`, // Centering with scroll offset
-              left: `calc(30% + ${window.scrollX}px)`,
-              transform: "translate(-50%, -50%)", // Center horizontally
-              width: "80%", // Adjust width if needed
-              maxWidth: "600px",
-            }}
-            onClick={(e) => e.stopPropagation()} // Prevent modal close when clicking inside
-          >
-            <button
-              onClick={closeModal}
-              className="absolute top-7 text-3xl right-[-120px] text-black  hover:text-gray-700"
-            >
-              &times;
-            </button>
-            <SinglePostSideBar
-              initialLikes={post.likes}
-              initialComments={post.comments}
-              id={post._id}
-            />
-          </div>
-        )} */}
       </div>
     );
   }

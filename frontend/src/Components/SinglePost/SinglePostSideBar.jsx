@@ -15,7 +15,6 @@ export default function SinglePostSideBar({
   initialLikes = [],
 }) {
   const { user } = useContext(UserContext);
- 
 
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState(initialComments);
@@ -43,7 +42,6 @@ export default function SinglePostSideBar({
     replyId: null,
     content: "",
   });
-
 
   const toggleOptions = (commentId) => {
     setShowOptions(showOptions === commentId ? null : commentId);
@@ -100,7 +98,6 @@ export default function SinglePostSideBar({
             },
           }
         );
-    
 
         const newCommentData =
           response.data.comment ||
@@ -321,7 +318,6 @@ export default function SinglePostSideBar({
     setShowOptions(null);
     closeEditReplyPopup();
     setShowReplyPopup(false);
-    
 
     try {
       // Send the update request to the server
@@ -364,7 +360,7 @@ export default function SinglePostSideBar({
   };
 
   return (
-    <div className="bg-gray-900 rounded-t-3xl m-auto lg:w-[800px] overflow-y-auto p-8 shadow-lg">
+    <div className="bg-gray-900 dark:bg-darkBg dark:shadow-sm dark:shadow-slate-300 rounded-t-3xl m-auto lg:w-[800px] overflow-y-auto p-8 shadow-lg">
       <div className="w-full flex justify-end mb-4">
         <Link to={`/profile/${user._id}`}>
           <img
@@ -387,7 +383,7 @@ export default function SinglePostSideBar({
           >
             {editReplyData.commentId && (
               <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                <div className="bg-gray-800 p-6 rounded-md w-11/12 md:w-1/2">
+                <div className="bg-gray-800 dark:bg-darkBg  p-6 rounded-md w-11/12 md:w-1/2">
                   <h2 className="text-xl font-bold text-white mb-4">
                     Edit Reply
                   </h2>
@@ -615,7 +611,7 @@ export default function SinglePostSideBar({
           placeholder="Write a comment..."
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
-          className="flex-grow p-2 bg-gray-800 text-white rounded-md focus:outline-none border border-gray-700"
+          className="flex-grow p-2 bg-gray-800 dark:bg-darkBg text-white rounded-md focus:outline-none border border-gray-700"
         />
         <button onClick={handleCommentSubmit}>
           <AiOutlineSend className="absolute right-8 top-[30%] text-primary" />
@@ -625,7 +621,7 @@ export default function SinglePostSideBar({
       {/* Popup for editing a comment */}
       {editCommentId && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-gray-800 p-6 rounded-md w-11/12 md:w-1/2">
+          <div className="bg-gray-800 dark:bg-darkBg p-6 rounded-md w-11/12 md:w-1/2">
             <h2 className="text-xl font-bold text-white mb-4">Edit Comment</h2>
             <textarea
               className="w-full p-2 text-black border border-gray-300 rounded-md mb-4"

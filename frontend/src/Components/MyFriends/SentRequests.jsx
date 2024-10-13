@@ -7,7 +7,7 @@ export default function SentRequests({ sentRequests, setSentRequests }) {
   return (
     <div>
       {sentRequests.length === 0 ? (
-        <p>No sent requests</p>
+        <p className="text-center">No sent requests</p>
       ) : (
         sentRequests.map((request) => (
           <div
@@ -26,7 +26,7 @@ export default function SentRequests({ sentRequests, setSentRequests }) {
                   <p className="text-sm text-gray-500">{request.email}</p>
                 </div>
               </div>
-           </Link>
+            </Link>
             <button
               className="bg-red-500 text-white p-2 rounded-full"
               onClick={() => handleUnsendRequest(request._id, setSentRequests)}

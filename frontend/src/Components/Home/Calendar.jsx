@@ -17,7 +17,6 @@ const Calendar = () => {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
         setEvents(res.data);
-       
       } catch (error) {
         console.error("Error fetching events:", error);
         toast.error("Failed to fetch events");
@@ -76,15 +75,15 @@ const Calendar = () => {
       <Toaster position="top-right" />
       {/* Calendar and Events Section */}
       <div className="col-span-1 lg:col-span-2">
-        <div className="bg-white shadow-md rounded-lg p-6">
+        <div className="bg-white dark:bg-darkBg shadow-md rounded-lg p-6">
           <div className="flex justify-between items-center mb-4">
             <button
-              className="bg-blue-500 text-white px-4 py-2 rounded"
+              className="bg-blue-500 text-white  px-4 py-2 rounded"
               onClick={handlePreviousMonth}
             >
               Previous
             </button>
-            <h2 className="text-xl font-bold">
+            <h2 className="text-xl font-bold text-black dark:text-white">
               {currentMonth.format("MMMM YYYY")}
             </h2>
             <button
@@ -97,28 +96,30 @@ const Calendar = () => {
 
           <div className="grid grid-cols-7 gap-2 text-center">
             {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-              <div key={day} className="font-bold">
+              <div key={day} className="font-bold text-black dark:text-white">
                 {day}
               </div>
             ))}
             {generateCalendar().map((date) => (
               <div
                 key={date.format("YYYY-MM-DD")}
-                className={`border p-2 rounded-lg cursor-pointer hover:bg-blue-100 transition relative h-24 overflow-hidden ${
+                className={`border p-2 rounded-lg cursor-pointer hover:bg-slate-800 transition relative h-24 overflow-hidden ${
                   selectedDate && selectedDate.isSame(date, "day")
-                    ? "bg-blue-200"
+                    ? "bg-slate-900"
                     : ""
                 }`}
                 onClick={() => handleDateClick(date)}
               >
-                <div>{date.format("D")}</div>
+                <div className="text-lg font-bold dark:text-white text-black ">
+                  {date.format("D")}
+                </div>
                 <div className="overflow-y-auto max-h-16">
                   {events
                     .filter((event) => event.date === date.format("YYYY-MM-DD"))
                     .map((event, index) => (
                       <div
                         key={index}
-                        className="text-sm text-gray-600 truncate max-h-6 overflow-hidden whitespace-nowrap"
+                        className="text-sm text-gray-600 dark:text-bg truncate max-h-6 overflow-hidden whitespace-nowrap"
                       >
                         {event.name}
                       </div>
@@ -130,13 +131,13 @@ const Calendar = () => {
         </div>
 
         {/* Add Event Section */}
-        <div className="mt-6 bg-white shadow-md rounded-lg p-6">
-          <h3 className="font-semibold mb-4">Add Event</h3>
+        <div className="mt-6 bg-white dark:bg-darkBg shadow-md rounded-lg p-6">
+          <h3 className="font-semibold mb-4 dark:text-white">Add Event</h3>
           <input
             type="text"
             value={eventInput}
             onChange={(e) => setEventInput(e.target.value)}
-            className="border p-2 w-full mt-2 rounded"
+            className="border p-2 w-full mt-2 rounded dark:bg-darkBg dark:text-white"
             placeholder="Event Name"
           />
           <button

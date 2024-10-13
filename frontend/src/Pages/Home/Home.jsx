@@ -42,7 +42,6 @@ const Home = () => {
 
     fetchPosts();
 
-
     window.addEventListener("scroll", handleScroll);
 
     return () => {
@@ -67,15 +66,16 @@ const Home = () => {
     };
     fetchFriends();
   }, []);
+  // Check for user's system preference on page load and apply it
 
   return (
-    <div className="flex justify-between bg-gray-100 z-0 min-h-screen">
+    <div className="flex justify-between  bg-gray-100 z-50 min-h-screen">
       {/* Left Sidebar */}
-      <div className=" md:flex md:w-1/4 bg-white shadow-lg">
+      <div className=" dark:bg-darkBg md:flex md:w-1/4 bg-white shadow-lg">
         <HomeSideBar />
       </div>
 
-      <div className="flex justify-between items-start w-full md:w-3/4 lg:w-1/2 mx-auto p-8 space-x-8 overflow-hidden">
+      <div className="flex justify-between items-start w-full md:w-3/4 lg:w-1/2 mx-auto p-8 dark:bg-darkBg bg-gray-100 space-x-8 overflow-hidden">
         <div
           className={`flex flex-col w-full space-y-6 transition-all duration-300 ${
             isFriendsVisible ? "lg:w-2/3" : "lg:translate-x-40"
@@ -90,17 +90,19 @@ const Home = () => {
         </div>
 
         <div
-          className={`hidden md:flex flex-col space-y-5 bg-white rounded-2xl shadow-md p-6 transition-transform duration-300 ${
+          className={`hidden md:flex flex-col space-y-5 bg-white rounded-2xl dark:bg-darkBg dark:shadow-slate-300 shadow-md p-6 transition-transform duration-300 ${
             isFriendsVisible ? "translate-x-0" : "translate-x-[500px] "
           }`}
         >
-          <h3 className="text-lg font-semibold text-gray-600">Friends</h3>
+          <h3 className="text-lg font-semibold dark:text-bg  text-gray-600">
+            Friends
+          </h3>
           <div className="flex w-[200px] flex-col gap-3">
             {friends.slice(0, 7).map((friend) => (
               <Link to={`/profile/${friend._id}`}>
                 <button
                   key={friend._id}
-                  className="text-base flex justify-start p-2 w-[200px] rounded-lg bg-gray-50 hover:bg-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300 text-gray-700 font-semibold"
+                  className="text-base flex justify-start p-2 w-[200px] rounded-lg dark:bg-darkBg dark:shadow-slate-300 dark:text-bg bg-gray-50 hover:bg-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300 text-gray-700 font-semibold"
                 >
                   <img
                     src={summaryApi.domain.url + "/" + friend.profilePic}
@@ -112,18 +114,18 @@ const Home = () => {
               </Link>
             ))}
             {friends.length > 7 && (
-          <Link
-            to="/friends"
-            className="text-gray-500 flex justify-center  hover:underline"
-          >
-            Show More
-          </Link>
-        )}
+              <Link
+                to="/friends"
+                className="text-gray-500 flex justify-center  hover:underline"
+              >
+                Show More
+              </Link>
+            )}
           </div>
         </div>
       </div>
 
-      <div className="hidden lg:flex w-1/4 bg-white shadow-lg">
+      <div className="hidden lg:flex w-1/4 dark:bg-darkBg bg-white shadow-lg">
         <RightSideBar />
       </div>
     </div>

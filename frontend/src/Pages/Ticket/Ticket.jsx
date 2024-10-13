@@ -55,9 +55,9 @@ const Ticket = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex justify-center items-center p-4 sm:p-8 md:p-16 bg-bg">
-      <div className="w-full max-w-2xl mx-auto border rounded-xl shadow p-6 sm:p-8 md:p-10 bg-white">
-        <h2 className="text-xl sm:text-2xl font-semibold mb-4">
+    <div className="w-full min-h-screen flex justify-center items-center p-4 sm:p-8 md:p-16 bg-bg dark:bg-[#0D0D0D]">
+      <div className="w-full max-w-2xl mx-auto border rounded-xl shadow p-6 sm:p-8 md:p-10 bg-white dark:bg-darkBg">
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4 dark:text-white">
           Submit a Ticket
         </h2>
         <Formik
@@ -78,7 +78,9 @@ const Ticket = () => {
 
               <TextArea id="message" label="Message" />
 
-              <label className="block text-sm font-medium mb-2">Image</label>
+              <label className="block text-sm font-medium mb-2 dark:text-white">
+                Image
+              </label>
               <MediaUploader uploadedFile={image} setUploadedFile={setImage} />
 
               <SubmitButton isSubmitting={isSubmitting} text="Submit Ticket" />

@@ -20,9 +20,7 @@ export default function Chat() {
   useEffect(() => {
     if (user) {
       socket.current.emit("addUser", user._id);
-      socket.current.on("getUsers", (users) => {
-    
-      });
+      socket.current.on("getUsers", (users) => {});
     }
   }, [user]);
 
@@ -41,7 +39,7 @@ export default function Chat() {
       }
     };
     getConversations();
-  }, [user]); 
+  }, [user]);
 
   const handleSelectConversation = (conversation) => {
     setSelectedConversation(conversation);
@@ -54,7 +52,7 @@ export default function Chat() {
   };
 
   return (
-    <div className="h-screen flex flex-col lg:flex-row bg-gray-100">
+    <div className="h-screen flex flex-col lg:flex-row bg-gray-100 dark:bg-darkBg ">
       {/* Sidebar */}
       {isSidebarVisible && (
         <ChatSideBar
@@ -82,7 +80,7 @@ export default function Chat() {
         ) : (
           <div className="text-center">
             <div className="text-6xl">📬</div>
-            <h1 className="mt-4 text-xl font-bold">
+            <h1 className="mt-4 text-xl font-bold dark:text-white">
               It's nice to chat with someone
             </h1>
             <p className="text-gray-500">

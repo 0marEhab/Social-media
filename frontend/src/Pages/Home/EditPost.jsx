@@ -37,7 +37,7 @@ const EditPost = () => {
             },
           }
         );
-   
+
         if (response.data) {
           setPost(response.data);
           setContent(response.data.content || "");

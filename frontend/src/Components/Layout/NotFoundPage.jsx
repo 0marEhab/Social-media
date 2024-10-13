@@ -109,7 +109,7 @@ const DinoGame = () => {
 // Not Found Page
 const NotFoundPage = () => {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+    <div className="min-h-screen  bg-gray-100 flex items-center justify-center p-6">
       <motion.div
         className="bg-white p-10 rounded-lg shadow-xl text-center max-w-lg"
         initial={{ opacity: 0, scale: 0.8 }}

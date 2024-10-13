@@ -9,7 +9,7 @@ export default function Layout() {
   return (
     <>
       <NavBar />
-      <div className="pt-14  w-full min-h-screen bg-bg ">
+      <div className="pt-14  w-full min-h-screen dark:bg-darkBg bg-bg ">
         <div className=" lg:p-0">
           <Outlet />
         </div>

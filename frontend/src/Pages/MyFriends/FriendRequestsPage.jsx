@@ -30,7 +30,7 @@ export default function FriendRequestsPage() {
       ) : (
         <ReceivedRequests
           receivedRequests={receivedRequests}
-          setReceivedRequests={setReceivedRequests}
+          setReceivedRequests={setReceivedRequests} 
         />
       )}
     </div>

@@ -194,13 +194,13 @@ export default function Post() {
     });
   };
   return (
-    <div className="flex bg-[#FBFCFE] text-secondary p-10 lg:w-[800px] md:w-[500px] flex-col justify-start items-start shadow-lg rounded-md">
+    <div className="flex bg-[#FBFCFE] dark:bg-darkBg  dark:shadow-sm dark:shadow-slate-300  p-10 lg:w-[800px] md:w-[500px] flex-col justify-start items-start shadow-lg rounded-md">
       <div className="opacity-65 bg-gray-200 w-24 h-14 rounded-xl bg-transparent flex justify-center items-center gap-3 mb-6 mt-6">
         <button
-          className="text-xl flex gap-3 items-center"
+          className="text-xl flex gap-3 items-center dark:text-white"
           onClick={() => navigate(-1)}
         >
-          <img src={ArrowLeft} className="w-12" /> Back
+          <img src={ArrowLeft} className="w-12 " /> Back
         </button>
       </div>
 
@@ -216,9 +216,11 @@ export default function Post() {
           </Link>{" "}
           <div>
             <Link to={`/profile/${post.user._id}`}>
-              <h4 className="font-bold hover:underline">{post.user.name}</h4>
+              <h4 className="font-bold hover:underline dark:text-white">
+                {post.user.name}
+              </h4>
             </Link>
-            <p className="opacity-50">
+            <p className="opacity-50 dark:text-[#6B7280]">
               {relativeTime} • {post.privacy}
             </p>
           </div>
@@ -226,8 +228,8 @@ export default function Post() {
 
         <div className="flex gap-5">
           <button
-            className={`flex clickableImage items-center gap-1 ${
-              isLiked ? "text-red-500" : ""
+            className={`flex clickableImage dark:text-white items-center gap-1 ${
+              isLiked ? "text-red-500 dark:text-red-500" : ""
             }`}
             onClick={handleLike}
           >
@@ -237,22 +239,22 @@ export default function Post() {
 
           <button
             onClick={showLikesPopup}
-            className=" clickableImage flex items-center gap-1"
+            className=" clickableImage dark:text-white flex items-center gap-1"
           >
             Show Likes
           </button>
 
           <button
-            className="flex clickableImage items-center gap-1"
+            className="flex clickableImage dark:text-white items-center gap-1"
             onClick={handleShare}
           >
             <RiShareForwardFill className="cursor-pointer" /> <p>Share</p>
           </button>
 
-          <button className="clickableImage relative">
+          <button className=" clickableImage relative">
             <BsThreeDots
               onClick={toggleOptions}
-              className="text-gray-500 cursor-pointer"
+              className="text-gray-500 dark:text-white cursor-pointer"
             />
             {showOptions && (
               <PostOptions
@@ -295,7 +297,7 @@ export default function Post() {
       </div>
 
       <div className="p-10 w-full h-40 ">
-        <p className="text-xl lg:w-full md:w-full overflow-auto  mb-6">
+        <p className="text-xl lg:w-full md:w-full overflow-auto dark:text-white mb-6">
           {post.content}
         </p>
       </div>

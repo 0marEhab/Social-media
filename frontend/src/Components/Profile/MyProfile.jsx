@@ -38,7 +38,6 @@ export default function Profile() {
             Authorization: `Bearer ${token}`,
           },
         });
-        
 
         setData(response.data.user);
         setActiveUser(true);
@@ -58,7 +57,6 @@ export default function Profile() {
           },
         });
 
-      
         setData(response.data.user);
         setActiveUser(false);
       } catch (error) {
@@ -105,7 +103,7 @@ export default function Profile() {
 
   return (
     <>
-      <div className="bg-gray-100 mt-20 min-h-screen">
+      <div className="bg-gray-100 dark:bg-darkBg mt-20 min-h-screen">
         {/* Button above Details */}
         <div className="ml-20 ">
           <Link to="/">
@@ -138,7 +136,7 @@ export default function Profile() {
             </div>
 
             {/* Right Column: Content Sections */}
-            <div className="lg:w-3/4 w-full mt-10 mb-10 bg-white rounded-l-3xl shadow-lg shadow-slate-400  ">
+            <div className="lg:w-3/4 dark:bg-darkBg dark:text-bg w-full mt-10 mb-10 bg-white rounded-l-3xl shadow-lg shadow-slate-400  ">
               {/* Tabs: Posts, Photos, Videos, Events */}
               <div className="px-6 py-6">
                 <div className="flex space-x-6 text-gray-500 font-bold mt-4 mb-11">

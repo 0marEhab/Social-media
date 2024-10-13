@@ -10,7 +10,7 @@ export default function ReceivedRequests({
   return (
     <div>
       {receivedRequests.length === 0 ? (
-        <p>No received requests</p>
+        <p className="text-center dark:text-bg">No received requests</p>
       ) : (
         receivedRequests.map((request) => (
           <div
@@ -24,10 +24,12 @@ export default function ReceivedRequests({
                 className="w-10 h-10 rounded-full mr-4"
               />
               <Link to={`/profile/${request._id}`}>
-              <div>
-                <span className="font-semibold">{request.name}</span>
-                <p className="text-sm text-gray-500">{request.email}</p>
-              </div>
+                <div>
+                  <span className="font-semibold text-white ">
+                    {request.name}
+                  </span>
+                  <p className="text-sm text-gray-500">{request.email}</p>
+                </div>
               </Link>
             </div>
             <div>

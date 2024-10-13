@@ -28,46 +28,48 @@ export default function HomeSideBar() {
       </button>
 
       <aside
-        className={`fixed top-0 left-0 h-screen bg-white shadow-xl transition-transform transform lg:translate-x-0 ${
+        className={`fixed top-0 left-0 h-screen dark:bg-darkBg lg:dark:shadow-slate-300  bg-white shadow-xl transition-transform transform lg:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } w-64 sm:w-72 lg:w-80 p-6 z-40 md:z-0 md:pt-32`}
       >
-        <div className="flex flex-col gap-8">
-          <div className="bg-gray-100 rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-            <small className="text-gray-500 font-semibold">News Feed</small>
+        <div className="flex flex-col gap-8  ">
+          <div className="bg-gray-100 dark:bg-darkBg dark:shadow-slate-300  rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
+            <small className="text-gray-500 font-semibold dark:text-bg ">
+              News Feed
+            </small>
             <div className="flex flex-col gap-5 mt-4">
               <Link to={"/"}>
-                <button className="text-lg text-gray-800 font-bold hover:bg-gray-200 hover:scale-105 transition-all duration-300 p-2 rounded-xl w-full text-left">
+                <button className="text-lg text-gray-800 dark:text-bg  font-bold hover:bg-gray-200 dark:hover:text-black hover:scale-105 transition-all duration-300 p-2 rounded-xl w-full text-left">
                   <FontAwesomeIcon className="mx-3" icon={faHome} />
                   News Feed
                 </button>
               </Link>
               <Link to={"/profile"}>
-                <button className="text-lg text-gray-800 font-bold hover:bg-gray-200 hover:scale-105 transition-all duration-300 p-2 rounded-xl w-full text-left">
+                <button className="text-lg text-gray-800 dark:text-bg  font-bold hover:bg-gray-200 dark:hover:text-black hover:scale-105 transition-all duration-300 p-2 rounded-xl w-full text-left">
                   <FontAwesomeIcon className="mx-3" icon={faUser} />
                   My Profile
                 </button>
               </Link>
               <Link to={"/friends"}>
-                <button className="text-lg text-gray-800 font-bold hover:bg-gray-200 hover:scale-105 transition-all duration-300 p-2 rounded-xl w-full text-left">
+                <button className="text-lg text-gray-800 dark:text-bg  font-bold hover:bg-gray-200 dark:hover:text-black hover:scale-105 transition-all duration-300 p-2 rounded-xl w-full text-left">
                   <FontAwesomeIcon className="mx-3" icon={faUserFriends} />
                   My Friends
                 </button>
               </Link>
               <Link to={"/friend-requests"}>
-                <button className="text-lg text-gray-800 font-bold hover:bg-gray-200 hover:scale-105 transition-all duration-300 p-2 rounded-xl w-full text-left">
+                <button className="text-lg text-gray-800 dark:text-bg  font-bold hover:bg-gray-200 dark:hover:text-black hover:scale-105 transition-all duration-300 p-2 rounded-xl w-full text-left">
                   <FontAwesomeIcon className="mx-3" icon={faHourglassEnd} />
                   Friend Requests
                 </button>
               </Link>
               <Link to={"/calendar"}>
-                <button className="text-lg text-gray-800 font-bold hover:bg-gray-200 hover:scale-105 transition-all duration-300 p-2 rounded-xl w-full text-left">
+                <button className="text-lg text-gray-800 dark:text-bg  font-bold hover:bg-gray-200 dark:hover:text-black hover:scale-105 transition-all duration-300 p-2 rounded-xl w-full text-left">
                   <FontAwesomeIcon className="mx-3" icon={faCalendar} />
                   Calender
                 </button>
               </Link>
               <Link to={"/chat"}>
-                <button className="text-lg text-gray-800 font-bold hover:bg-gray-200 hover:scale-105 transition-all duration-300 p-2 rounded-xl w-full text-left">
+                <button className="text-lg text-gray-800 dark:text-bg  font-bold hover:bg-gray-200 dark:hover:text-black hover:scale-105 transition-all duration-300 p-2 rounded-xl w-full text-left">
                   <FontAwesomeIcon className="mx-3" icon={faEnvelope} />
                   Chat
                 </button>

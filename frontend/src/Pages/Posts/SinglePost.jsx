@@ -32,7 +32,7 @@ export default function SinglePost() {
     fetchComments();
   }, [id]);
   return (
-    <div className="grid grid-cols-1  gap-10 bg-[#F3F4F6]">
+    <div className="grid grid-cols-1  gap-10 bg-[#F3F4F6] dark:bg-darkBg">
       <div className="col-span-1 lg:col-span-1 m-auto p-12 ">
         <Post />
       </div>

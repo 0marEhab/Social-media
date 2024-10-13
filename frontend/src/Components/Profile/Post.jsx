@@ -95,8 +95,8 @@ export default function Post({ post, profilePic, name, user }) {
     : truncateText(examplePost.content); // Truncated content
 
   return (
-    <div className="col-span-1 ">
-      <div className="bg-white rounded-3xl border-2 border-gray-200 p-6 flex flex-col justify-between">
+    <div className="col-span-1  ">
+      <div className="bg-white dark:bg-darkBg rounded-3xl border-2  border-gray-200 p-6 flex flex-col justify-between">
         <div className="flex items-center mb-4">
           <div className="flex-1 flex items-center">
             <img

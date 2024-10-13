@@ -7,7 +7,7 @@ export default function ChatSideBar({
   user,
 }) {
   return (
-    <aside className="w-full lg:w-1/4 bg-white border-r border-gray-200 h-full">
+    <aside className="w-full lg:w-1/4 bg-white border-r border-gray-200 dark:bg-darkBg h-full">
       <div className="px-10 py-2">
         {/* Search Bar */}
         <div className="relative mt-10 mb-8">
@@ -21,7 +21,7 @@ export default function ChatSideBar({
           </button>
         </div>
         {/* Inbox */}
-        <h2 className="text-3xl font-semibold mb-4">Inbox</h2>
+        <h2 className="text-3xl font-semibold mb-4 dark:text-white">Inbox</h2>
         <ul className="space-y-3 overflow-auto h-[80vh]">
           {conversation.map((c, index) => (
             <li

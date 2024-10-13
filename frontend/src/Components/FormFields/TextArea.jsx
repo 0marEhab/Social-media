@@ -4,7 +4,10 @@ import { Field, ErrorMessage } from "formik";
 const TextArea = ({ id, label }) => {
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium mb-2">
+      <label
+        htmlFor={id}
+        className="block text-sm font-medium mb-2 dark:text-white"
+      >
         {label}
       </label>
       <Field

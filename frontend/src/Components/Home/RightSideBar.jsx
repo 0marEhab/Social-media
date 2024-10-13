@@ -45,12 +45,12 @@ export default function RightSideBar() {
 
   return (
     <aside
-      className={` hidden md:block fixed top-0 right-0 h-screen bg-[#F3F4F6] shadow-lg shadow-slate-400 transition-transform transform lg:translate-x-0 
+      className={` dark:bg-darkBg dark:shadow-slate-300  hidden md:block fixed top-0 right-0 h-screen bg-[#F3F4F6] shadow-lg shadow-slate-400 transition-transform transform lg:translate-x-0 
 w-64 sm:w-72 lg:w-80 p-6 z-40 md:z-0 md:pt-32`}
     >
-      <div className="flex flex-col mt-4 bg-white p-4 shadow-md  shadow-slate-400 rounded-2xl w-[280px]">
+      <div className="flex flex-col mt-4 bg-white p-4 shadow-md dark:bg-darkBg dark:shadow-slate-300 shadow-slate-400 rounded-2xl w-[280px]">
         <Link to={"/friends"}>
-          <h2 className="text-xl font-bold mb-4 text-black mt-4">
+          <h2 className="text-xl font-bold mb-4 dark:text-bg text-black mt-4">
             Friends Suggestions
           </h2>
         </Link>

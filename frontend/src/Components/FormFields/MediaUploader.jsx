@@ -52,7 +52,7 @@ const MediaUploader = ({
 
   return (
     <div
-      className={` relative w-full md:w-64 h-48 border-dashed border-2 rounded-lg flex flex-col justify-center items-center bg-white ${
+      className={`  relative w-full md:w-64 h-48 border-dashed border-2 rounded-lg flex flex-col justify-center items-center bg-white ${
         isDragging ? "border-blue-500" : "border-gray-300"
       }`}
       onDrop={handleDrop}
@@ -67,7 +67,13 @@ const MediaUploader = ({
               alt="Uploaded"
               className="w-full h-full object-cover rounded-lg"
             />
-            <button type="button" className="absolute top-0 right-0 text-red-500 p-3" onClick={handleClearFile}>X</button>
+            <button
+              type="button"
+              className="absolute top-0 right-0 text-red-500 p-3"
+              onClick={handleClearFile}
+            >
+              X
+            </button>
           </>
         ) : (
           <div className="flex flex-col items-center">
