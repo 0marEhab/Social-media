@@ -74,10 +74,6 @@ export default function App() {
             },
 
             {
-              path: "/DashBoard",
-              element: <DashboardComponent />,
-            },
-            {
               path: "/Posts",
               element: <Posts />,
             },

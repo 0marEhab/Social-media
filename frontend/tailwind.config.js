@@ -22,7 +22,7 @@ export default {
         bg: "#F7F7F7",
         primary: "#666AEC",
         secondary: "#1E1F20",
-        darkBg: "#1A1A1A",
+        darkBg: "#151515",
         darkPrimary: "#7F7FFF",
         darkSecondary: "#FFFFFF",
       },

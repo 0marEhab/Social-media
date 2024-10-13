@@ -41,7 +41,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(error.notfound);
 
 app.use(error.errorhandler);
-
+require("./seeders/index");
 db();
 
 module.exports = app;

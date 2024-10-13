@@ -26,7 +26,7 @@ var userSchema = new mongoose.Schema(
     ],
     country: { type: String, required: true },
     linkedProfile: { type: String },
-    birthDate: { type: Date, required: true },
+    birthDate: { type: Date },
     isAdmin: { type: Boolean, default: false },
   },
   { timestamps: true }
