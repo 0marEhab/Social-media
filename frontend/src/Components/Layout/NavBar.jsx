@@ -12,6 +12,7 @@ import {
   faCalendar,
   faMoon,
   faSun,
+  faShieldAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import SearchBar from "./SearchBar";
@@ -19,6 +20,7 @@ import SearchBar from "./SearchBar";
 export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,8 +28,18 @@ export default function NavBar() {
     const darkModePreference = localStorage.getItem("darkMode") === "true";
     setIsDarkMode(darkModePreference);
     applyDarkMode(darkModePreference);
+    checkAdminStatus();
   }, []);
-
+  const checkAdminStatus = () => {
+    // Replace this with your actual admin check logic
+    // For example, you might check a JWT token or make an API call
+    const token = localStorage.getItem("token");
+    if (token) {
+      // Decode the token or check its contents
+      // This is a placeholder implementation
+      setIsAdmin(token.includes("admin"));
+    }
+  };
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
   };
@@ -74,6 +86,14 @@ export default function NavBar() {
 
           {/* Right Icons */}
           <div className="hidden md:flex items-center space-x-4">
+            {isAdmin && (
+              <Link
+                to="/dashboard"
+                className="p-3 rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0] dark:bg-gray-700 dark:hover:bg-gray-600"
+              >
+                <FontAwesomeIcon icon={faShieldAlt} />
+              </Link>
+            )}
             <button
               onClick={toggleDarkMode}
               className="p-3 rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0] dark:bg-gray-700 dark:hover:bg-gray-600"
@@ -130,6 +150,14 @@ export default function NavBar() {
 
         {/* Mobile Icons */}
         <div className="flex justify-center gap-10 items-center">
+          {isAdmin && (
+            <Link
+              to="/admin"
+              className="p-3 rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0] dark:bg-gray-700 dark:hover:bg-gray-600"
+            >
+              <FontAwesomeIcon icon={faShieldAlt} />
+            </Link>
+          )}
           <button
             onClick={toggleDarkMode}
             className="p-3 rounded-2xl text-white flex justify-center items-center text-xl bg-[#8588F0] hover:bg-white hover:text-[#8588F0] dark:bg-gray-700 dark:hover:bg-gray-600"
