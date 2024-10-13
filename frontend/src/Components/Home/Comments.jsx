@@ -17,7 +17,7 @@ export default function Comments({
   id,
   userprofile,
 }) {
-  // const user = useContext(UserContext);
+  const user = useContext(UserContext);
 
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState(initialComments);
@@ -98,7 +98,7 @@ export default function Comments({
           setComments((prevComments) => [...prevComments, newCommentData]);
           setNewComment(""); // Clear the input field
           toast.success("Comment added successfully!");
-          // setTimeout(() => window.location.reload(), 200);
+          setTimeout(() => window.location.reload(), 200);
         } else {
           console.error("New comment data is not valid:", newCommentData);
         }
@@ -133,7 +133,7 @@ export default function Comments({
         prevComments.filter((comment) => comment._id !== commentId)
       );
       Swal.fire("Deleted!", "Your comment has been deleted.", "success");
-      // setTimeout(() => window.location.reload(), 1200);
+      setTimeout(() => window.location.reload(), 1200);
     }
     try {
       const response = await axios.delete(
@@ -185,7 +185,7 @@ export default function Comments({
     closeEditPopup();
     setShowEditPopup(false);
     Swal.fire("Updated!", "Your comment has been updated.", "success");
-    // setTimeout(() => window.location.reload(), 1200);
+    setTimeout(() => window.location.reload(), 1200);
     try {
       const response = await axios.put(
         summaryApi.editComment.url
@@ -207,7 +207,7 @@ export default function Comments({
     setActiveReplyComment(commentId); // Show reply input for the specific comment
     setReplyContent(""); // Clear the reply input
   };
-  const handleReplySubmit = async (commentId, replyIndex) => {
+  const handleReplySubmit = async (commentId, index) => {
     if (replyContent.trim()) {
       try {
         const response = await axios.post(
@@ -222,7 +222,8 @@ export default function Comments({
           }
         );
 
-        const replyData = response.data.comments[replyIndex].replies;
+        const replyData = response.data.comments[index].replies;
+        console.log(replyData);
 
         setComments((prevComments) =>
           prevComments.map((comment) =>
@@ -234,7 +235,7 @@ export default function Comments({
 
         setActiveReplyComment(null);
         toast.success("Reply added successfully!");
-        // setTimeout(() => window.location.reload(), 200);
+        setTimeout(() => window.location.reload(), 200);
       } catch (error) {
         console.error("Error replying to comment:", error);
         toast.error("Failed to add the reply.");
@@ -243,7 +244,6 @@ export default function Comments({
       toast.error("Reply cannot be empty.");
     }
   };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -254,8 +254,8 @@ export default function Comments({
       <div className="w-full flex justify-end mb-6">
         <motion.img
           whileHover={{ scale: 1.1 }}
-          src={summaryApi.domain.url + "/" + userprofile?.profilePic}
-          alt={`${userprofile?.name}'s profile`}
+          src={summaryApi.domain.url + "/" + user?.profilePic}
+          alt={`${user?.name}'s profile`}
           className="w-12 h-12 rounded-full clickableImage border-2 border-gray-200 shadow-md"
         />
       </div>
@@ -406,7 +406,7 @@ export default function Comments({
                       />
                       <div className="flex-grow">
                         <p className="text-gray-800 dark:text-white font-semibold">
-                          {reply?.user?.name}
+                          {reply?.user?._id}
                         </p>
                         <p className="text-gray-600 dark:text-white mt-1">
                           {reply?.content}
@@ -457,13 +457,13 @@ export default function Comments({
           placeholder="Write a comment..."
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
-          className="bg-gray-100 dark:bg-darkBg dark:text-white w-full h-12 rounded-full p-4 outline-none text-gray-800 focus:ring-2 focus:ring-blue-300 transition duration-200"
+          className="bg-gray-100 lg:absolute fixed top-[-30px] right-0 dark:bg-darkBg dark:text-white w-full h-12 rounded-full p-4 outline-none text-gray-800 focus:ring-2 focus:ring-blue-300 transition duration-200"
         />
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={handleCommentSubmit}
-          className="absolute right-4 top-2 bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition duration-200"
+          className="absolute right-4 top-[-24px] bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition duration-200"
         >
           <AiOutlineSend className="text-xl" />
         </motion.button>
