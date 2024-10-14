@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect  } from "react";
 import {
   AiOutlineHeart,
   AiOutlineMessage,
@@ -28,10 +28,30 @@ export default function PostCard({ post }) {
   );
   const [showOptions, setShowOptions] = useState(false);
   const navigate = useNavigate();
-
+  const [comments, setComments] = useState([]);
   const toggleOptions = () => {
     setShowOptions((prev) => !prev);
   };
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const response = await axios.get(
+          summaryApi.post.url.replace(":id", post._id),
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        setComments(response.data.comments);
+      } catch (error) {
+        console.error("Error fetching comments", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchComments();
+  }, [post._id]);
 
   const handleLike = async () => {
     try {
@@ -222,7 +242,7 @@ export default function PostCard({ post }) {
       html: (
         <Comments
           initialLikes={post.likes}
-          initialComments={post.comments}
+          initialComments={comments}
           userprofile={user}
           id={post._id}
         />

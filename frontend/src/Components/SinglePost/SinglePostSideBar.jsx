@@ -15,7 +15,7 @@ export default function SinglePostSideBar({
   initialLikes = [],
 }) {
   const { user } = useContext(UserContext);
-
+  const [likes, setLikes] = useState(initialLikes);
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState(initialComments);
 
@@ -98,10 +98,9 @@ export default function SinglePostSideBar({
             },
           }
         );
+        console.log(response.data);
 
-        const newCommentData =
-          response.data.comment ||
-          response.data.post.comments[response.data.post.comments.length - 1];
+        const newCommentData = response.data;
         if (newCommentData && newCommentData.content) {
           setComments((prevComments) => [...prevComments, newCommentData]);
           setNewComment(""); // Clear the input field
@@ -243,7 +242,9 @@ export default function SinglePostSideBar({
           }
         );
 
-        const replyData = response.data.reply;
+        const replyData = response.data;
+        console.log(response.data);
+
         setComments((prevComments) =>
           prevComments.map((comment) =>
             comment._id === commentId
@@ -254,7 +255,7 @@ export default function SinglePostSideBar({
 
         setActiveReplyComment(null);
         toast.success("Reply added successfully!");
-        setTimeout(() => window.location.reload(), 200);
+        // setTimeout(() => window.location.reload(), 200);
       } catch (error) {
         console.error("Error replying to comment:", error);
         toast.error("Failed to add the reply.");

@@ -200,20 +200,18 @@ const likePost = async (req, res) => {
 const addComment = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
-
+    const user = await User.findById(req.user._id);
     if (!post) return res.status(404).json({ message: "Post not found" });
 
     const comment = {
-      user: req.user._id,
+      user: user,
       content: req.body.content,
     };
 
     post.comments.push(comment);
     await post.save();
 
-    res
-      .status(200)
-      .json({ post: post, message: "comment created successfully" });
+    res.status(200).json(comment);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -306,8 +304,9 @@ const replyComment = async (req, res) => {
       replies: comment.replies,
     };
     comment.replies.push(reply);
+
     await post.save();
-    res.status(200).json(post);
+    res.status(200).json(reply);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

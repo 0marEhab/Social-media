@@ -90,9 +90,7 @@ export default function Comments({
           }
         );
 
-        const newCommentData =
-          response.data.comment ||
-          response.data.post.comments[response.data.post.comments.length - 1];
+        const newCommentData = response.data;
 
         if (newCommentData && newCommentData.content) {
           setComments((prevComments) => [...prevComments, newCommentData]);
@@ -222,7 +220,7 @@ export default function Comments({
           }
         );
 
-        const replyData = response.data.comments[index].replies;
+        const replyData = response.data;
         console.log(replyData);
 
         setComments((prevComments) =>
@@ -235,7 +233,7 @@ export default function Comments({
 
         setActiveReplyComment(null);
         toast.success("Reply added successfully!");
-        setTimeout(() => window.location.reload(), 200);
+        // setTimeout(() => window.location.reload(), 200);
       } catch (error) {
         console.error("Error replying to comment:", error);
         toast.error("Failed to add the reply.");
@@ -254,8 +252,8 @@ export default function Comments({
       <div className="w-full flex justify-end mb-6">
         <motion.img
           whileHover={{ scale: 1.1 }}
-          src={summaryApi.domain.url + "/" + user?.profilePic}
-          alt={`${user?.name}'s profile`}
+          src={summaryApi.domain.url + "/" + userprofile?.profilePic}
+          alt={`${userprofile?.name}'s profile`}
           className="w-12 h-12 rounded-full clickableImage border-2 border-gray-200 shadow-md"
         />
       </div>
@@ -406,7 +404,7 @@ export default function Comments({
                       />
                       <div className="flex-grow">
                         <p className="text-gray-800 dark:text-white font-semibold">
-                          {reply?.user?._id}
+                          {reply?.user?.name}
                         </p>
                         <p className="text-gray-600 dark:text-white mt-1">
                           {reply?.content}
