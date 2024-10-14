@@ -25,10 +25,10 @@ export default function ReceivedRequests({
               />
               <Link to={`/profile/${request._id}`}>
                 <div>
-                  <span className="font-semibold text-white ">
+                  <span className="font-semibold text-black dark:text-white ">
                     {request.name}
                   </span>
-                  <p className="text-sm text-gray-500">{request.email}</p>
+                  <p className="text-sm text-gray-500 dark:text-white">{request.email}</p>
                 </div>
               </Link>
             </div>

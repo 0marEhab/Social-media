@@ -31,7 +31,7 @@ export default function SearchResults() {
         );
     }
   }, [query]);
-
+console.log(posts);
   return (
     <div className="p-5">
       <SearchBar value={query} />

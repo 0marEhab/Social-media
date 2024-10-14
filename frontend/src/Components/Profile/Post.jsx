@@ -163,8 +163,8 @@ export default function Post({ post, profilePic, name, user }) {
         </Link>
 
         <Link to={`/posts/${examplePost.id}`}>
-          {examplePost.media && (
-            <div className="text-l mb-3 h-28 pt-8 overflow-hidden transform transition-transform duration-300 hover:scale-110">
+          {examplePost.media[0] === "text" && (
+            <div className="text-l mb-3 h-48 place-content-center pb-7 pl-2 overflow-hidden transform transition-transform duration-300 hover:scale-110">
               <p className="whitespace-pre-line">{displayedContent}</p>
               {examplePost.content.split(" ").length > MAX_WORDS && (
                 <button
