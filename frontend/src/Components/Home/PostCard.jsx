@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect  } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   AiOutlineHeart,
   AiOutlineMessage,
@@ -46,8 +46,6 @@ export default function PostCard({ post }) {
         setComments(response.data.comments);
       } catch (error) {
         console.error("Error fetching comments", error);
-      } finally {
-        setLoading(false);
       }
     };
     fetchComments();

@@ -115,6 +115,9 @@ const summaryApi = {
   editReply: {
     url: `${urlDomain}/api/posts/:id/comment/:commentId/reply/:replyId/edit`,
   },
+  deletePostByAdmin: {
+    url: `${urlDomain}/api/posts/admin/:id`,
+  },
 };
 
 export default summaryApi;

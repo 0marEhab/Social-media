@@ -8,19 +8,17 @@ import {
   faTicket,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link, useNavigate,useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import UserContext from "../../Contexts/UserContext";
 
-
 export default function NavBarDashboard() {
-  const {setUser} = useContext(UserContext)
+  const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("token");
     setUser(null);
     navigate("/signing");
   };
-  
 
   return (
     <nav className="bg-slate-800 border-b   z-10 border-gray-200 shadow-lg fixed w-full -top-1 md:top-0">
@@ -28,7 +26,9 @@ export default function NavBarDashboard() {
         <div className="flex justify-between items-center h-20">
           {/* Left Icon (Logo) */}
           <div className="flex-shrink-0">
-            <img className="h-10 w-10" src={Logo} alt="Logo" />
+            <Link to="/">
+              <img className="h-10 w-10" src={Logo} alt="Logo" />
+            </Link>
           </div>
 
           {/* Right Icons */}
@@ -63,15 +63,9 @@ export default function NavBarDashboard() {
             >
               <FontAwesomeIcon icon={faArrowRightFromBracket} />
             </button>
-            
           </div>
-
-          
         </div>
       </div>
-
     </nav>
   );
 }
-
-

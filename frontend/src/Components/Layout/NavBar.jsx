@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Logo from "./../../Assets/Images/logo.svg";
 import { IoSearch, IoMenu, IoClose } from "react-icons/io5";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,30 +16,34 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import SearchBar from "./SearchBar";
+import UserContext from "../../Contexts/UserContext";
 
 export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
+  const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
     // Check for user's dark mode preference on initial load
     const darkModePreference = localStorage.getItem("darkMode") === "true";
     setIsDarkMode(darkModePreference);
     applyDarkMode(darkModePreference);
-    checkAdminStatus();
-  }, []);
-  const checkAdminStatus = () => {
-    // Replace this with your actual admin check logic
-    // For example, you might check a JWT token or make an API call
-    const token = localStorage.getItem("token");
-    if (token) {
-      // Decode the token or check its contents
-      // This is a placeholder implementation
-      setIsAdmin(token.includes("admin"));
+
+    // Load user data from localStorage
+    setUser(user);
+    checkAdminStatus(user);
+  }, [user]);
+
+  const checkAdminStatus = (currentUser) => {
+    if (currentUser?.name === "Admin") {
+      setIsAdmin(true);
+    } else {
+      setIsAdmin(false);
     }
   };
+
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
   };
@@ -51,6 +55,9 @@ export default function NavBar() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+    setIsAdmin(false);
     navigate("/signing");
   };
 

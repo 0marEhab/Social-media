@@ -105,7 +105,7 @@ export default function SinglePostSideBar({
           setComments((prevComments) => [...prevComments, newCommentData]);
           setNewComment(""); // Clear the input field
           toast.success("Comment added successfully!");
-          setTimeout(() => window.location.reload(), 200);
+          setTimeout(() => window.location.reload(), 500);
         } else {
           console.error("New comment data is not valid:", newCommentData);
         }
@@ -152,10 +152,6 @@ export default function SinglePostSideBar({
           },
         }
       );
-
-      if (!response.data.success) {
-        console.error("Failed to delete comment on server");
-      }
     } catch (error) {
       console.error("Error deleting comment:", error);
       Swal.fire("Error!", "Failed to delete the comment.", "error");
@@ -255,7 +251,7 @@ export default function SinglePostSideBar({
 
         setActiveReplyComment(null);
         toast.success("Reply added successfully!");
-        // setTimeout(() => window.location.reload(), 200);
+        setTimeout(() => window.location.reload(), 500);
       } catch (error) {
         console.error("Error replying to comment:", error);
         toast.error("Failed to add the reply.");
@@ -445,7 +441,9 @@ export default function SinglePostSideBar({
                           onClick={() => toggleOptions(comment._id)}
                           className="text-gray-400 cursor-pointer ml-5 lg:ml-[150px] md:ml-[200px]"
                         />
-                        {showOptions === comment._id && (
+                        {showOptions === comment._id &&
+                        user &&
+                        user._id === comment.user._id ? (
                           <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                             <ul className="py-2">
                               <li
@@ -464,7 +462,7 @@ export default function SinglePostSideBar({
                               </li>
                             </ul>
                           </div>
-                        )}
+                        ) : null}
                       </button>
                     </div>
                     <p className="text-gray-400 text-sm">

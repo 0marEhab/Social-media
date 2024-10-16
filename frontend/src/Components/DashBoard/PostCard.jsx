@@ -39,11 +39,14 @@ export default function PostCard({ post }) {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(summaryApi.delete.url.replace(":id", post._id), {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          });
+          await axios.delete(
+            summaryApi.deleteByAdmin.url.replace(":id", post._id),
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
 
           Swal.fire("Deleted!", "Your post has been deleted.", "success").then(
             () => {

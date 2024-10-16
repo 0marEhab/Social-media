@@ -175,8 +175,8 @@ export default function Settings() {
   };
   return (
     <div className="grid grid-cols-10 gap-10">
-      <div className="col-span-10 lg:col-span-6 xl:col-span-7 p-5 md:p-10 bg-white shadow-lg rounded-lg">
-        <p className="text-xl md:text-3xl font-semibold mb-8 text-center md:text-start text-gray-800">
+      <div className="col-span-10 lg:col-span-6 xl:col-span-7 p-5 md:p-10 dark:bg-darkBg bg-white shadow-lg rounded-lg">
+        <p className="text-xl md:text-3xl font-semibold mb-8 text-center md:text-start dark:text-white text-gray-800">
           Account Information
         </p>
         <div className="flex  flex-col my-10">
@@ -192,7 +192,7 @@ export default function Settings() {
               />
             </div>
             <div className="flex flex-col gap-4 md:gap-8">
-              <p className="text-lg md:text-xl font-semibold text-gray-500">
+              <p className="text-lg md:text-xl font-semibold dark:text-white text-gray-500">
                 Profile Picture
               </p>
               <div className=" flex flex-col md:flex-row gap-4 md:gap-8">
@@ -218,7 +218,7 @@ export default function Settings() {
         </div>
 
         <div>
-          <p className="text-xl md:text-3xl font-semibold mb-8 text-gray-800">
+          <p className="text-xl md:text-3xl font-semibold mb-8 dark:text-white text-gray-800">
             Basic Information
           </p>
           <form onSubmit={handleSubmit} className="flex gap-5 flex-wrap">

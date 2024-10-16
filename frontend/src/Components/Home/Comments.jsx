@@ -51,8 +51,8 @@ export default function Comments({
   //     );
   //   }
   // }, [comment.map((com) => com), user]);
-  const toggleOptions = (index) => {
-    setShowOptions(showOptions === index ? null : index);
+  const toggleOptions = (commentId) => {
+    setShowOptions(showOptions === commentId ? null : commentId);
   };
 
   useEffect(() => {
@@ -301,32 +301,33 @@ export default function Comments({
                     className="text-gray-500 cursor-pointer text-xl"
                   />
                   <AnimatePresence>
-                    {showOptions === index && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
-                        transition={{ duration: 0.2 }}
-                        className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10"
-                      >
-                        <ul className="py-2">
-                          <li
-                            onClick={() =>
-                              openEditPopup(comment._id, comment.content)
-                            }
-                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700 transition-colors duration-200"
-                          >
-                            Edit Comment
-                          </li>
-                          <li
-                            onClick={() => deleteComment(comment._id)}
-                            className="px-4 py-2 hover:bg-red-100 cursor-pointer text-red-600 transition-colors duration-200"
-                          >
-                            Delete Comment
-                          </li>
-                        </ul>
-                      </motion.div>
-                    )}
+                    {showOptions === index &&
+                      userprofile._id === comment.user._id && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.9 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10"
+                        >
+                          <ul className="py-2">
+                            <li
+                              onClick={() =>
+                                openEditPopup(comment._id, comment.content)
+                              }
+                              className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700 transition-colors duration-200"
+                            >
+                              Edit Comment
+                            </li>
+                            <li
+                              onClick={() => deleteComment(comment._id)}
+                              className="px-4 py-2 hover:bg-red-100 cursor-pointer text-red-600 transition-colors duration-200"
+                            >
+                              Delete Comment
+                            </li>
+                          </ul>
+                        </motion.div>
+                      )}
                   </AnimatePresence>
                 </motion.button>
               </div>
