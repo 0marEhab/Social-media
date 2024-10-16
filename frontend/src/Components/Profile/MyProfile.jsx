@@ -29,6 +29,8 @@ export default function Profile() {
   const [data, setData] = useState(null);
   const { id } = useParams();
   const [activeUser, setActiveUser] = useState();
+  const [activeUserID, setActiveUserID] = useState("");
+
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -40,7 +42,9 @@ export default function Profile() {
         });
 
         setData(response.data.user);
+        setActiveUserID(response.data.user._id);
         setActiveUser(true);
+        console.log(activeUserID,"Profile updated");
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -48,21 +52,25 @@ export default function Profile() {
 
     const fetchUserById = async (userId) => {
       try {
-        const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+        const token = localStorage.getItem("token");
 
-        // Make the request with the Authorization header
-        const response = await axios.get(`${summaryApi.user.url}/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        setData(response.data.user);
+        const [userResponse, activeUserResponse] = await Promise.all([
+          axios.get(`${summaryApi.user.url}/${userId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get(summaryApi.user.url, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+        
+        setActiveUserID(activeUserResponse.data.user._id);
+        setData(userResponse.data.user);
         setActiveUser(false);
+
+
       } catch (error) {
         console.error("Error fetching user data:", error);
 
-        // Fallback to fetching the profile if the user-specific request fails
         fetchUserProfile();
         setActiveUser(true);
         throw error;
@@ -100,7 +108,6 @@ export default function Profile() {
   } = data;
 
   const postsCount = posts.length;
-
   return (
     <>
       <div className="bg-gray-100 dark:bg-darkBg mt-20 min-h-screen">
@@ -167,42 +174,38 @@ export default function Profile() {
                 </div>
               </div>
 
+              
               {state.activeTab === "posts" && (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-6 pb-6">
-                  {posts.filter(
-                    (post) =>
-                      post.privacy === "public" ||
-                      (post.privacy === "friends" &&
-                        friends.some(
-                          (friend) => friend._id === activeUser?._id
-                        )) ||
-                      (activeUser === true && post.privacy === "private")
-                  ).length > 0 ? (
-                    posts.map(
-                      (post, index) =>
-                        (post.privacy === "public" ||
-                          (post.privacy === "friends" &&
-                            friends.some(
-                              (friend) => friend._id === activeUser?._id
-                            )) ||
-                          (activeUser === true &&
-                            post.privacy === "private")) && (
-                          <Post
-                            key={post._id}
-                            post={post}
-                            profilePic={profilePic}
-                            name={name}
-                            className="w-full h-full"
-                          />
-                        )
-                    )
-                  ) : (
-                    <p className="col-span-full text-center text-gray-500">
-                      There are no Posts 📫 to show. 😥
-                    </p>
-                  )}
-                </div>
-              )}
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-6 pb-6">
+    {posts.length > 0 ? (
+      posts.map((post, index) => {
+        if (
+          post.privacy === "public" ||
+          (post.privacy === "friends" &&
+            (activeUser === true ||
+            friends.some(friend => friend._id === activeUserID))) || 
+          (activeUser === true && post.privacy === "private") 
+        ) {
+          return (
+            <Post
+              key={post._id}
+              post={post}
+              profilePic={profilePic}
+              name={name}
+              className="w-full h-full"
+            />
+          );
+        }
+        return null; 
+      })
+    ) : (
+      <p className="col-span-full text-center text-gray-500">
+        There are no Posts 📫 to show. 😥
+      </p>
+    )}
+  </div>
+)}
+
 
               {state.activeTab === "photos" && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-6 pb-6">
