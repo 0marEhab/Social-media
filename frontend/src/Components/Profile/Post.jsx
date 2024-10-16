@@ -22,7 +22,7 @@ export default function Post({ post, profilePic, name, user }) {
     user: post.user,
     createdAt: post.createdAt,
   };
-
+// console.log(post);
   const userHasLiked = post.likes.some((like) => like._id === user);
 
   const [liked, setLiked] = useState(userHasLiked);
