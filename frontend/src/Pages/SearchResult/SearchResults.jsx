@@ -4,7 +4,7 @@ import axios from "axios";
 import SearchBar from "../../Components/Layout/SearchBar";
 import PostCard from "../../Components/Home/PostCard";
 import summaryApi from "../../../common";
-
+import { Link } from "react-router-dom";
 export default function SearchResults() {
   const location = useLocation();
   const query = new URLSearchParams(location.search).get("query");
@@ -24,14 +24,13 @@ export default function SearchResults() {
         .then((response) => {
           setUsers(response.data.users);
           setPosts(response.data.posts);
-      
         })
         .catch((error) =>
           console.error("Error fetching search results:", error)
         );
     }
   }, [query]);
-console.log(posts);
+  console.log(posts);
   return (
     <div className="p-5">
       <SearchBar value={query} />
@@ -63,15 +62,17 @@ console.log(posts);
           {users.length > 0 ? (
             users.map((user) => (
               <div className="flex items-center border-b p-5" key={user._id}>
-                <img
-                  src={summaryApi.domain.url + "/" + user.profilePic}
-                  alt={user.name}
-                  className="w-10 h-10 rounded-full mr-4"
-                />
-                <div>
-                  <span className="font-semibold">{user.name}</span>
-                  <p className="text-sm text-gray-500">{user.email}</p>
-                </div>
+                <Link to={`/profile/${user._id}`}>
+                  <img
+                    src={summaryApi.domain.url + "/" + user.profilePic}
+                    alt={user.name}
+                    className="w-10 h-10 rounded-full mr-4"
+                  />
+                  <div>
+                    <span className="font-semibold">{user.name}</span>
+                    <p className="text-sm text-gray-500">{user.email}</p>
+                  </div>
+                </Link>
               </div>
             ))
           ) : (
