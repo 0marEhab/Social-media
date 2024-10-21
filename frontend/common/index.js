@@ -1,7 +1,7 @@
-const urlDomain = "http://localhost:3000";
+const urlDomain = "social-media-production-b27a.up.railway.app";
 const summaryApi = {
   domain: {
-    url: "http://localhost:3000",
+    url: "social-media-production-b27a.up.railway.app",
   },
   login: {
     url: `${urlDomain}/api/login`,
