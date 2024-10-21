@@ -267,7 +267,7 @@ export default function Comments({
         <AnimatePresence>
           {comments?.map((comment, index) => (
             <motion.div
-              key={comment.id || Math.random()}
+              key={comment.id }
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
