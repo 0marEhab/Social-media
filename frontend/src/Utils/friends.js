@@ -1,10 +1,11 @@
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import summaryApi from "../../common";
 
 export const sendFriendRequest = async (userId) => {
   try {
     const response = await axios.post(
-      `http://localhost:3000/api/friends/request`,
+      summaryApi.sendReq.url,
       { recipientId: userId },
       {
         headers: {
@@ -26,14 +27,11 @@ export const fetchRequests = async (
   setLoading
 ) => {
   try {
-    const { data: sentData } = await axios.get(
-      `http://localhost:3000/api/friends/myrequests`,
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      }
-    );
+    const { data: sentData } = await axios.get(summaryApi.fetchRequests.url, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
     const { data: receivedData } = await axios.get(
-      `http://localhost:3000/api/friends/requests`,
+      summaryApi.getFriendRequest.url,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
@@ -50,7 +48,7 @@ export const fetchRequests = async (
 
 export const handleUnsendRequest = async (userId, setSentRequests) => {
   try {
-    await axios.delete(`http://localhost:3000/api/friends/request`, {
+    await axios.delete(summaryApi.sendReq.url, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       data: { recipientId: userId },
     });
@@ -66,7 +64,7 @@ export const handleUnsendRequest = async (userId, setSentRequests) => {
 export const handleAcceptRequest = async (userId, setReceivedRequests) => {
   try {
     await axios.post(
-      `http://localhost:3000/api/friends/accept`,
+      summaryApi.acceptFriendRequest.url,
       { requesterId: userId },
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -84,7 +82,7 @@ export const handleAcceptRequest = async (userId, setReceivedRequests) => {
 export const handleRejectRequest = async (userId, setReceivedRequests) => {
   try {
     await axios.post(
-      `http://localhost:3000/api/friends/reject`,
+      summaryApi.rejectFriendRequest.url,
       { requesterId: userId },
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -100,16 +98,12 @@ export const handleRejectRequest = async (userId, setReceivedRequests) => {
 };
 export const handleDeleteFriend = async (friendId) => {
   try {
-    await axios.delete(
-      `http://localhost:3000/api/friends/deleteFriend/${friendId}`,
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      }
-    );
+    await axios.delete(`${summaryApi.deleteFriend.url}/${friendId}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
 
     toast.success("Friend Deleted Successfully!");
   } catch (error) {
     toast.error("Failed to Delete friend.");
   }
 };
-

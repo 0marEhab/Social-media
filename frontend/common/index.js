@@ -82,6 +82,24 @@ const summaryApi = {
   myFriends: {
     url: `${urlDomain}/api/friends/get`,
   },
+  sendReq: {
+    url: `${urlDomain}/api/friends/request`,
+  },
+  fetchRequests: {
+    url: `${urlDomain}/api/friends/myrequests`,
+  },
+  getFriendRequest: {
+    url: `${urlDomain}/api/friends/requests`,
+  },
+  acceptFriendRequest: {
+    url: `${urlDomain}/api/friends/accept`,
+  },
+  rejectFriendRequest: {
+    url: `${urlDomain}/api/friends/reject`,
+  },
+  deleteFriend: {
+    url: `${urlDomain}/api/friends/deleteFriend`,
+  },
   suggestions: {
     url: `${urlDomain}/api/friends/suggestions`,
   },
