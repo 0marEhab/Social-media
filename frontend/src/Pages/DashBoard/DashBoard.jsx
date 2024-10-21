@@ -27,10 +27,10 @@ function DashBoard() {
   const [trend, setTrend] = useState();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const {user} = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
   useEffect(() => {
-    console.log(user)
+    console.log(user);
     if (user && user.isAdmin != true) {
       navigate("/");
       toast.error("You must be an admin");
@@ -53,7 +53,7 @@ function DashBoard() {
     };
 
     fetchStats();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     const fetchTickets = async () => {

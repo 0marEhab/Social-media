@@ -43,8 +43,13 @@ export default function Profile() {
 
         setData(response.data.user);
         setActiveUserID(response.data.user._id);
-        setActiveUser(true);
-        console.log(activeUserID,"Profile updated");
+        // If no 'id' param is provided or the current user is viewing their own profile
+        if (!id || response.data.user._id === id) {
+          setActiveUser(true); // User is viewing their own profile
+        } else {
+          setActiveUser(false); // User is viewing someone else's profile
+        }
+        console.log(activeUserID, "Profile updated");
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -56,24 +61,22 @@ export default function Profile() {
 
         const [userResponse, activeUserResponse] = await Promise.all([
           axios.get(`${summaryApi.user.url}/${userId}`, {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${token} ` },
           }),
           axios.get(summaryApi.user.url, {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${token} ` },
           }),
         ]);
-        
+
         setActiveUserID(activeUserResponse.data.user._id);
         setData(userResponse.data.user);
-        setActiveUser(false);
 
-
+        // If the fetched profile is not the active user's profile
+        setActiveUser(
+          userResponse.data.user._id === activeUserResponse.data.user._id
+        );
       } catch (error) {
         console.error("Error fetching user data:", error);
-
-        fetchUserProfile();
-        setActiveUser(true);
-        throw error;
       }
     };
 
@@ -82,7 +85,7 @@ export default function Profile() {
     } else {
       fetchUserById(id);
     }
-  }, []);
+  }, [id, activeUserID]);
 
   if (!data) {
     return <Loading color={"#666AEC"} />;
@@ -174,72 +177,66 @@ export default function Profile() {
                 </div>
               </div>
 
-              
               {state.activeTab === "posts" && (
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-6 pb-6">
-    {posts.length > 0 ? (
-      posts.map((post, index) => {
-        if (
-          post.privacy === "public" ||
-          (post.privacy === "friends" &&
-            (activeUser === true ||
-            friends.some(friend => friend._id === activeUserID))) || 
-          (activeUser === true && post.privacy === "private") 
-        ) {
-          return (
-            <Post
-              key={post._id}
-              post={post}
-              profilePic={profilePic}
-              name={name}
-              className="w-full h-full"
-            />
-          );
-        }
-        return null; 
-      })
-    ) : (
-      <p className="col-span-full text-center text-gray-500">
-        There are no Posts 📫 to show. 😥
-      </p>
-    )}
-  </div>
-)}
-
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-6 pb-6">
+                  {posts.length > 0 ? (
+                    posts.map((post, index) => {
+                      if (
+                        post.privacy === "public" ||
+                        (post.privacy === "friends" &&
+                          (activeUser === true ||
+                            friends.some(
+                              (friend) => friend._id === activeUserID
+                            ))) ||
+                        (activeUser === true && post.privacy === "private")
+                      ) {
+                        return (
+                          <Post
+                            key={post._id}
+                            post={post}
+                            profilePic={profilePic}
+                            name={name}
+                            className="w-full h-full"
+                          />
+                        );
+                      }
+                      return null;
+                    })
+                  ) : (
+                    <p className="col-span-full text-center text-gray-500">
+                      There are no Posts 📫 to show. 😥
+                    </p>
+                  )}
+                </div>
+              )}
 
               {state.activeTab === "photos" && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-6 pb-6">
-                  {posts.filter(
-                    (post) =>
-                      (post.privacy === "public" ||
+                  {posts.length > 0 ? (
+                    posts.map((post) => {
+                      if (
+                        activeUser || // Show all photos if the active user is viewing their own profile
+                        post.privacy === "public" ||
                         (post.privacy === "friends" &&
                           friends.some(
-                            (friend) => friend._id === activeUser?._id
+                            (friend) => friend._id === activeUserID
                           )) ||
-                        (activeUser === true && post.privacy === "private")) &&
-                      (post.media
-                        ? Object.keys(post.media).includes("photo")
-                        : false)
-                  ).length > 0 ? (
-                    posts.map(
-                      (post, index) =>
-                        (post.privacy === "public" ||
-                          (post.privacy === "friends" &&
-                            friends.some(
-                              (friend) => friend._id === activeUser?._id
-                            )) ||
-                          (activeUser === true &&
-                            post.privacy === "private")) &&
-                        (post.media
-                          ? Object.keys(post.media).includes("photo")
-                          : false) && (
-                          <Photos
-                            photo={post.media.photo}
-                            id={post._id}
-                            className="w-full h-full"
-                          />
-                        )
-                    )
+                        (activeUser && post.privacy === "private") // Only show private photos to the profile owner
+                      ) {
+                        // Check if the post has photos
+                        if (post.media && post.media.photo) {
+                          return (
+                            <Photos
+                              key={post._id}
+                              photo={post.media.photo}
+                              id={post._id}
+                              className="w-full h-full"
+                            />
+                          );
+                        }
+                      }
+                      return null;
+                    })
                   ) : (
                     <p className="col-span-full text-center text-gray-500">
                       There are no Photos 📷 to show. 😥
@@ -250,40 +247,34 @@ export default function Profile() {
 
               {state.activeTab === "videos" && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-6 pb-6">
-                  {posts.filter(
-                    (post) =>
-                      (post.privacy === "public" ||
+                  {posts.length > 0 ? (
+                    posts.map((post) => {
+                      if (
+                        activeUser || // Show all videos if the active user is viewing their own profile
+                        post.privacy === "public" ||
                         (post.privacy === "friends" &&
                           friends.some(
-                            (friend) => friend._id === activeUser?._id
+                            (friend) => friend._id === activeUserID
                           )) ||
-                        (activeUser === true && post.privacy === "private")) &&
-                      (post.media
-                        ? Object.keys(post.media).includes("video")
-                        : false)
-                  ).length > 0 ? (
-                    posts.map(
-                      (post, index) =>
-                        (post.privacy === "public" ||
-                          (post.privacy === "friends" &&
-                            friends.some(
-                              (friend) => friend._id === activeUser?._id
-                            )) ||
-                          (activeUser === true &&
-                            post.privacy === "private")) &&
-                        (post.media
-                          ? Object.keys(post.media).includes("video")
-                          : false) && (
-                          <Videos
-                            video={post.media.video}
-                            id={post._id}
-                            className="w-full h-full"
-                          />
-                        )
-                    )
+                        (activeUser && post.privacy === "private") // Only show private videos to the profile owner
+                      ) {
+                        // Check if the post has videos
+                        if (post.media && post.media.video) {
+                          return (
+                            <Videos
+                              key={post._id}
+                              video={post.media.video}
+                              id={post._id}
+                              className="w-full h-full"
+                            />
+                          );
+                        }
+                      }
+                      return null;
+                    })
                   ) : (
                     <p className="col-span-full text-center text-gray-500">
-                      There are no Videos 📽️ to show. 😥
+                      There are no Videos 📽 to show. 😥
                     </p>
                   )}
                 </div>
@@ -292,6 +283,7 @@ export default function Profile() {
           </div>
         </div>
       </div>
+          
     </>
   );
 }

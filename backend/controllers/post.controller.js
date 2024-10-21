@@ -689,7 +689,7 @@ const getReportedPosts = async (req, res) => {
         path: "reportedBy",
         select: "name email",
       })
-      .populate("user", "name email")
+      .populate("user", "name email profilePic")
       .exec();
 
     res.status(200).json({ reportedPosts: reportedPosts });
