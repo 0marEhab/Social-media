@@ -1,7 +1,7 @@
-const urlDomain = "social-media-production-b27a.up.railway.app";
+const urlDomain = "https://social-media-production-b27a.up.railway.app";
 const summaryApi = {
   domain: {
-    url: "social-media-production-b27a.up.railway.app",
+    url: "https://social-media-production-b27a.up.railway.app",
   },
   login: {
     url: `${urlDomain}/api/login`,

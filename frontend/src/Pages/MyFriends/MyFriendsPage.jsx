@@ -4,6 +4,8 @@ import SearchBar from "../../Components/Layout/SearchBar";
 import FriendsSideBar from "../../Components/MyFriends/FriendsSideBar";
 import axios from "axios";
 import Loading from "../../Components/Layout/Loading";
+import summaryApi from "../../../common/index";
+
 
 export default function MyFriendsPage() {
   const [friends, setFriends] = useState([]);
@@ -15,7 +17,7 @@ export default function MyFriendsPage() {
     const fetchFriends = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/friends/get`,
+          summaryApi.myFriends.url,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
