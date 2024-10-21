@@ -157,7 +157,7 @@ export default function CreatePost() {
   };
 
   return (
-    <div className="flex flex-col dark:bg-darkBg dark:shadow-slate-300  bg-white p-5 rounded-lg shadow-md w-full max-w-2xl mx-auto">
+    <div className="flex flex-col dark:bg-darkBg dark:shadow-slate-300 bg-white p-5 rounded-lg shadow-md w-full max-w-2xl mx-auto">
       <form onSubmit={handleShare}>
         <div className="flex items-center gap-4">
           <Link to={"/profile/" + user?._id}>
@@ -172,14 +172,14 @@ export default function CreatePost() {
             value={content}
             onInput={handleInput}
             placeholder="What are you thinking?"
-            className=" w-[230px] p-3 rounded-lg h-auto  dark:bg-darkBg dark:text-bg focus:outline-none resize-none overflow-hidden"
+            className="w-[230px] p-3 rounded-lg h-auto dark:bg-darkBg dark:text-bg focus:outline-none resize-none overflow-hidden"
             rows={1}
           />
         </div>
         {image && (
           <div className="mt-4 relative">
             <button
-              className="absolute top-2 right-5 z-50  text-white"
+              className="absolute top-2 right-5 z-50 text-white"
               onClick={() => {
                 setImage(null);
                 fileInputRef.current.value = "";
@@ -190,7 +190,7 @@ export default function CreatePost() {
             <img
               src={URL.createObjectURL(image)}
               alt="Preview"
-              className="w-full rounded-lg  max-h-[400px] object-center"
+              className="w-full rounded-lg max-h-[400px] object-center"
             />
           </div>
         )}
@@ -208,14 +208,15 @@ export default function CreatePost() {
             <video
               controls
               src={URL.createObjectURL(video)}
-              className="w-full rounded-lg  object-cover object-center"
+              className="w-full rounded-lg object-cover object-center"
             />
           </div>
         )}
         <div className="flex justify-between items-center mt-4">
           <div className="flex gap-3 text-gray-500">
             <div
-              className="bg-gray-200 dark:bg-darkBg dark:text-bg px-2 py-2 rounded-lg dark:hover:text-blue-500 duration-300 hover:text-blue-500 cursor-pointer"
+              className="bg-gray-200 dark:bg-darkBg dark:text-bg px-2 py-2 rounded-lg dark:hover:text-blue-500 hover:text-blue-500 duration-300 cursor-pointer
+              w-9 md:w-10"  
               onClick={handleCameraClick}
             >
               <AiOutlineCamera size={20} />
@@ -229,14 +230,16 @@ export default function CreatePost() {
             />
             <div
               onClick={handleVideoClick}
-              className="bg-gray-200 dark:bg-darkBg dark:text-bg px-2 py-2 rounded-lg hover:text-blue-500 dark:hover:text-blue-500 duration-300 cursor-pointer"
+              className="bg-gray-200 dark:bg-darkBg dark:text-bg px-2 py-2 rounded-lg dark:hover:text-blue-500 hover:text-blue-500 duration-300 cursor-pointer
+              w-9 md:w-10"  
             >
               <AiOutlineVideoCamera size={20} />
             </div>
             <select
               value={privacy}
               onChange={(e) => setPrivacy(e.target.value)}
-              className="bg-gray-200 dark:bg-darkBg dark:text-bg px-2 py-2 rounded-lg hover:text-blue-500 dark:hover:text-blue-500 duration-300 cursor-pointer"
+              className="bg-gray-200 dark:bg-darkBg dark:text-bg px-2 py-2 rounded-lg hover:text-blue-500 dark:hover:text-blue-500 duration-300 cursor-pointer
+              w-20 md:w-24 "  
             >
               <option value="public">Public</option>
               <option value="private">Private</option>
@@ -245,7 +248,8 @@ export default function CreatePost() {
           </div>
           <button
             type="submit"
-            className="bg-primary dark:bg-darkBg hover:scale-105 duration-300 dark:hover:text-blue-500  text-white px-4 py-2 rounded-lg flex gap-1 items-center"
+            className="bg-primary dark:bg-darkBg hover:scale-105 duration-300 dark:hover:text-blue-500 text-white px-2 py-2 rounded-lg flex gap-1 items-center
+            w-20 md:w-24 text-sm ml-2" 
           >
             Share <AiOutlineRight />
           </button>
