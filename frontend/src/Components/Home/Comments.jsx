@@ -247,50 +247,50 @@ export default function Comments({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-white rounded-t-3xl dark:bg-[#1D1D1D] m-auto lg:w-[80%] max-w-7xl overflow-y-auto px-8 py-12 shadow-lg"
+      className="bg-white rounded-t-3xl dark:bg-[#1D1D1D] m-auto w-full lg:w-[80%] max-w-7xl overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-12 shadow-lg"
     >
-      <div className="w-full flex justify-end mb-6">
+      <div className="w-full flex justify-end mb-4 lg:mb-6">
         <motion.img
           whileHover={{ scale: 1.1 }}
           src={summaryApi.domain.url + "/" + userprofile?.profilePic}
           alt={`${userprofile?.name}'s profile`}
-          className="w-12 h-12 rounded-full clickableImage border-2 border-gray-200 shadow-md"
+          className="w-10 h-10 sm:w-12 sm:h-12 rounded-full clickableImage border-2 border-gray-200 shadow-md"
         />
       </div>
 
-      <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-8">
+      <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white mb-4 lg:mb-8">
         Comments ({comments.length})
       </h2>
 
       {/* Comments section */}
-      <div className="max-h-[600px] overflow-y-auto space-y-6 pr-4">
+      <div className="max-h-[400px] sm:max-h-[600px] overflow-y-auto space-y-4 lg:space-y-6 pr-2 lg:pr-4">
         <AnimatePresence>
           {comments?.map((comment, index) => (
             <motion.div
-              key={comment.id}
+              key={comment.id || Math.random()}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="mb-6 flex flex-col justify-between dark:bg-darkBg items-start p-6 rounded-lg shadow-lg bg-gray-50 hover:bg-gray-100 transition-all duration-300"
+              className="mb-4 lg:mb-6 flex flex-col justify-between dark:bg-darkBg items-start p-4 sm:p-6 rounded-lg shadow-lg bg-gray-50 hover:bg-gray-100 transition-all duration-300"
             >
-              <div className="flex items-center  justify-between w-full mb-4">
-                <div className="flex items-center gap-5">
+              <div className="flex items-center justify-between w-full mb-3 lg:mb-4">
+                <div className="flex items-center gap-4 sm:gap-5">
                   <motion.img
                     whileHover={{ scale: 1.1 }}
                     src={
                       summaryApi.domain.url + "/" + comment?.user?.profilePic
                     }
                     alt={`${comment?.user?.name}'s profile`}
-                    className="w-12 h-12 rounded-full border-2 border-gray-300 shadow-sm"
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-gray-300 shadow-sm"
                   />
                   <div>
                     <div className="flex items-center justify-between w-full">
-                      <div className="text-gray-800 dark:text-white font-semibold text-lg">
+                      <div className="text-gray-800 dark:text-white font-semibold text-sm sm:text-base lg:text-lg">
                         {comment?.user?.name}
                       </div>
                     </div>
-                    <p className="text-gray-500 text-sm">
+                    <p className="text-gray-500 text-xs sm:text-sm">
                       {relativeTimes[index]}
                     </p>
                   </div>
@@ -298,7 +298,7 @@ export default function Comments({
                 <motion.button whileHover={{ scale: 1.1 }} className="relative">
                   <BsThreeDots
                     onClick={() => toggleOptions(index)}
-                    className="text-gray-500 cursor-pointer text-xl"
+                    className="text-gray-500 cursor-pointer text-lg sm:text-xl"
                   />
                   <AnimatePresence>
                     {showOptions === index &&
@@ -308,7 +308,7 @@ export default function Comments({
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0, scale: 0.9 }}
                           transition={{ duration: 0.2 }}
-                          className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10"
+                          className="absolute right-0 mt-2 w-32 sm:w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10"
                         >
                           <ul className="py-2">
                             <li
@@ -331,22 +331,22 @@ export default function Comments({
                   </AnimatePresence>
                 </motion.button>
               </div>
-              <p className="text-gray-700 dark:text-white mt-2 text-lg">
+              <p className="text-gray-700 dark:text-white mt-2 text-sm sm:text-base lg:text-lg">
                 {comment.content}
               </p>
 
               {/* Like and reply buttons */}
-              <div className="flex items-center gap-2 lg:gap-6 mt-4 ml-[60px]">
+              <div className="flex items-center gap-2 lg:gap-4 mt-3 lg:mt-4 ml-[50px] sm:ml-[60px]">
                 <motion.button
                   whileHover={{ scale: 1.1 }}
-                  className="flex items-center gap-1 lg:gap-2 text-gray-500 hover:text-red-500 transition duration-300"
+                  className="flex items-center gap-1 text-sm lg:gap-2 text-gray-500 hover:text-red-500 transition duration-300"
                 >
-                  <AiOutlineHeart className="text-xl" />
-                  <span className=" w-9">Like</span>
+                  <AiOutlineHeart className="text-lg sm:text-xl" />
+                  <span className="w-9">Like</span>
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.1 }}
-                  className="flex items-center gap-1 lg:gap-2 text-gray-500 hover:text-blue-500 transition duration-300"
+                  className="flex items-center gap-1 text-sm lg:gap-2 text-gray-500 hover:text-blue-500 transition duration-300"
                   onClick={() => handleReply(comment._id)}
                 >
                   <BiComment className="text-xl" />
@@ -384,7 +384,7 @@ export default function Comments({
               </AnimatePresence>
 
               {/* Replies section */}
-              <div className="ml-12 mt-4 space-y-4">
+              <div className="mt-4 w-full max-h-40 overflow-y-auto">
                 {comment.replies
                   ?.slice(0, visibleRepliesCount)
                   .map((reply, replyIndex) => (
@@ -393,7 +393,7 @@ export default function Comments({
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3 }}
-                      className="flex gap-5 items-start dark:bg-[#1d1d1d] bg-white p-4 rounded-lg shadow-sm"
+                      className="flex mb-3 gap-5 left-0 w-full items-start dark:bg-[#1d1d1d] bg-white p-4 rounded-lg shadow-sm"
                     >
                       <motion.img
                         whileHover={{ scale: 1.1 }}
@@ -456,13 +456,13 @@ export default function Comments({
           placeholder="Write a comment..."
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
-          className="bg-gray-100 lg:absolute fixed top-[-30px] right-0 dark:bg-darkBg dark:text-white w-full h-12 rounded-full p-4 outline-none text-gray-800 focus:ring-2 focus:ring-blue-300 transition duration-200"
+          className="bg-gray-100 lg:absolute md:fixed md:top-[-30px] right-0 dark:bg-darkBg dark:text-white w-full h-12 rounded-full p-4 outline-none text-gray-800 focus:ring-2 focus:ring-blue-300 transition duration-200"
         />
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={handleCommentSubmit}
-          className="absolute right-4 top-[-24px] bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition duration-200"
+          className="absolute -right-6 top-2 md:right-4 md:top-[-24px] bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition duration-200"
         >
           <AiOutlineSend className="text-xl" />
         </motion.button>
