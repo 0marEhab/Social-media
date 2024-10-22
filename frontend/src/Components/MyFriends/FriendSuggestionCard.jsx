@@ -17,11 +17,11 @@ const FriendSuggestionCard = ({ suggestion, handleFriendRequest }) => {
             className="rounded-xl w-10 h-10 object-cover"
             alt={suggestion.name}
           />
-          <div className="flex flex-col items-start justify-center  gap-0.5"> 
-            <p className="text-[14px] font-bold dark:text-bg   text-black">
+          <div className="flex flex-col items-start justify-center  gap-0.5">
+            <p className="text-[14px] w-20 truncate  font-bold dark:text-bg   text-black">
               {suggestion.name}
             </p>
-            <p className="text-[12px] font-normal dark:text-bg text-black">
+            <p className="text-[12px] w-16 font-normal truncate dark:text-bg text-black">
               {suggestion.email}
             </p>
           </div>
