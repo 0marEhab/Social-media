@@ -296,8 +296,8 @@ export default function Post() {
         ) : null}
       </div>
 
-      <div className="p-10 w-full h-40 ">
-        <p className="text-xl lg:w-full md:w-full overflow-auto dark:text-white mb-6">
+       <div className="p-10 w-full h-full ">
+        <p className="text-xl lg:w-full h-full md:w-full overflow-auto dark:text-white mb-6">
           {post.content}
         </p>
       </div>
